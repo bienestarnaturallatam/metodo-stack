@@ -1,0 +1,129 @@
+'use client';
+
+interface Props {
+  month: number;
+  year: number;
+  habitCount: number;
+  completed: number;
+  pct: number;
+  isCurrentMonth: boolean;
+  onNavigate: (delta: number) => void;
+  onDateChange: (m: number, y: number) => void;
+  onOpenCalendar: () => void;
+}
+
+import { useTranslation } from '@/hooks/useTranslation';
+
+export default function MonthHeader({ month, year, habitCount, completed, pct, onNavigate, onOpenCalendar }: Props) {
+  const { t } = useTranslation();
+
+  return (
+    <div className="bg-app-surface border border-app-border rounded shadow-card px-4 py-3 mb-4">
+
+      {/* ── TOP ROW: month + navigation ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+          <div>
+            <div className="text-[26px] font-light tracking-[-0.5px] leading-tight text-app-text">
+              {t('months')[month]}
+            </div>
+            <div className="text-[11px] text-app-text3 font-medium">{year}</div>
+          </div>
+          <button 
+            onClick={onOpenCalendar}
+            className="w-9 h-9 rounded-lg bg-white border border-app-border flex items-center justify-center text-lg hover:bg-brand-green/5 hover:border-brand-green transition-all duration-200 shadow-sm"
+            title="Abrir calendario mensual"
+          >
+            📅
+          </button>
+        </div>
+
+        {/* Navigation arrows + Sliders */}
+        <div className="flex flex-col items-center sm:items-end gap-4 w-full sm:w-auto">
+          <div className="flex gap-1.5 w-full sm:w-auto justify-center sm:justify-end">
+            {(['←', '→'] as const).map((arrow, i) => (
+              <button
+                key={arrow}
+                onClick={() => onNavigate(i === 0 ? -1 : 1)}
+                className="w-10 h-10 sm:w-8 sm:h-8 rounded-sm border border-app-border bg-app-surface text-app-text2 text-sm
+                           flex items-center justify-center transition-colors hover:bg-app-surface2 hover:text-app-text"
+              >
+                {arrow}
+              </button>
+            ))}
+          </div>
+          
+          {/* SLIDERS MES Y AÑO */}
+          <div className="flex flex-col gap-3 w-full sm:w-64 bg-black/5 p-3 rounded-xl sm:bg-transparent sm:p-0">
+            <div className="flex items-center gap-4">
+              <span className="text-[9px] font-black text-app-text3 uppercase w-10">MES</span>
+              <input 
+                type="range" 
+                min="0" 
+                max="11" 
+                value={month} 
+                onChange={(e) => onDateChange(parseInt(e.target.value), year)}
+                className="flex-1 h-1.5 bg-app-border rounded-lg appearance-none cursor-pointer accent-brand-green"
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-[9px] font-black text-app-text3 uppercase w-10">AÑO</span>
+              <input 
+                type="range" 
+                min="2024" 
+                max="2030" 
+                value={year} 
+                onChange={(e) => onDateChange(month, parseInt(e.target.value))}
+                className="flex-1 h-1.5 bg-app-border rounded-lg appearance-none cursor-pointer accent-brand-green"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── STATS GRID: 2 cols on mobile → 4 cols on md+ ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border border-app-border rounded overflow-hidden">
+
+        {/* Hábitos */}
+        <div className="flex flex-col p-3 border-r border-app-border">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-app-text3 mb-1">
+            {t('habits_label')}
+          </span>
+          <span className="text-[22px] font-light font-mono text-app-text leading-none">{habitCount}</span>
+        </div>
+
+        {/* Completados */}
+        <div className="flex flex-col p-3 md:border-r border-app-border">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-app-text3 mb-1">
+            {t('completed_label')}
+          </span>
+          <span className="text-[22px] font-light font-mono text-app-text leading-none">{completed}</span>
+        </div>
+
+        {/* Progreso (barra) */}
+        <div className="flex flex-col p-3 border-r border-t md:border-t-0 border-app-border gap-2 justify-center">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-app-text3">
+            {t('progress_label')}
+          </span>
+          <div className="h-4 bg-[#e5e5e5] rounded-sm overflow-hidden w-full">
+            <div
+              className="h-full bg-brand-green rounded-sm transition-[width] duration-500"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Progress % */}
+        <div className="flex flex-col p-3 border-t md:border-t-0 border-app-border">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-app-text3 mb-1">
+            Progress in %
+          </span>
+          <span className="text-[22px] font-light font-mono text-brand-green leading-none">
+            {pct.toFixed(2)}%
+          </span>
+        </div>
+
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  * { box-sizing: border-box; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d0cec6; border-radius: 3px; }
+}
+
+@layer components {
+  /* Checkbox */
+  .habit-cb {
+    @apply w-[20px] h-[20px] border border-app-border rounded-[4px] cursor-pointer
+           inline-flex items-center justify-center bg-transparent transition-all duration-100;
+  }
+  .habit-cb:hover { @apply border-brand-green bg-brand-green-light; }
+  .habit-cb.checked {
+    @apply bg-brand-green border-brand-green;
+  }
+  .habit-cb.checked::after {
+    content: '';
+    display: block;
+    width: 6px; height: 3px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+
+  /* Mood select */
+  .mood-select {
+    @apply w-8 h-6 text-[10px] border border-app-border rounded-[4px] bg-app-surface text-app-text
+           cursor-pointer font-mono text-center outline-none transition-colors;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align-last: center;
+    padding: 2px 0;
+  }
+}
+
+@keyframes urgentGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+}
+
+@keyframes bellShake {
+  0%, 100% { transform: rotate(0); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(15deg); }
+  20%, 40%, 60%, 80% { transform: rotate(-15deg); }
+}
+
+@keyframes confettiRise {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-100px) scale(0); opacity: 0; }
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-50px) rotate(0); opacity: 1; }
+  100% { transform: translateY(200px) rotate(360deg); opacity: 0; }
+}
+@keyframes intermittent-glow {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 20px 40px rgba(0,200,83,0.4); }
+  50% { opacity: 0.85; transform: scale(1.02); box-shadow: 0 25px 50px rgba(0,200,83,0.6); }
+}
+
+.animate-intermittent {
+  animation: intermittent-glow 2s infinite ease-in-out;
+}

@@ -1,0 +1,1418 @@
+'use client';
+
+import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { Doughnut } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+} from 'chart.js';
+import { createClient } from '@/lib/client';
+import { toISODate } from '@/lib/dateUtils';
+import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
+
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
+
+const COLORS = {
+  g900: '#1f3d2a',
+  g800: '#2d5a3d',
+  g700: '#3d7a4e',
+  g600: '#4e9a60',
+  g500: '#6aaf7a',
+  g400: '#8fc99e',
+  g200: '#c8e6c9',
+  g100: '#e8f5e9',
+  g50: '#f4faf6',
+  emerald: '#10b981',
+  bg: '#f7f9f7',
+  text: '#1a2e1e',
+  text3: '#7a9b82',
+};
+
+interface PlannerData {
+  day_index: number;
+  mood: number | null;
+  tasks: { text: string; done: boolean; priority?: 'critical' | 'important' | 'growth'; created_at?: string; scheduled_time?: string }[];
+  reflections: {
+    notes: string[];
+    improve: string[];
+    thanks: string[];
+  };
+}
+
+export default function PlannerClient({ userId, userEmail = '', asEmbedded = false }: { userId: string; userEmail?: string; asEmbedded?: boolean }) {
+  return (
+    <PlannerContent userId={userId} userEmail={userEmail} asEmbedded={asEmbedded} />
+  );
+}
+
+function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId: string; userEmail?: string; asEmbedded?: boolean }) {
+  const { t, lang, months } = useTranslation();
+
+  const DAYS: string[] = t('planner_days') || ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const ABBR: string[] = t('planner_days_abbr') || ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+
+  const [view, setView] = useState<'tasks' | 'reflect'>('tasks');
+  const [isDeepWork, setIsDeepWork] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(1500); // 25 mins
+  const [newTaskPriority, setNewTaskPriority] = useState<'critical' | 'important' | 'growth'>('important');
+  const [newTaskTime, setNewTaskTime] = useState('');
+  const [newTaskText, setNewTaskText] = useState('');
+  const [ringingTasks, setRingingTasks] = useState<Set<string>>(new Set());
+  
+  const quotes: string[] = useMemo(() => {
+    const val = t('planner_atomic_quotes');
+    return Array.isArray(val) ? val : [
+      "Los hábitos son el interés compuesto de la superación personal. 📈"
+    ];
+  }, [t]);
+
+  const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const currentQuote = quotes[currentQuoteIndex % quotes.length] || '';
+
+  const [weekStart, setWeekStart] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - d.getDay()); // Sunday
+    return toISODate(d.getFullYear(), d.getMonth(), d.getDate());
+  });
+
+  const [localData, setLocalData] = useState<PlannerData[]>(
+    Array.from({ length: 7 }, (_, i) => ({
+      day_index: i,
+      mood: null,
+      tasks: [],
+      reflections: { notes: ['', '', ''], improve: ['', '', ''], thanks: ['', '', ''] },
+    }))
+  );
+
+  const [loading, setLoading] = useState(true);
+  const [userTier, setUserTier] = useState<string>('trial');
+  const [isPaid, setIsPaid] = useState(false);
+  const [showLockedModal, setShowLockedModal] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function checkUserPlan() {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('tier, is_paid')
+        .eq('id', userId)
+        .single();
+      
+      if (profile) {
+        setUserTier(profile.tier || 'trial');
+        setIsPaid(profile.is_paid || false);
+        
+        // Si no es embedded y el plan es habitos (y es de pago), bloquear
+        if (!asEmbedded && profile.is_paid && profile.tier === 'habitos') {
+          setShowLockedModal(true);
+        }
+      }
+    }
+    checkUserPlan();
+  }, [userId, asEmbedded]);
+
+  const [selectedDayIndex, setSelectedDayIndex] = useState(() => {
+    const d = new Date();
+    return d.getDay();
+  });
+
+  // Calendar modal state
+  const [movingTaskIdx, setMovingTaskIdx] = useState<number | null>(null);
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date().getMonth());
+  const [calendarYear, setCalendarYear] = useState(() => new Date().getFullYear());
+
+  // Month View state
+  const [showMonthModal, setShowMonthModal] = useState(false);
+  const [monthModalMonth, setMonthModalMonth] = useState(() => new Date().getMonth());
+  const [monthModalYear, setMonthModalYear] = useState(() => new Date().getFullYear());
+  const [monthData, setMonthData] = useState<any[]>([]);
+  const [loadingMonth, setLoadingMonth] = useState(false);
+
+  useEffect(() => {
+    if (!showMonthModal) return;
+    async function fetchMonth() {
+      setLoadingMonth(true);
+      const { data } = await supabase.from('weekly_planner_data').select('*').eq('user_id', userId);
+      setMonthData(data || []);
+      setLoadingMonth(false);
+    }
+    fetchMonth();
+  }, [showMonthModal, userId, supabase]);
+
+  // 24h <-> 12h helpers
+  const to12h = (t24: string) => {
+    if (!t24) return { h: '', m: '', ampm: 'AM' as 'AM' | 'PM' };
+    const [hh, mm] = t24.split(':').map(Number);
+    const ampm = hh >= 12 ? 'PM' : 'AM';
+    const h12 = hh === 0 ? 12 : hh > 12 ? hh - 12 : hh;
+    return { h: String(h12).padStart(2, '0'), m: String(mm).padStart(2, '0'), ampm };
+  };
+  const to24h = (h: string, m: string, ampm: string) => {
+    let hh = parseInt(h) || 0;
+    if (ampm === 'PM' && hh < 12) hh += 12;
+    if (ampm === 'AM' && hh === 12) hh = 0;
+    return `${String(hh).padStart(2, '0')}:${(m || '00').padStart(2, '0')}`;
+  };
+
+  // Pomodoro Timer Logic
+  useEffect(() => {
+    let interval: any;
+    if (isDeepWork && timeLeft > 0) {
+      interval = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isDeepWork, timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const getTaskIcon = (text: string) => {
+    const t = text.toLowerCase();
+    if (t.includes('leer') || t.includes('biblia') || t.includes('libro')) return '📖';
+    if (t.includes('lavar') || t.includes('carro') || t.includes('auto')) return '🚗';
+    if (t.includes('facturar') || t.includes('pago') || t.includes('guía') || t.includes('recibo')) return '📄';
+    if (t.includes('gym') || t.includes('entren') || t.includes('ejercic') || t.includes('pesas')) return '🏋️';
+    if (t.includes('pc') || t.includes('laptop') || t.includes('computadora') || t.includes('reparar')) return '💻';
+    if (t.includes('agua') || t.includes('beber')) return '💧';
+    if (t.includes('meditar') || t.includes('respirar')) return '🧘';
+    if (t.includes('dormir') || t.includes('descansar')) return '😴';
+    if (t.includes('comida') || t.includes('almuerzo') || t.includes('cena') || t.includes('cocinar')) return '🍳';
+    if (t.includes('objetivo') || t.includes('meta') || t.includes('puntuar') || t.includes('target')) return '🎯';
+    if (t.includes('dinero') || t.includes('banco') || t.includes('invertir') || t.includes('pago')) return '💰';
+    if (t.includes('llamar') || t.includes('teléfono') || t.includes('celular')) return '📞';
+    if (t.includes('estudiar') || t.includes('aprender') || t.includes('clase')) return '🎓';
+    if (t.includes('iglesia') || t.includes('orar') || t.includes('dios')) return '🙏';
+    if (t.includes('super') || t.includes('comprar') || t.includes('tienda')) return '🛒';
+    return '✨';
+  };
+
+  // Intermittent beep sound
+  const playBellSound = () => {
+    try {
+      const AppAudioCtx = (window as any).AppAudioCtx || new (window.AudioContext || (window as any).webkitAudioContext)();
+      (window as any).AppAudioCtx = AppAudioCtx;
+      const osc = AppAudioCtx.createOscillator();
+      const gain = AppAudioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, AppAudioCtx.currentTime);
+      gain.gain.setValueAtTime(0.3, AppAudioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, AppAudioCtx.currentTime + 0.1);
+      osc.connect(gain).connect(AppAudioCtx.destination);
+      osc.start();
+      osc.stop(AppAudioCtx.currentTime + 0.15);
+    } catch (e) { /* silent fallback */ }
+  };
+
+  // Sound loop effect for intermittent ringing
+  useEffect(() => {
+    if (ringingTasks.size === 0) return;
+    const interval = setInterval(playBellSound, 1000);
+    return () => clearInterval(interval);
+  }, [ringingTasks.size]);
+
+  // Alarm checker - runs every 30s
+  useEffect(() => {
+    const check = () => {
+      const now = new Date();
+      const nowHHMM = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const currentDay = localData[selectedDayIndex];
+      if (!currentDay) return;
+      const newRinging = new Set<string>();
+      currentDay.tasks.forEach((task, idx) => {
+        if (task.scheduled_time && !task.done && task.scheduled_time === nowHHMM) {
+          newRinging.add(`${selectedDayIndex}-${idx}`);
+        }
+      });
+      if (newRinging.size > 0) {
+        setRingingTasks(prev => {
+          const addedKeys: string[] = [];
+          newRinging.forEach(k => { if (!prev.has(k)) addedKeys.push(k); });
+          if (addedKeys.length === 0) return prev;
+          
+          // Schedule 7s stop for each NEW ringing task
+          addedKeys.forEach(key => {
+            setTimeout(() => {
+              setRingingTasks(current => {
+                const next = new Set(current);
+                next.delete(key);
+                return next;
+              });
+            }, 7000);
+          });
+
+          return new Set([...prev, ...addedKeys]);
+        });
+      }
+    };
+    check();
+    const interval = setInterval(check, 30000);
+    return () => clearInterval(interval);
+  }, [localData, selectedDayIndex]);
+
+  // Load data from Supabase
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('weekly_planner_data')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('week_start_date', weekStart);
+
+      if (data) {
+        const merged = Array.from({ length: 7 }, (_, i) => {
+          const found = data.find((d: any) => d.day_index === i);
+          if (found) {
+            const refl = found.reflections || { notes: [], improve: [], thanks: [] };
+            // Asegurar al menos 3 slots
+            while (refl.notes.length < 3) refl.notes.push('');
+            while (refl.improve.length < 3) refl.improve.push('');
+            while (refl.thanks.length < 3) refl.thanks.push('');
+            
+            return {
+              day_index: i,
+              mood: found.mood ?? null,
+              tasks: found.tasks ?? [],
+              reflections: refl,
+            };
+          }
+          return {
+            day_index: i,
+            mood: null,
+            tasks: [],
+            reflections: { notes: ['', '', ''], improve: ['', '', ''], thanks: ['', '', ''] },
+          };
+        });
+        setLocalData(merged);
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, [weekStart, userId]);
+
+  // Save single day to Supabase
+  const saveDay = async (dayIndex: number, dayData: PlannerData) => {
+    // Optimización: No guardar tareas vacías ni reflexiones vacías para ahorrar espacio en JSONB
+    const cleanTasks = dayData.tasks.filter(t => t.text.trim() !== '');
+    const cleanReflections = dayData.reflections;
+
+    await supabase.from('weekly_planner_data').upsert({
+      user_id: userId,
+      week_start_date: weekStart,
+      day_index: dayIndex,
+      tasks: cleanTasks,
+      reflections: cleanReflections,
+      mood: dayData.mood,
+    }, { onConflict: 'user_id,week_start_date,day_index' });
+  };
+
+  const handleTaskToggle = (dayIndex: number, taskIndex: number) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    const taskWasDone = dayData.tasks[taskIndex].done;
+    
+    dayData.tasks = dayData.tasks.map((t, i) =>
+      i === taskIndex ? { ...t, done: !t.done } : t
+    );
+    
+    // Change quote on completion
+    if (!taskWasDone && dayData.tasks[taskIndex].done) {
+      const idx = Math.floor(Math.random() * quotes.length);
+      setCurrentQuoteIndex(idx);
+    }
+
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    saveDay(dayIndex, dayData);
+  };
+
+  const handleTaskTextChange = (dayIndex: number, taskIndex: number, text: string) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = dayData.tasks.map((t, i) =>
+      i === taskIndex ? { ...t, text } : t
+    );
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+  };
+
+  const addTask = (dayIndex: number, text: string) => {
+    if (!text.trim()) return;
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = [...dayData.tasks, { text, done: false, priority: newTaskPriority, created_at: new Date().toISOString(), scheduled_time: newTaskTime || undefined }];
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    saveDay(dayIndex, dayData);
+    setNewTaskPriority('important');
+    setNewTaskTime('');
+    setNewTaskText('');
+  };
+
+  const handleTaskTimeChange = (dayIndex: number, taskIndex: number, time: string) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = dayData.tasks.map((t, i) =>
+      i === taskIndex ? { ...t, scheduled_time: time || undefined } : t
+    );
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+  };
+
+  const handleReflectionChange = (dayIndex: number, field: 'notes' | 'improve' | 'thanks', idx: number, val: string) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.reflections = { ...dayData.reflections };
+    dayData.reflections[field] = [...dayData.reflections[field]];
+    dayData.reflections[field][idx] = val;
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+  };
+
+  const deleteTask = (dayIndex: number, taskIndex: number) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = [...dayData.tasks];
+    dayData.tasks.splice(taskIndex, 1);
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    saveDay(dayIndex, dayData);
+  };
+
+  // Move task to any date (possibly a different week)
+  const moveTaskToDate = async (fromDayIdx: number, taskIdx: number, targetDate: Date) => {
+    const task = localData[fromDayIdx].tasks[taskIdx];
+    if (!task) return;
+
+    const targetSunday = new Date(targetDate);
+    targetSunday.setDate(targetDate.getDate() - targetDate.getDay());
+    const newWeekStart = toISODate(targetSunday.getFullYear(), targetSunday.getMonth(), targetSunday.getDate());
+    const targetDayIndex = targetDate.getDay();
+
+    // 1. Remove from current day
+    const newData = [...localData];
+    const fromDay = { ...newData[fromDayIdx] };
+    fromDay.tasks = [...fromDay.tasks];
+    fromDay.tasks.splice(taskIdx, 1);
+    newData[fromDayIdx] = fromDay;
+    setLocalData(newData);
+    await saveDay(fromDayIdx, fromDay);
+
+    // 2. If same week, add to that day
+    if (newWeekStart === weekStart) {
+      const toDay = { ...newData[targetDayIndex] };
+      toDay.tasks = [...toDay.tasks, { ...task, done: false }];
+      newData[targetDayIndex] = toDay;
+      setLocalData([...newData]);
+      await saveDay(targetDayIndex, toDay);
+    } else {
+      // Different week – upsert directly to Supabase
+      const { data: existing } = await supabase
+        .from('weekly_planner_data')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('week_start_date', newWeekStart)
+        .eq('day_index', targetDayIndex)
+        .maybeSingle();
+
+      const existingTasks = existing?.tasks ?? [];
+      await supabase.from('weekly_planner_data').upsert({
+        user_id: userId,
+        week_start_date: newWeekStart,
+        day_index: targetDayIndex,
+        tasks: [...existingTasks, { ...task, done: false }],
+        reflections: existing?.reflections ?? { notes: ['','',''], improve: ['','',''], thanks: ['','',''] },
+        mood: existing?.mood ?? null,
+      }, { onConflict: 'user_id,week_start_date,day_index' });
+
+      // Navigate to that week
+      setWeekStart(newWeekStart);
+      setSelectedDayIndex(targetDayIndex);
+    }
+  };
+
+  const handleMoodSelect = (dayIndex: number, mood: number) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex], mood };
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    saveDay(dayIndex, dayData);
+  };
+
+  // Stats
+  const dayStats = useMemo(() => {
+    return localData.map(d => {
+      const nonEmpty = d.tasks.filter(t => t.text.trim());
+      const done = nonEmpty.filter(t => t.done).length;
+      return { total: nonEmpty.length, done };
+    });
+  }, [localData]);
+
+  const overallStats = useMemo(() => {
+    const total = dayStats.reduce((acc, curr) => acc + curr.total, 0);
+    const done = dayStats.reduce((acc, curr) => acc + curr.done, 0);
+    return { total, done, pct: total ? Math.round((done / total) * 100) : 0 };
+  }, [dayStats]);
+
+  const getWeekDates = () => {
+    const start = new Date(weekStart + 'T00:00:00');
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+  };
+  const weekDates = getWeekDates();
+
+
+
+  const changeWeek = (delta: number) => {
+    const d = new Date(weekStart + 'T00:00:00');
+    d.setDate(d.getDate() + delta * 7);
+    setWeekStart(toISODate(d.getFullYear(), d.getMonth(), d.getDate()));
+  };
+
+  const day = localData[selectedDayIndex];
+  const dateStr = toISODate(weekDates[selectedDayIndex].getFullYear(), weekDates[selectedDayIndex].getMonth(), weekDates[selectedDayIndex].getDate());
+  const todayStr = toISODate(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  const isToday = dateStr === todayStr;
+  const pct = dayStats[selectedDayIndex].total > 0 ? Math.round((dayStats[selectedDayIndex].done / dayStats[selectedDayIndex].total) * 100) : 0;
+  const isFull = pct === 100 && dayStats[selectedDayIndex].total > 0;
+  const isProgress75 = pct >= 75 && pct < 100;
+
+  // Mood labels from translations
+  const moodLabels = [
+    { v: 1, e: '😫', l: t('planner_mood_exhausted') },
+    { v: 2, e: '😕', l: t('planner_mood_low') },
+    { v: 3, e: '😐', l: t('planner_mood_neutral') },
+    { v: 4, e: '🙂', l: t('planner_mood_good') },
+    { v: 5, e: '🤩', l: t('planner_mood_amazing') },
+  ];
+
+  if (loading) {
+    return <div className="min-h-screen bg-[#f7f9f7] flex items-center justify-center font-fraunces text-[#2d5a3d]">{t('planner_loading')}</div>;
+  }
+
+  return (
+    <div className={`min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans transition-all duration-1000 ${asEmbedded ? 'pt-2' : ''} ${isDeepWork ? 'bg-black' : ''}`}>
+      {/* TOPBAR */}
+      {!asEmbedded && (
+        <nav className={`bg-[#2d5a3d] h-[54px] flex items-center px-4 sm:px-7 sticky top-0 z-[200] shadow-lg transition-all duration-700 ${isDeepWork ? 'opacity-0 -translate-y-full pointer-events-none' : 'opacity-100'}`}>
+          <div className="flex items-center gap-3 mr-8">
+             <div className="w-7 h-7 bg-[#6aaf7a] rounded-full rounded-bl-none -rotate-45 flex items-center justify-center text-[13px]">
+               <span className="rotate-45">🌿</span>
+             </div>
+             <Link href="/tracker" className="font-fraunces text-white text-lg font-bold tracking-tight">{t('planner_weekly')}</Link>
+          </div>
+
+          <div className="hidden sm:flex bg-white/10 border border-white/20 rounded-lg overflow-hidden mr-auto">
+            <button 
+              onClick={() => setView('tasks')}
+              className={`px-5 py-1.5 text-[11px] font-bold transition-all ${view === 'tasks' ? 'bg-[#2d5a3d] text-white' : 'text-white/70 hover:bg-white/5'}`}
+            >
+              {t('planner_tasks')}
+            </button>
+            <button 
+              onClick={() => setView('reflect')}
+              className={`px-5 py-1.5 text-[11px] font-bold transition-all ${view === 'reflect' ? 'bg-[#2d5a3d] text-white' : 'text-white/70 hover:bg-white/5'}`}
+            >
+              {t('planner_reflect')}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3 ml-auto">
+            <button onClick={() => changeWeek(-1)} className="w-[30px] h-[30px] flex items-center justify-center bg-white/10 border border-white/20 rounded text-white hover:bg-white/20 transition-all">←</button>
+            <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-3 py-1">
+              <span className="text-[10px] text-[#c8e6c9] font-mono uppercase">{t('planner_week_nav')}</span>
+              <input 
+                type="date" 
+                value={weekStart} 
+                onChange={(e) => setWeekStart(e.target.value)}
+                className="bg-transparent border-none text-white text-[11px] font-mono outline-none cursor-pointer"
+              />
+            </div>
+            <button onClick={() => changeWeek(1)} className="w-[30px] h-[30px] flex items-center justify-center bg-white/10 border border-white/20 rounded text-white hover:bg-white/20 transition-all">→</button>
+          </div>
+        </nav>
+      )}
+
+      {/* Control bar (Day Selector) */}
+      <div className={`px-7 py-5 flex flex-col items-center gap-6 bg-white border-b border-[#d8eadb] shadow-sm transition-all duration-700 ${isDeepWork ? 'blur-xl opacity-20 pointer-events-none' : 'blur-0 opacity-100'}`}>
+        <div className="w-full flex flex-wrap items-center justify-center sm:justify-between gap-3 sm:gap-6 max-w-[800px]">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-[#2d5a3d] rounded-lg flex items-center justify-center text-[12px] shadow-sm">🌿</div>
+            <h2 className="hidden xs:block font-fraunces text-[#2d5a3d] text-xl font-black tracking-tight">{asEmbedded ? t('planner_daily_focus') : t('planner_weekly')}</h2>
+          </div>
+          
+          <div className="flex bg-[#f4faf6] border border-[#d8eadb] rounded-xl overflow-hidden p-0.5 sm:p-1 shadow-inner">
+            <button 
+              onClick={() => setView('tasks')}
+              className={`px-2.5 sm:px-6 py-2 text-[9px] sm:text-[10px] font-black tracking-widest transition-all rounded-lg ${view === 'tasks' ? 'bg-[#2d5a3d] text-white shadow-md' : 'text-[#7a9b82] hover:bg-white'}`}
+            >
+              {t('planner_tasks')}
+            </button>
+            <button 
+              onClick={() => setView('reflect')}
+              className={`px-2.5 sm:px-6 py-2 text-[9px] sm:text-[10px] font-black tracking-widest transition-all rounded-lg ${view === 'reflect' ? 'bg-[#2d5a3d] text-white shadow-md' : 'text-[#7a9b82] hover:bg-white'}`}
+            >
+              {t('planner_reflect')}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+             <button onClick={() => changeWeek(-1)} className="w-8 h-8 rounded-full border border-[#d8eadb] text-[#7a9b82] hover:bg-[#f4faf6] transition-all">←</button>
+             <span className="font-mono text-[10px] font-bold text-[#2d5a3d] uppercase tracking-tighter">{t('planner_week_label')} {weekStart.split('-').reverse().slice(0,2).join('/')}</span>
+             <button onClick={() => changeWeek(1)} className="w-8 h-8 rounded-full border border-[#d8eadb] text-[#7a9b82] hover:bg-[#f4faf6] transition-all">→</button>
+                <span className="hidden xs:inline">📅 {t('planner_full_month')}</span>
+          </div>
+        </div>
+
+        {/* DAY SELECTOR BAR */}
+        <div className="w-full overflow-x-auto no-scrollbar py-2">
+          <div className="flex justify-center min-w-max gap-2 sm:gap-4 p-1.5 bg-[#f4faf6] rounded-2xl border border-[#d8eadb] shadow-inner mx-auto">
+          {ABBR.map((label, idx) => {
+            const d = weekDates[idx];
+            const isSel = selectedDayIndex === idx;
+            const isTodayDay = toISODate(d.getFullYear(), d.getMonth(), d.getDate()) === todayStr;
+            const dayPct = dayStats[idx].total > 0 ? Math.round((dayStats[idx].done / dayStats[idx].total) * 100) : 0;
+            const dayFull = dayPct === 100 && dayStats[idx].total > 0;
+
+            return (
+              <button 
+                key={idx}
+                onClick={() => setSelectedDayIndex(idx)}
+                className={`relative flex flex-col items-center justify-center w-12 h-14 sm:w-16 sm:h-20 rounded-xl transition-all duration-300 group
+                  ${isSel ? 'bg-[#2d5a3d] text-white shadow-xl scale-110 -translate-y-1' : 'bg-white text-[#7a9b82] hover:bg-[#ebf5ed] border border-[#d8eadb]'}`}
+              >
+                <span className={`text-[10px] font-black mb-1 ${isSel ? 'text-white/60' : 'text-[#7a9b82]'}`}>{label}</span>
+                <span className={`font-fraunces text-base sm:text-lg font-black ${isSel ? 'text-white' : 'text-[#2d5a3d]'}`}>{d.getDate()}</span>
+                
+                {isTodayDay && (
+                  <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-white shadow-sm ${isSel ? 'bg-[#6aaf7a]' : 'bg-[#e74b6c]'}`} />
+                )}
+                
+                {dayStats[idx].total > 0 && (
+                  <div className="absolute -bottom-1 left-1 right-1 h-1 bg-white/20 rounded-full overflow-hidden">
+                    <div className={`h-full transition-all duration-500 ${dayFull ? 'bg-emerald-400' : 'bg-[#6aaf7a]'}`} style={{ width: `${dayPct}%` }} />
+                  </div>
+                )}
+              </button>
+            )
+          })}
+          </div>
+        </div>
+      </div>
+
+      <main className="p-2 sm:p-10 max-w-[1200px] mx-auto min-h-[calc(100vh-250px)] flex flex-col items-center justify-center">
+        
+        {/* FOCUS CARD */}
+        <div 
+          key={selectedDayIndex}
+          className={`w-full max-w-[900px] bg-white border transition-all duration-500 ${isDeepWork ? 'border-emerald-500 ring-[20px] ring-emerald-500/10' : isToday ? 'border-emerald-500 ring-4 ring-emerald-500/5' : 'border-[#d8eadb]'} rounded-[32px] shadow-[0_20px_50px_-15px_rgba(45,90,61,0.12)] overflow-hidden animate-in fade-in slide-in-from-right-8 duration-500 flex flex-col md:flex-row`}
+        >
+          {/* LEFT SIDE */}
+          <div className="flex-1 p-4 sm:p-12">
+            <header className="mb-10 flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white ${isToday ? 'bg-emerald-500' : 'bg-[#6aaf7a]'}`}>
+                    {isToday ? t('planner_focus_today') : DAYS[selectedDayIndex]}
+                  </span>
+                  <span className="font-mono text-xs text-[#7a9b82] font-bold">
+                    {lang === 'en' 
+                      ? `${months[weekDates[selectedDayIndex].getMonth()]} ${String(weekDates[selectedDayIndex].getDate()).padStart(2, '0')}, ${weekDates[selectedDayIndex].getFullYear()}`
+                      : `${String(weekDates[selectedDayIndex].getDate()).padStart(2, '0')} de ${months[weekDates[selectedDayIndex].getMonth()].toLowerCase()} de ${weekDates[selectedDayIndex].getFullYear()}`}
+                  </span>
+                </div>
+                <h3 className="font-fraunces text-4xl sm:text-5xl font-black text-[#2d5a3d] leading-tight">
+                  {isToday ? t('planner_dominate') : t('planner_purposes_for', { day: DAYS[selectedDayIndex] })}
+                </h3>
+              </div>
+              
+              <button 
+                onClick={() => {
+                  setIsDeepWork(!isDeepWork);
+                  if (!isDeepWork) setTimeLeft(1500);
+                }}
+                className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-all duration-500 shadow-lg ${isDeepWork ? 'bg-emerald-500 text-white scale-125 rotate-[360deg]' : 'bg-[#f4faf6] text-[#6aaf7a] hover:scale-110'}`}
+                title={t('planner_deep_work_mode')}
+              >
+                ⚡
+              </button>
+            </header>
+
+            {isDeepWork && (
+              <div className="mb-8 flex items-center gap-4 bg-emerald-500/10 p-4 rounded-2xl border border-emerald-500/20 animate-pulse">
+                <span className="text-2xl font-mono font-black text-emerald-600 tracking-tighter">{formatTime(timeLeft)}</span>
+                <div className="flex-1 h-1 bg-emerald-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${(timeLeft / 1500) * 100}%` }} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{t('planner_deep_work_active')}</span>
+              </div>
+            )}
+
+            {view === 'tasks' ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-4 px-2">
+                  <div className="flex items-center gap-3">
+                    <h4 className="text-[11px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_stack_list')}</h4>
+                      <button 
+                        onClick={() => {
+                          const dateObj = weekDates[selectedDayIndex];
+                          const dateStr = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+                          const tasksText = day.tasks.length > 0 
+                            ? day.tasks.map((t, i) => `\n${i + 1}. ${t.text}`).join('')
+                            : `\n${t('planner_no_tasks')}`;
+                          
+                          const message = t('planner_whatsapp_msg', { tasks: tasksText });
+                          const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                          window.open(whatsappUrl, '_blank');
+                        }}
+                        className="flex items-center gap-1.5 px-2 py-1 bg-[#25D366] text-white rounded-md hover:scale-105 transition-all shadow-sm group shrink-0"
+                      >
+                      <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                      </svg>
+                      <span className="text-[9px] font-black uppercase">WSP</span>
+                    </button>
+                  </div>
+                  <span className="text-[11px] font-bold text-[#2d5a3d]">{dayStats[selectedDayIndex].done} / {dayStats[selectedDayIndex].total} {t('planner_completed')}</span>
+                </div>
+                
+                <div className={`space-y-3 min-h-[200px] transition-all duration-500 ${isDeepWork ? 'scale-105 origin-left' : ''}`}>
+                  {(() => {
+                    const PRIORITY_ORDER = { critical: 0, important: 1, growth: 2 };
+                    const sortedTasks = day.tasks
+                      .map((task, origIdx) => ({ ...task, origIdx }))
+                      .sort((a, b) => {
+                        if (a.done !== b.done) return a.done ? 1 : -1;
+                        return (PRIORITY_ORDER[a.priority || 'important'] || 1) - (PRIORITY_ORDER[b.priority || 'important'] || 1);
+                      });
+                    return sortedTasks.map((task) => {
+                      const tIdx = task.origIdx;
+                      const p = task.priority || 'important';
+                      const isUrgent = p === 'critical' && !task.done && task.created_at && (Date.now() - new Date(task.created_at).getTime() > 3 * 60 * 60 * 1000);
+                      const borderColor = task.done ? 'border-[#d8eadb]' : p === 'critical' ? 'border-rose-400' : p === 'growth' ? 'border-emerald-400' : 'border-amber-400';
+                      return (
+                    <div key={tIdx} className="relative group">
+                      <div className={`flex flex-col gap-1 p-2 sm:p-4 rounded-2xl transition-all border-2 ${task.done ? 'bg-[#f4faf6] opacity-60' : 'bg-white shadow-sm'} ${borderColor} ${isUrgent ? 'animate-[urgentGlow_2s_ease-in-out_infinite]' : ''}`}
+                        style={isUrgent ? { boxShadow: '0 0 12px rgba(239,68,68,0.3)' } : undefined}
+                      >
+                        {/* ROW 1: Priority + Checkbox + Text */}
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className={`w-2 sm:w-2.5 h-6 sm:h-8 rounded-full flex-shrink-0 ${p === 'critical' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]' : p === 'growth' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]'}`} />
+                          <input 
+                            type="checkbox" 
+                            checked={task.done}
+                            onChange={() => handleTaskToggle(selectedDayIndex, tIdx)}
+                            className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-[#8fc99e] rounded-md text-[#2d5a3d] focus:ring-[#2d5a3d] cursor-pointer flex-shrink-0"
+                          />
+                          <span className="text-base sm:text-xl flex-shrink-0" title="Auto-icono">
+                            {getTaskIcon(task.text)}
+                          </span>
+                          <textarea 
+                            rows={1}
+                            value={task.text}
+                            onChange={(e) => handleTaskTextChange(selectedDayIndex, tIdx, e.target.value)}
+                            onBlur={() => saveDay(selectedDayIndex, day)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                (e.target as HTMLElement).blur();
+                              }
+                            }}
+                            onInput={(e) => {
+                              const el = e.target as HTMLTextAreaElement;
+                              el.style.height = 'auto';
+                              el.style.height = el.scrollHeight + 'px';
+                            }}
+                            className={`flex-1 min-w-0 text-xs sm:text-base bg-transparent border-none outline-none font-medium transition-all resize-none overflow-hidden ${task.done ? 'line-through text-[#7a9b82] italic' : 'text-[#1a2e1e]'}`}
+                          />
+                        </div>
+                        
+                        {/* ROW 2: Time + Actions */}
+                        <div className="flex items-center gap-2 pl-6 sm:pl-8">
+                          {/* TIME BADGE */}
+                          {(() => {
+                            const tt = to12h(task.scheduled_time || '');
+                            return (
+                              <div className="flex items-center gap-1.5 flex-shrink-0">
+                                <input
+                                  type="time"
+                                  value={task.scheduled_time || ''}
+                                  onChange={(e) => handleTaskTimeChange(selectedDayIndex, tIdx, e.target.value)}
+                                  onBlur={() => saveDay(selectedDayIndex, day)}
+                                  className={`w-[68px] bg-[#f4faf6] border border-[#d8eadb] hover:border-[#6aaf7a] focus:border-[#2d5a3d] rounded-lg text-[10px] font-mono font-black text-center outline-none transition-all py-0.5 cursor-pointer ${task.scheduled_time ? 'text-[#2d5a3d]' : 'text-[#c8e6c9]'}`}
+                                />
+                                {task.scheduled_time && (
+                                  <span className={`text-[7px] sm:text-[8px] font-black rounded px-1 py-0.5 ${tt.ampm === 'PM' ? 'bg-indigo-100 text-indigo-600' : 'bg-amber-100 text-amber-600'}`}>
+                                    {tt.h}:{tt.m} {tt.ampm}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })()}
+                          {/* BELL */}
+                          {task.scheduled_time && (
+                            <button
+                              onClick={() => {
+                                setRingingTasks(prev => {
+                                  const next = new Set(prev);
+                                  const key = `${selectedDayIndex}-${tIdx}`;
+                                  if (next.has(key)) next.delete(key); else playBellSound();
+                                  return next;
+                                });
+                              }}
+                              className={`text-sm transition-all ${ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? 'animate-[bellShake_0.5s_ease-in-out_infinite] text-amber-500' : 'text-[#c8e6c9] hover:text-amber-400'}`}
+                              title="Alarma"
+                            >
+                              {ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? '🔔' : '🔕'}
+                            </button>
+                          )}
+
+                          {/* TASK ACTIONS */}
+                          <div className="flex items-center gap-0.5 ml-auto">
+                              <button 
+                                onClick={() => {
+                                  setMovingTaskIdx(movingTaskIdx === tIdx ? null : tIdx);
+                                  setCalendarMonth(new Date().getMonth());
+                                  setCalendarYear(new Date().getFullYear());
+                                }}
+                                title={t('planner_move_title')}
+                                className={`flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-lg transition-all ${movingTaskIdx === tIdx ? 'bg-[#2d5a3d] text-white shadow-md' : 'text-[#7a9b82] hover:bg-[#f4faf6] hover:text-[#2d5a3d]'}`}
+                              >
+                                <span className="text-sm">📅</span>
+                                <span className="text-[7px] font-black uppercase">{t('planner_move_date')}</span>
+                              </button>
+                            <button 
+                              onClick={() => deleteTask(selectedDayIndex, tIdx)}
+                              title={t('planner_delete_title')}
+                              className="p-1 sm:p-2 text-[#e74b6c] hover:bg-[#fff0f3] rounded-lg transition-all text-sm"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* FULL CALENDAR MODAL */}
+                      {movingTaskIdx === tIdx && (() => {
+                        const CAL_HEADERS: string[] = t('planner_cal_headers') || ['D','L','M','M','J','V','S'];
+                        const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+                        const daysInCal = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+                        const todayNow = new Date();
+                        const calCells: (number | null)[] = [
+                          ...Array(firstDay).fill(null),
+                          ...Array.from({ length: daysInCal }, (_, i) => i + 1),
+                        ];
+                        while (calCells.length % 7 !== 0) calCells.push(null);
+
+                        return (
+                          <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+                               onClick={() => setMovingTaskIdx(null)}>
+                            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
+                                 onClick={e => e.stopPropagation()}>
+                              
+                              {/* Calendar Header */}
+                              <div className="bg-[#2d5a3d] px-6 py-5">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">{t('planner_move_to_day')}</p>
+                                <p className="text-white font-fraunces text-sm font-bold italic truncate opacity-80">&ldquo;{task.text}&rdquo;</p>
+                              </div>
+
+                              {/* Month Navigator */}
+                              <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                                <button
+                                  onClick={() => {
+                                    if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); }
+                                    else setCalendarMonth(m => m - 1);
+                                  }}
+                                  className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black hover:bg-[#2d5a3d] hover:text-white transition-all"
+                                >‹</button>
+                                <span className="font-fraunces font-black text-[#2d5a3d] text-lg capitalize">
+                                  {months[calendarMonth]} {calendarYear}
+                                </span>
+                                <button
+                                  onClick={() => {
+                                    if (calendarMonth === 11) { setCalendarMonth(0); setCalendarYear(y => y + 1); }
+                                    else setCalendarMonth(m => m + 1);
+                                  }}
+                                  className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black hover:bg-[#2d5a3d] hover:text-white transition-all"
+                                >›</button>
+                              </div>
+
+                              {/* Day Headers */}
+                              <div className="grid grid-cols-7 px-4 pb-2">
+                                {CAL_HEADERS.map((h, i) => (
+                                  <div key={i} className="text-center text-[9px] font-black uppercase text-[#7a9b82] py-1">{h}</div>
+                                ))}
+                              </div>
+
+                              {/* Calendar Grid */}
+                              <div className="grid grid-cols-7 px-4 pb-5 gap-y-1">
+                                {calCells.map((d, i) => {
+                                  if (!d) return <div key={i} />;
+                                  const cellDate = new Date(calendarYear, calendarMonth, d);
+                                  const isToday2 = cellDate.toDateString() === todayNow.toDateString();
+                                  const isPast = cellDate < new Date(todayNow.getFullYear(), todayNow.getMonth(), todayNow.getDate());
+                                  return (
+                                    <button
+                                      key={i}
+                                      disabled={isPast}
+                                      onClick={async () => {
+                                        if (movingTaskIdx === -1) {
+                                          // Move the whole list
+                                          const tasksToMove = localData[selectedDayIndex].tasks;
+                                          for (let i = tasksToMove.length - 1; i >= 0; i--) {
+                                            await moveTaskToDate(selectedDayIndex, i, cellDate);
+                                          }
+                                        } else if (movingTaskIdx !== null) {
+                                          await moveTaskToDate(selectedDayIndex, movingTaskIdx, cellDate);
+                                        }
+                                        setMovingTaskIdx(null);
+                                      }}
+                                      className={`aspect-square rounded-xl text-sm font-bold transition-all flex items-center justify-center
+                                        ${isPast ? 'text-[#c8e6c9] cursor-not-allowed' :
+                                          isToday2 ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 font-black' :
+                                          'text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white hover:scale-110'}`}
+                                    >
+                                      {d}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Footer */}
+                              <div className="border-t border-[#d8eadb] px-5 py-3 flex justify-end">
+                                <button
+                                  onClick={() => setMovingTaskIdx(null)}
+                                  className="text-[10px] font-black uppercase text-[#7a9b82] hover:text-[#2d5a3d] transition-colors px-4 py-2 rounded-lg hover:bg-[#f4faf6]"
+                                >
+                                  {t('planner_cancel')}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
+                  
+                  {/* GLOBAL MOVE MODAL (when moving whole list) */}
+                  {movingTaskIdx === -1 && (() => {
+                    const CAL_HEADERS: string[] = t('planner_cal_headers') || ['D','L','M','M','J','V','S'];
+                    const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+                    const daysInCal = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+                    const todayNow = new Date();
+                    const calCells: (number | null)[] = [
+                      ...Array(firstDay).fill(null),
+                      ...Array.from({ length: daysInCal }, (_, i) => i + 1),
+                    ];
+                    while (calCells.length % 7 !== 0) calCells.push(null);
+
+                    return (
+                      <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+                           onClick={() => setMovingTaskIdx(null)}>
+                        <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
+                             onClick={e => e.stopPropagation()}>
+                          <div className="bg-[#2d5a3d] px-6 py-5 text-center">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">Mover toda la lista</p>
+                            <p className="text-white font-fraunces text-base font-bold italic opacity-80">Selecciona el día de destino</p>
+                          </div>
+                          <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                            <button onClick={() => { if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); } else setCalendarMonth(m => m - 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">‹</button>
+                            <span className="font-fraunces font-black text-[#2d5a3d] text-lg capitalize">{months[calendarMonth]} {calendarYear}</span>
+                            <button onClick={() => { if (calendarMonth === 11) { setCalendarMonth(0); setCalendarYear(y => y + 1); } else setCalendarMonth(m => m + 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">›</button>
+                          </div>
+                          <div className="grid grid-cols-7 px-4 pb-2">
+                            {CAL_HEADERS.map((h, i) => (<div key={i} className="text-center text-[9px] font-black uppercase text-[#7a9b82] py-1">{h}</div>))}
+                          </div>
+                          <div className="grid grid-cols-7 px-4 pb-5 gap-y-1">
+                            {calCells.map((d, i) => {
+                              if (!d) return <div key={i} />;
+                              const cellDate = new Date(calendarYear, calendarMonth, d);
+                              const isToday2 = cellDate.toDateString() === todayNow.toDateString();
+                              const isPast = cellDate < new Date(todayNow.getFullYear(), todayNow.getMonth(), todayNow.getDate());
+                              return (
+                                <button
+                                  key={i}
+                                  disabled={isPast}
+                                  onClick={async () => {
+                                    const tasksToMove = localData[selectedDayIndex].tasks;
+                                    for (let j = tasksToMove.length - 1; j >= 0; j--) {
+                                      await moveTaskToDate(selectedDayIndex, j, cellDate);
+                                    }
+                                    setMovingTaskIdx(null);
+                                  }}
+                                  className={`aspect-square rounded-xl text-sm font-bold transition-all flex items-center justify-center ${isPast ? 'text-[#c8e6c9] cursor-not-allowed' : isToday2 ? 'bg-emerald-500 text-white shadow-lg' : 'text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white hover:scale-110'}`}
+                                >
+                                  {d}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <div className="border-t border-[#d8eadb] px-5 py-3 flex justify-end">
+                            <button onClick={() => setMovingTaskIdx(null)} className="text-[10px] font-black uppercase text-[#7a9b82] hover:text-[#2d5a3d] transition-colors px-4 py-2 rounded-lg">{t('planner_cancel')}</button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-8 animate-in fade-in duration-700">
+                <section>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="w-8 h-8 rounded-full bg-[#f4faf6] flex items-center justify-center text-sm shadow-sm">😊</span>
+                    <h4 className="text-[11px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_mood_question')}</h4>
+                  </div>
+                  <div className="flex flex-wrap justify-around bg-[#f4faf6] p-5 rounded-[24px] border border-[#d8eadb] gap-2">
+                    {moodLabels.map(m => (
+                      <button 
+                        key={m.v}
+                        onClick={() => handleMoodSelect(selectedDayIndex, m.v)}
+                        className={`flex flex-col items-center gap-2 group transition-all ${day.mood === m.v ? 'scale-125' : 'grayscale opacity-40 hover:opacity-70 hover:grayscale-0'}`}
+                      >
+                        <span className="text-3xl drop-shadow-sm">{m.e}</span>
+                        <span className={`text-[8px] font-black uppercase tracking-tighter transition-opacity ${day.mood === m.v ? 'opacity-100' : 'opacity-0'}`}>{m.l}</span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center px-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_notes_label')}</label>
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => {
+                            const newData = [...localData];
+                            newData[selectedDayIndex].reflections.notes.push('');
+                            setLocalData(newData);
+                          }}
+                          className="text-[9px] font-black uppercase text-[#6aaf7a] hover:underline"
+                        >
+                          + Añadir
+                        </button>
+                        <button 
+                          onClick={() => saveDay(selectedDayIndex, day)}
+                          className="text-[9px] font-black uppercase text-[#2d5a3d] hover:underline"
+                        >
+                          Grabar
+                        </button>
+                        <button 
+                          onClick={() => {
+                            if(confirm('¿Borrar propósitos?')) {
+                              const newData = [...localData];
+                              newData[selectedDayIndex].reflections.notes = ['', '', ''];
+                              setLocalData(newData);
+                              saveDay(selectedDayIndex, newData[selectedDayIndex]);
+                            }
+                          }}
+                          className="text-[9px] font-black uppercase text-rose-500 hover:underline"
+                        >
+                          Borrar
+                        </button>
+                      </div>
+                    </div>
+                    <div className="bg-white border border-[#d8eadb] rounded-2xl p-4 shadow-sm space-y-3">
+                       {day.reflections.notes.map((txt, i) => (
+                         <div key={i} className="flex gap-3 items-start group">
+                           <span className="text-[11px] font-black text-[#6aaf7a] mt-2">{i+1}.</span>
+                           <textarea 
+                             className="flex-1 bg-transparent border-none outline-none text-sm font-medium resize-none text-[#1a2e1e]" 
+                             rows={1}
+                             placeholder={t('planner_notes_placeholder')}
+                             value={txt} 
+                             onChange={(e) => handleReflectionChange(selectedDayIndex, 'notes', i, e.target.value)}
+                             onBlur={() => saveDay(selectedDayIndex, day)}
+                             onInput={(e) => {
+                               const el = e.target as HTMLTextAreaElement;
+                               el.style.height = 'auto';
+                               el.style.height = el.scrollHeight + 'px';
+                             }}
+                           />
+                         </div>
+                       ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center px-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_improve_label')}</label>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => {
+                              const newData = [...localData];
+                              newData[selectedDayIndex].reflections.improve.push('');
+                              setLocalData(newData);
+                            }}
+                            className="text-[9px] font-black uppercase text-[#6aaf7a] hover:underline"
+                          >
+                            + Añadir
+                          </button>
+                          <button 
+                            onClick={() => saveDay(selectedDayIndex, day)}
+                            className="text-[9px] font-black uppercase text-[#2d5a3d] hover:underline"
+                          >
+                            Grabar
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if(confirm('¿Borrar puntos de mejora?')) {
+                                const newData = [...localData];
+                                newData[selectedDayIndex].reflections.improve = ['', '', ''];
+                                setLocalData(newData);
+                                saveDay(selectedDayIndex, newData[selectedDayIndex]);
+                              }
+                            }}
+                            className="text-[9px] font-black uppercase text-rose-500 hover:underline"
+                          >
+                            Borrar
+                          </button>
+                        </div>
+                      </div>
+                      <div className="bg-[#fff9f9] border border-[#ead8d8] rounded-2xl p-4 shadow-sm space-y-2">
+                        {day.reflections.improve.map((txt, i) => (
+                           <input 
+                             key={i}
+                             className="w-full bg-transparent border-none outline-none text-sm font-medium text-[#7a1a1a] placeholder-[#c49b9b]" 
+                             placeholder={t('planner_improve_placeholder')}
+                             value={txt} 
+                             onChange={(e) => handleReflectionChange(selectedDayIndex, 'improve', i, e.target.value)}
+                             onBlur={() => saveDay(selectedDayIndex, day)}
+                           />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center px-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_thanks_label')}</label>
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => {
+                              const newData = [...localData];
+                              newData[selectedDayIndex].reflections.thanks.push('');
+                              setLocalData(newData);
+                            }}
+                            className="text-[9px] font-black uppercase text-[#6aaf7a] hover:underline"
+                          >
+                            + Añadir
+                          </button>
+                          <button 
+                            onClick={() => saveDay(selectedDayIndex, day)}
+                            className="text-[9px] font-black uppercase text-[#2d5a3d] hover:underline"
+                          >
+                            Grabar
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if(confirm('¿Borrar agradecimientos?')) {
+                                const newData = [...localData];
+                                newData[selectedDayIndex].reflections.thanks = ['', '', ''];
+                                setLocalData(newData);
+                                saveDay(selectedDayIndex, newData[selectedDayIndex]);
+                              }
+                            }}
+                            className="text-[9px] font-black uppercase text-rose-500 hover:underline"
+                          >
+                            Borrar
+                          </button>
+                        </div>
+                      </div>
+                      <div className="bg-[#f9fff9] border border-[#d8eadb] rounded-2xl p-4 shadow-sm space-y-2">
+                        {day.reflections.thanks.map((txt, i) => (
+                           <input 
+                             key={i}
+                             className="w-full bg-transparent border-none outline-none text-sm font-medium text-[#2d5a3d] placeholder-[#9bc4a5]" 
+                             placeholder={t('planner_thanks_placeholder')}
+                             value={txt} 
+                             onChange={(e) => handleReflectionChange(selectedDayIndex, 'thanks', i, e.target.value)}
+                             onBlur={() => saveDay(selectedDayIndex, day)}
+                           />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SIEMPRE VISIBLE: AGREGAR TAREA */}
+            <div className="mt-8 pt-8 border-t border-[#d8eadb] animate-in fade-in slide-in-from-bottom-4 duration-1000">
+              <h4 className="text-[11px] font-black uppercase tracking-widest text-[#7a9b82] mb-4 ml-2">{t('planner_add_task_global') || 'Rápido: Agregar Tarea'}</h4>
+              <div className="flex flex-col gap-3 p-3 sm:p-4 bg-[#f4faf6]/60 rounded-2xl border-2 border-dashed border-[#d8eadb] group focus-within:border-[#2d5a3d] transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 flex items-center justify-center text-[#6aaf7a] text-xl font-bold flex-shrink-0">
+                    {newTaskText.trim() ? getTaskIcon(newTaskText) : '+'}
+                  </div>
+                  <textarea 
+                    id={`new-task-${selectedDayIndex}-global`}
+                    rows={1}
+                    placeholder={t('planner_add_placeholder')} 
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addTask(selectedDayIndex, newTaskText);
+                        const el = e.target as HTMLTextAreaElement;
+                        el.style.height = 'auto';
+                      }
+                    }}
+                    onInput={(e) => {
+                      const el = e.target as HTMLTextAreaElement;
+                      el.style.height = 'auto';
+                      el.style.height = el.scrollHeight + 'px';
+                    }}
+                    className="flex-1 min-w-0 bg-transparent border-none outline-none text-sm sm:text-lg placeholder-[#8fc99e] text-[#2d5a3d] font-bold resize-none overflow-hidden"
+                  />
+                </div>
+                <div className="flex items-center gap-2 flex-wrap pl-8">
+                  {(['critical', 'important', 'growth'] as const).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setNewTaskPriority(p)}
+                      className={`flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all ${newTaskPriority === p ? 'scale-110 ring-2 ring-offset-1 bg-white shadow-sm opacity-100' : 'opacity-80 hover:opacity-100'} ${p === 'critical' ? 'ring-rose-500' : p === 'growth' ? 'ring-emerald-500' : 'ring-amber-500'}`}
+                    >
+                      <span className="text-sm">{p === 'critical' ? '🔴' : p === 'growth' ? '🟢' : '🟡'}</span>
+                      <span className={`text-[8px] font-black uppercase tracking-tight ${p === 'critical' ? 'text-rose-600' : p === 'growth' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                        {t(`planner_priority_${p}`)}
+                      </span>
+                    </button>
+                  ))}
+                  <input
+                    type="time"
+                    value={newTaskTime}
+                    onChange={(e) => setNewTaskTime(e.target.value)}
+                    className="w-[72px] bg-[#f4faf6] border border-[#d8eadb] focus:border-[#2d5a3d] rounded-lg text-[11px] font-mono font-black text-center outline-none py-1 text-[#2d5a3d]"
+                  />
+                  <button 
+                    onClick={() => addTask(selectedDayIndex, newTaskText)}
+                    className="px-4 sm:px-6 py-2 bg-[#2d5a3d] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md ml-auto"
+                  >
+                    {t('planner_add_btn')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* IMPACT DONUT - RIGHT SIDE */}
+          <div className={`w-full md:w-[320px] bg-gradient-to-br transition-all duration-500 flex flex-col items-center justify-center p-10 border-t md:border-t-0 md:border-l border-[#d8eadb] relative ${isFull ? 'from-emerald-50 to-emerald-100/50 shadow-[inset_0_0_50px_rgba(16,185,129,0.2)]' : 'from-[#f4faf6] to-[#ebf5ed]'}`}>
+              {/* LEAF DECORATIONS (The Harvest) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {Array.from({ length: dayStats[selectedDayIndex].done }).map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="absolute text-xl animate-bounce" 
+                    style={{ 
+                      top: `${Math.random() * 80 + 10}%`, 
+                      left: `${Math.random() * 80 + 10}%`, 
+                      opacity: 0.4,
+                      animationDelay: `${i * 0.2}s`,
+                      transform: `rotate(${Math.random() * 360}deg)`
+                    }}
+                  >
+                    🌿
+                  </div>
+                ))}
+              </div>
+
+              <div className={`relative w-full aspect-square max-w-[220px] transition-all duration-500 ${isFull ? 'drop-shadow-[0_0_25px_rgba(16,185,129,0.5)] scale-110' : ''}`}>
+                <Doughnut 
+                  data={{
+                    datasets: [{
+                      data: [dayStats[selectedDayIndex].done || 0, (dayStats[selectedDayIndex].total - dayStats[selectedDayIndex].done) || (dayStats[selectedDayIndex].total === 0 ? 1 : 0)],
+                      backgroundColor: [isFull ? COLORS.emerald : COLORS.g700, dayStats[selectedDayIndex].total === 0 ? '#f0f4f0' : COLORS.g200],
+                      borderWidth: 0,
+                    }]
+                  }}
+                  options={{ responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { tooltip: { enabled: false }, legend: { display: false } } }}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                  <span className={`font-fraunces text-6xl font-black transition-all ${isFull ? 'text-emerald-600 scale-110 drop-shadow-sm' : 'text-[#2d5a3d]'}`}>
+                    {pct}<span className="text-2xl font-bold">%</span>
+                  </span>
+                  <span className={`text-[10px] font-black uppercase tracking-widest mt-2 ${isFull ? 'text-emerald-500' : 'text-[#7a9b82]'}`}>
+                    {isFull ? t('planner_stack_completed') : t('planner_daily_impact')}
+                  </span>
+                </div>
+              </div>
+
+              <div className={`mt-12 space-y-4 w-full transition-all duration-700 ${isDeepWork ? 'blur-lg opacity-20' : ''}`}>
+                 <div className="bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-[#d8eadb] flex items-center justify-between shadow-sm">
+                   <div className="flex flex-col">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_achieved')}</span>
+                      <span className="font-fraunces text-2xl font-black text-[#2d5a3d]">{dayStats[selectedDayIndex].done}</span>
+                   </div>
+                   <div className="w-10 h-10 bg-[#f4faf6] rounded-xl flex items-center justify-center text-lg shadow-inner">🎯</div>
+                 </div>
+                 <div className="bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-[#d8eadb] flex items-center justify-between shadow-sm">
+                   <div className="flex flex-col">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_pending')}</span>
+                      <span className="font-fraunces text-2xl font-black text-[#7a9b82]">{dayStats[selectedDayIndex].total - dayStats[selectedDayIndex].done}</span>
+                   </div>
+                   <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-lg shadow-inner">⏳</div>
+                 </div>
+              </div>
+
+              {isProgress75 && (
+                <div className="mt-8 px-6 py-3 bg-amber-400 text-[#2d5a3d] rounded-2xl font-fraunces italic font-black text-sm shadow-lg animate-pulse border-2 border-white text-center">
+                  {t('planner_progress_75')}
+                </div>
+              )}
+
+              {isFull && (
+                <div className="relative mt-8 group">
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 pointer-events-none flex gap-2">
+                     {[1,2,3,4,5].map(i => (
+                       <div key={i} className={`w-2 h-2 rounded-full animate-[confettiRise_1.5s_ease-out_infinite]`} style={{ animationDelay: `${i*0.2}s`, backgroundColor: ['#10b981','#fbbf24','#3b82f6','#f87171','#a78bfa'][i-1] }} />
+                     ))}
+                  </div>
+                  <div className="px-6 py-3 bg-[#2d5a3d] text-white rounded-2xl font-fraunces italic font-black text-sm shadow-xl flex flex-col items-center gap-1 border-4 border-emerald-400/30 text-center animate-bounce">
+                    <span className="text-xl">🏆</span>
+                    <span>{t('planner_unstoppable')}</span>
+                    <span className="text-[10px] opacity-80 uppercase tracking-widest">{t('planner_excellent')}</span>
+                  </div>
+                </div>
+              )}
+          </div>
+        </div>
+
+        <div className={`mt-12 text-center max-w-[600px] transition-all duration-700 ${isDeepWork ? 'opacity-0 scale-90' : 'opacity-100'}`}>
+           <p className="font-fraunces text-2xl italic text-[#2d5a3d] leading-relaxed opacity-80 animate-in slide-in-from-bottom-4 duration-1000">
+             {currentQuote}
+           </p>
+        </div>
+      </main>
+
+      {/* MONTH FULL VIEW MODAL */}
+      {showMonthModal && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-2 sm:p-10 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setShowMonthModal(false)}>
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl h-[90vh] sm:h-auto sm:max-h-full overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="bg-[#2d5a3d] px-6 py-5 flex items-center justify-between shrink-0">
+               <h2 className="text-white font-fraunces text-2xl font-black">{t('planner_monthly_view') || 'Vista Mensual'}</h2>
+               <button onClick={() => setShowMonthModal(false)} className="text-white hover:text-rose-300 text-xl font-bold p-2">✖</button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-4 sm:gap-6 p-4 border-b border-[#d8eadb] bg-[#f4faf6] shrink-0">
+              <button onClick={() => {
+                if (monthModalMonth === 0) { setMonthModalMonth(11); setMonthModalYear(y => y-1); }
+                else setMonthModalMonth(m => m-1);
+              }} className="text-2xl font-bold text-[#2d5a3d] hover:scale-110 px-2">‹</button>
+              <span className="font-fraunces text-xl sm:text-2xl font-black text-[#2d5a3d] w-48 text-center capitalize">
+                {months[monthModalMonth]} {monthModalYear}
+              </span>
+              <button onClick={() => {
+                if (monthModalMonth === 11) { setMonthModalMonth(0); setMonthModalYear(y => y+1); }
+                else setMonthModalMonth(m => m+1);
+              }} className="text-2xl font-bold text-[#2d5a3d] hover:scale-110 px-2">›</button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f9fbf9]">
+              {loadingMonth ? (
+                 <div className="flex justify-center items-center h-full text-[#2d5a3d] font-bold">Cargando...</div>
+              ) : (
+                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 pb-10">
+                    {(() => {
+                       const daysInMonth = new Date(monthModalYear, monthModalMonth + 1, 0).getDate();
+                       return Array.from({length: daysInMonth}, (_, i) => {
+                         const d = i + 1;
+                         const dateObj = new Date(monthModalYear, monthModalMonth, d);
+                         const targetSunday = new Date(dateObj);
+                         targetSunday.setDate(dateObj.getDate() - dateObj.getDay());
+                         const weekStartStr = toISODate(targetSunday.getFullYear(), targetSunday.getMonth(), targetSunday.getDate());
+                         const dayIndex = dateObj.getDay();
+
+                         const row = monthData.find(r => r.week_start_date === weekStartStr && r.day_index === dayIndex);
+                         const tasks = row?.tasks || [];
+                         const completed = tasks.filter((t:any) => t.done).length;
+
+                         return (
+                           <div key={d} className="bg-white border border-[#d8eadb] rounded-2xl p-3 shadow-sm flex flex-col hover:border-[#6aaf7a] transition-all min-h-[120px]">
+                             <div className="flex justify-between items-center mb-2">
+                               <span className="text-[10px] font-black uppercase text-[#7a9b82]">{ABBR[dayIndex]}</span>
+                               <span className={`text-lg font-fraunces font-black ${dateObj.toDateString() === new Date().toDateString() ? 'text-emerald-500' : 'text-[#2d5a3d]'}`}>{d}</span>
+                             </div>
+                             
+                             <div className="flex-1 flex flex-col gap-1.5 overflow-y-auto max-h-[140px] custom-scrollbar pr-1">
+                               {tasks.length === 0 ? (
+                                 <span className="text-[9px] text-[#c8e6c9] italic text-center mt-2">- Sin tareas -</span>
+                               ) : (
+                                 tasks.map((task: any, tIdx: number) => {
+                                   const p = task.priority || 'important';
+                                   const pColor = p === 'critical' ? 'text-rose-500' : p === 'growth' ? 'text-emerald-500' : 'text-amber-500';
+                                   return (
+                                     <div key={tIdx} className="flex gap-1.5 items-start bg-[#f4faf6] p-1.5 rounded-lg border border-[#d8eadb]">
+                                       <span className={`text-[8px] mt-0.5 font-bold ${pColor}`}>●</span>
+                                       <span className={`text-[9px] leading-tight flex-1 ${task.done ? 'line-through text-[#7a9b82]' : 'text-[#1a2e1e] font-bold'}`}>{task.text}</span>
+                                     </div>
+                                   )
+                                 })
+                               )}
+                             </div>
+
+                             {tasks.length > 0 && (
+                               <div className="mt-3 pt-2 border-t border-[#f4faf6] flex justify-between items-center shrink-0">
+                                 <span className="text-[8px] font-black uppercase text-[#8fc99e]">{completed}/{tasks.length}</span>
+                                 <div className="flex-1 h-1.5 bg-[#ebf5ed] mx-2 rounded-full overflow-hidden">
+                                    <div className={`h-full ${completed === tasks.length ? 'bg-emerald-400' : 'bg-[#6aaf7a]'}`} style={{ width: `${(completed/tasks.length)*100}%` }} />
+                                 </div>
+                               </div>
+                             )}
+                           </div>
+                         )
+                       });
+                    })()}
+                 </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* MODAL DE MÓDULO BLOQUEADO */}
+      {showLockedModal && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="bg-white border border-app-border p-8 sm:p-12 rounded-[40px] w-full max-w-md shadow-2xl text-center animate-in zoom-in-95 duration-300">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl">🔒</span>
+            </div>
+            <h2 className="text-2xl font-black text-app-text mb-4 uppercase tracking-tight">Módulo Bloqueado</h2>
+            <p className="text-app-text2 text-sm leading-relaxed mb-8">
+              Este módulo (**Tareas**) no está incluido en tu plan actual (**Plan HÁBITOS**). 
+              Pásate al **Plan Dúo** para activarlo y desbloquear todo el potencial del MÉTODO STACK.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={() => {
+                  const msg = `Hola Orlando, quiero mi Plan Dúo. Mi correo es: ${userEmail}`;
+                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                }}
+                className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase text-xs hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+              >
+                <span>🚀 Quiero mi Plan Dúo (Upgrade)</span>
+              </button>
+              <Link 
+                href="/tracker"
+                className="w-full py-4 bg-app-surface text-app-text3 rounded-2xl font-black uppercase text-xs hover:bg-app-surface2 transition-all text-center"
+              >
+                Ir a mis Hábitos
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

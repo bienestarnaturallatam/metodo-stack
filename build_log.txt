@@ -1,0 +1,32 @@
+﻿   Ôû▓ Next.js 15.2.4
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/9) ...
+   Generating static pages (2/9) 
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
+ Ô£ô Generating static pages (9/9)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+Ôöî ãÆ /                                      141 B         101 kB
+Ôö£ Ôùï /_not-found                            977 B         102 kB
+Ôö£ ãÆ /api/test-push                         141 B         101 kB
+Ôö£ ãÆ /auth/callback                         141 B         101 kB
+Ôö£ Ôùï /login                               1.71 kB         163 kB
+Ôö£ ãÆ /planner                               182 B         245 kB
+Ôöö ãÆ /tracker                             13.3 kB         258 kB
++ First Load JS shared by all             101 kB
+  Ôö£ chunks/4bd1b696-8fa402a543ee9ce8.js  53.2 kB
+  Ôö£ chunks/684-bd463257583219ae.js       45.3 kB
+  Ôöö other shared chunks (total)          1.98 kB
+
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+
