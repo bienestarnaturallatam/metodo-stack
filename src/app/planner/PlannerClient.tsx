@@ -499,7 +499,11 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
   ];
 
   if (loading) {
-    return <div className="min-h-screen bg-[#f7f9f7] flex items-center justify-center font-fraunces text-[#2d5a3d]">{t('planner_loading')}</div>;
+    return (
+      <div className="min-h-screen bg-[#f7f9f7] flex items-center justify-center font-fraunces text-[#2d5a3d]">
+        {t('planner_loading')}
+      </div>
+    );
   }
 
   return (
