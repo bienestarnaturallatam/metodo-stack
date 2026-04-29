@@ -503,7 +503,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
   }
 
   return (
-    <div className={`min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans transition-all duration-1000 ${asEmbedded ? 'pt-2' : ''} ${isDeepWork ? 'bg-black' : ''}`}>      {/* TOPBAR */}
+    <div className={`min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans transition-all duration-1000 ${asEmbedded ? 'pt-2' : ''} ${isDeepWork ? 'bg-black' : ''}`}>
       {!asEmbedded && (
         <nav className={`bg-[#2d5a3d] h-[54px] flex items-center px-4 sm:px-7 sticky top-0 z-[200] shadow-lg transition-all duration-700 ${isDeepWork ? 'opacity-0 -translate-y-full pointer-events-none' : 'opacity-100'}`}>
           <div className="flex items-center gap-3 mr-8">
