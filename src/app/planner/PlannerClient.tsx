@@ -503,8 +503,9 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
         {t('planner_loading')}
       </div>
     );
+  }
 
-    return (
+  return (
       <div className={`min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans transition-all duration-1000 ${asEmbedded ? 'pt-2' : ''} ${isDeepWork ? 'bg-black' : ''}`}>
         {/* TOPBAR */}
         {!asEmbedded && (
@@ -697,278 +698,285 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                         .map((task, origIdx) => ({ ...task, origIdx }))
                         .sort((a, b) => {
                           if (a.done !== b.done) return a.done ? 1 : -1;
-                          return (PRIORITY_ORDER[a.priority || 'important'] || 1) - (PRIORITY_ORDER[b.priority || 'important'] || 1);
+                          return (PRIORITY_ORDER[a.priority || 'important'] as number || 1) - (PRIORITY_ORDER[b.priority || 'important'] as number || 1);
                         });
-                      return sortedTasks.map((task) => {
-                        const tIdx = task.origIdx;
-                        const p = task.priority || 'important';
-                        const isUrgent = p === 'critical' && !task.done && task.created_at && (Date.now() - new Date(task.created_at).getTime() > 3 * 60 * 60 * 1000);
-                        const borderColor = task.done ? 'border-[#d8eadb]' : p === 'critical' ? 'border-rose-400' : p === 'growth' ? 'border-emerald-400' : 'border-amber-400';
-                        return (
-                          <div key={tIdx} className="relative group">
-                            <div className={`flex flex-col gap-1 p-2 sm:p-4 rounded-2xl transition-all border-2 ${task.done ? 'bg-[#f4faf6] opacity-60' : 'bg-white shadow-sm'} ${borderColor} ${isUrgent ? 'animate-[urgentGlow_2s_ease-in-out_infinite]' : ''}`}
-                              style={isUrgent ? { boxShadow: '0 0 12px rgba(239,68,68,0.3)' } : undefined}
-                            >
-                              {/* ROW 1: Priority + Checkbox + Text */}
-                              <div className="flex items-center gap-2 sm:gap-3">
-                                <div className={`w-2 sm:w-2.5 h-6 sm:h-8 rounded-full flex-shrink-0 ${p === 'critical' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]' : p === 'growth' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]'}`} />
-                                <input
-                                  type="checkbox"
-                                  checked={task.done}
-                                  onChange={() => handleTaskToggle(selectedDayIndex, tIdx)}
-                                  className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-[#8fc99e] rounded-md text-[#2d5a3d] focus:ring-[#2d5a3d] cursor-pointer flex-shrink-0"
-                                />
-                                <span className="text-base sm:text-xl flex-shrink-0" title="Auto-icono">
-                                  {getTaskIcon(task.text)}
-                                </span>
-                                <textarea
-                                  rows={1}
-                                  value={task.text}
-                                  onChange={(e) => handleTaskTextChange(selectedDayIndex, tIdx, e.target.value)}
-                                  onBlur={() => saveDay(selectedDayIndex, day)}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                      e.preventDefault();
-                                      (e.target as HTMLElement).blur();
-                                    }
-                                  }}
-                                  onInput={(e) => {
-                                    const el = e.target as HTMLTextAreaElement;
-                                    el.style.height = 'auto';
-                                    el.style.height = el.scrollHeight + 'px';
-                                  }}
-                                  className={`flex-1 min-w-0 text-xs sm:text-base bg-transparent border-none outline-none font-medium transition-all resize-none overflow-hidden ${task.done ? 'line-through text-[#7a9b82] italic' : 'text-[#1a2e1e]'}`}
-                                />
-                              </div>
+                      return (
+                        <>
+                          {sortedTasks.map((task) => {
+                            const tIdx = task.origIdx;
+                            const p = task.priority || 'important';
+                            const isUrgent = p === 'critical' && !task.done && task.created_at && (Date.now() - new Date(task.created_at).getTime() > 3 * 60 * 60 * 1000);
+                            const borderColor = task.done ? 'border-[#d8eadb]' : p === 'critical' ? 'border-rose-400' : p === 'growth' ? 'border-emerald-400' : 'border-amber-400';
+                            return (
+                              <div key={tIdx} className="relative group">
+                                <div className={`flex flex-col gap-1 p-2 sm:p-4 rounded-2xl transition-all border-2 ${task.done ? 'bg-[#f4faf6] opacity-60' : 'bg-white shadow-sm'} ${borderColor} ${isUrgent ? 'animate-[urgentGlow_2s_ease-in-out_infinite]' : ''}`}
+                                  style={isUrgent ? { boxShadow: '0 0 12px rgba(239,68,68,0.3)' } : undefined}
+                                >
+                                  {/* ROW 1: Priority + Checkbox + Text */}
+                                  <div className="flex items-center gap-2 sm:gap-3">
+                                    <div className={`w-2 sm:w-2.5 h-6 sm:h-8 rounded-full flex-shrink-0 ${p === 'critical' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]' : p === 'growth' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]'}`} />
+                                    <input
+                                      type="checkbox"
+                                      checked={task.done}
+                                      onChange={() => handleTaskToggle(selectedDayIndex, tIdx)}
+                                      className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-[#8fc99e] rounded-md text-[#2d5a3d] focus:ring-[#2d5a3d] cursor-pointer flex-shrink-0"
+                                    />
+                                    <span className="text-base sm:text-xl flex-shrink-0" title="Auto-icono">
+                                      {getTaskIcon(task.text)}
+                                    </span>
+                                    <textarea
+                                      rows={1}
+                                      value={task.text}
+                                      onChange={(e) => handleTaskTextChange(selectedDayIndex, tIdx, e.target.value)}
+                                      onBlur={() => saveDay(selectedDayIndex, day)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                          e.preventDefault();
+                                          (e.target as HTMLElement).blur();
+                                        }
+                                      }}
+                                      onInput={(e) => {
+                                        const el = e.target as HTMLTextAreaElement;
+                                        el.style.height = 'auto';
+                                        el.style.height = el.scrollHeight + 'px';
+                                      }}
+                                      className={`flex-1 min-w-0 text-xs sm:text-base bg-transparent border-none outline-none font-medium transition-all resize-none overflow-hidden ${task.done ? 'line-through text-[#7a9b82] italic' : 'text-[#1a2e1e]'}`}
+                                    />
+                                  </div>
 
-                              {/* ROW 2: Time + Actions */}
-                              <div className="flex items-center gap-2 pl-6 sm:pl-8">
-                                {/* TIME BADGE */}
-                                {(() => {
-                                  const tt = to12h(task.scheduled_time || '');
-                                  return (
-                                    <div className="flex items-center gap-1.5 flex-shrink-0">
-                                      <input
-                                        type="time"
-                                        value={task.scheduled_time || ''}
-                                        onChange={(e) => handleTaskTimeChange(selectedDayIndex, tIdx, e.target.value)}
-                                        onBlur={() => saveDay(selectedDayIndex, day)}
-                                        className={`w-[68px] bg-[#f4faf6] border border-[#d8eadb] hover:border-[#6aaf7a] focus:border-[#2d5a3d] rounded-lg text-[10px] font-mono font-black text-center outline-none transition-all py-0.5 cursor-pointer ${task.scheduled_time ? 'text-[#2d5a3d]' : 'text-[#c8e6c9]'}`}
-                                      />
-                                      {task.scheduled_time && (
-                                        <span className={`text-[7px] sm:text-[8px] font-black rounded px-1 py-0.5 ${tt.ampm === 'PM' ? 'bg-indigo-100 text-indigo-600' : 'bg-amber-100 text-amber-600'}`}>
-                                          {tt.h}:{tt.m} {tt.ampm}
-                                        </span>
-                                      )}
-                                    </div>
-                                  );
-                                })()}
-                                {/* BELL */}
-                                {task.scheduled_time && (
-                                  <button
-                                    onClick={() => {
-                                      setRingingTasks(prev => {
-                                        const next = new Set(prev);
-                                        const key = `${selectedDayIndex}-${tIdx}`;
-                                        if (next.has(key)) next.delete(key); else playBellSound();
-                                        return next;
-                                      });
-                                    }}
-                                    className={`text-sm transition-all ${ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? 'animate-[bellShake_0.5s_ease-in-out_infinite] text-amber-500' : 'text-[#c8e6c9] hover:text-amber-400'}`}
-                                    title="Alarma"
-                                  >
-                                    {ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? '🔔' : '🔕'}
-                                  </button>
-                                )}
-
-                                {/* TASK ACTIONS */}
-                                <div className="flex items-center gap-0.5 ml-auto">
-                                  <button
-                                    onClick={() => {
-                                      setMovingTaskIdx(movingTaskIdx === tIdx ? null : tIdx);
-                                      setCalendarMonth(new Date().getMonth());
-                                      setCalendarYear(new Date().getFullYear());
-                                    }}
-                                    title={t('planner_move_title')}
-                                    className={`flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-lg transition-all ${movingTaskIdx === tIdx ? 'bg-[#2d5a3d] text-white shadow-md' : 'text-[#7a9b82] hover:bg-[#f4faf6] hover:text-[#2d5a3d]'}`}
-                                  >
-                                    <span className="text-sm">📅</span>
-                                    <span className="text-[7px] font-black uppercase">{t('planner_move_date')}</span>
-                                  </button>
-                                  <button
-                                    onClick={() => deleteTask(selectedDayIndex, tIdx)}
-                                    title={t('planner_delete_title')}
-                                    className="p-1 sm:p-2 text-[#e74b6c] hover:bg-[#fff0f3] rounded-lg transition-all text-sm"
-                                  >
-                                    🗑️
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* FULL CALENDAR MODAL */}
-                            {movingTaskIdx === tIdx && (() => {
-                              const CAL_HEADERS: string[] = t('planner_cal_headers') || ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
-                              const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
-                              const daysInCal = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-                              const todayNow = new Date();
-                              const calCells: (number | null)[] = [
-                                ...Array(firstDay).fill(null),
-                                ...Array.from({ length: daysInCal }, (_, i) => i + 1),
-                              ];
-                              while (calCells.length % 7 !== 0) calCells.push(null);
-
-                              return (
-                                <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
-                                  onClick={() => setMovingTaskIdx(null)}>
-                                  <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
-                                    onClick={e => e.stopPropagation()}>
-
-                                    {/* Calendar Header */}
-                                    <div className="bg-[#2d5a3d] px-6 py-5">
-                                      <p className="text-[9px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">{t('planner_move_to_day')}</p>
-                                      <p className="text-white font-fraunces text-sm font-bold italic truncate opacity-80">&ldquo;{task.text}&rdquo;</p>
-                                    </div>
-
-                                    {/* Month Navigator */}
-                                    <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                                  {/* ROW 2: Time + Actions */}
+                                  <div className="flex items-center gap-2 pl-6 sm:pl-8">
+                                    {/* TIME BADGE */}
+                                    {(() => {
+                                      const tt = to12h(task.scheduled_time || '');
+                                      return (
+                                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                                          <input
+                                            type="time"
+                                            value={task.scheduled_time || ''}
+                                            onChange={(e) => handleTaskTimeChange(selectedDayIndex, tIdx, e.target.value)}
+                                            onBlur={() => saveDay(selectedDayIndex, day)}
+                                            className={`w-[68px] bg-[#f4faf6] border border-[#d8eadb] hover:border-[#6aaf7a] focus:border-[#2d5a3d] rounded-lg text-[10px] font-mono font-black text-center outline-none transition-all py-0.5 cursor-pointer ${task.scheduled_time ? 'text-[#2d5a3d]' : 'text-[#c8e6c9]'}`}
+                                          />
+                                          {task.scheduled_time && (
+                                            <span className={`text-[7px] sm:text-[8px] font-black rounded px-1 py-0.5 ${tt.ampm === 'PM' ? 'bg-indigo-100 text-indigo-600' : 'bg-amber-100 text-amber-600'}`}>
+                                              {tt.h}:{tt.m} {tt.ampm}
+                                            </span>
+                                          )}
+                                        </div>
+                                      );
+                                    })()}
+                                    {/* BELL */}
+                                    {task.scheduled_time && (
                                       <button
                                         onClick={() => {
-                                          if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); }
-                                          else setCalendarMonth(m => m - 1);
+                                          setRingingTasks(prev => {
+                                            const next = new Set(prev);
+                                            const key = `${selectedDayIndex}-${tIdx}`;
+                                            if (next.has(key)) next.delete(key); else playBellSound();
+                                            return next;
+                                          });
                                         }}
-                                        className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black hover:bg-[#2d5a3d] hover:text-white transition-all"
-                                      >‹</button>
-                                      <span className="font-fraunces font-black text-[#2d5a3d] text-lg capitalize">
-                                        {months[calendarMonth]} {calendarYear}
-                                      </span>
-                                      <button
-                                        onClick={() => {
-                                          if (calendarMonth === 11) { setCalendarMonth(0); setCalendarYear(y => y + 1); }
-                                          else setCalendarMonth(m => m + 1);
-                                        }}
-                                        className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black hover:bg-[#2d5a3d] hover:text-white transition-all"
-                                      >›</button>
-                                    </div>
-
-                                    {/* Day Headers */}
-                                    <div className="grid grid-cols-7 px-4 pb-2">
-                                      {CAL_HEADERS.map((h, i) => (
-                                        <div key={i} className="text-center text-[9px] font-black uppercase text-[#7a9b82] py-1">{h}</div>
-                                      ))}
-                                    </div>
-
-                                    {/* Calendar Grid */}
-                                    <div className="grid grid-cols-7 px-4 pb-5 gap-y-1">
-                                      {calCells.map((d, i) => {
-                                        if (!d) return <div key={i} />;
-                                        const cellDate = new Date(calendarYear, calendarMonth, d);
-                                        const isToday2 = cellDate.toDateString() === todayNow.toDateString();
-                                        const isPast = cellDate < new Date(todayNow.getFullYear(), todayNow.getMonth(), todayNow.getDate());
-                                        return (
-                                          <button
-                                            key={i}
-                                            disabled={isPast}
-                                            onClick={async () => {
-                                              if (movingTaskIdx === -1) {
-                                                // Move the whole list
-                                                const tasksToMove = localData[selectedDayIndex].tasks;
-                                                for (let i = tasksToMove.length - 1; i >= 0; i--) {
-                                                  await moveTaskToDate(selectedDayIndex, i, cellDate);
-                                                }
-                                              } else if (movingTaskIdx !== null) {
-                                                await moveTaskToDate(selectedDayIndex, movingTaskIdx, cellDate);
-                                              }
-                                              setMovingTaskIdx(null);
-                                            }}
-                                            className={`aspect-square rounded-xl text-sm font-bold transition-all flex items-center justify-center
-                                        ${isPast ? 'text-[#c8e6c9] cursor-not-allowed' :
-                                                isToday2 ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 font-black' :
-                                                  'text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white hover:scale-110'}`}
-                                          >
-                                            {d}
-                                          </button>
-                                        );
-                                      })}
-                                    </div>
-
-                                    {/* Footer */}
-                                    <div className="border-t border-[#d8eadb] px-5 py-3 flex justify-end">
-                                      <button
-                                        onClick={() => setMovingTaskIdx(null)}
-                                        className="text-[10px] font-black uppercase text-[#7a9b82] hover:text-[#2d5a3d] transition-colors px-4 py-2 rounded-lg hover:bg-[#f4faf6]"
+                                        className={`text-sm transition-all ${ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? 'animate-[bellShake_0.5s_ease-in-out_infinite] text-amber-500' : 'text-[#c8e6c9] hover:text-amber-400'}`}
+                                        title="Alarma"
                                       >
-                                        {t('planner_cancel')}
+                                        {ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? '🔔' : '🔕'}
+                                      </button>
+                                    )}
+
+                                    {/* TASK ACTIONS */}
+                                    <div className="flex items-center gap-0.5 ml-auto">
+                                      <button
+                                        onClick={() => {
+                                          setMovingTaskIdx(movingTaskIdx === tIdx ? null : tIdx);
+                                          setCalendarMonth(new Date().getMonth());
+                                          setCalendarYear(new Date().getFullYear());
+                                        }}
+                                        title={t('planner_move_title')}
+                                        className={`flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-lg transition-all ${movingTaskIdx === tIdx ? 'bg-[#2d5a3d] text-white shadow-md' : 'text-[#7a9b82] hover:bg-[#f4faf6] hover:text-[#2d5a3d]'}`}
+                                      >
+                                        <span className="text-sm">📅</span>
+                                        <span className="text-[7px] font-black uppercase">{t('planner_move_date')}</span>
+                                      </button>
+                                      <button
+                                        onClick={() => deleteTask(selectedDayIndex, tIdx)}
+                                        title={t('planner_delete_title')}
+                                        className="p-1 sm:p-2 text-[#e74b6c] hover:bg-[#fff0f3] rounded-lg transition-all text-sm"
+                                      >
+                                        🗑️
                                       </button>
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            });
-                    })()}
 
-                            {/* GLOBAL MOVE MODAL (when moving whole list) */}
-                            {movingTaskIdx === -1 && (() => {
-                              const CAL_HEADERS: string[] = t('planner_cal_headers') || ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
-                              const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
-                              const daysInCal = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-                              const todayNow = new Date();
-                              const calCells: (number | null)[] = [
-                                ...Array(firstDay).fill(null),
-                                ...Array.from({ length: daysInCal }, (_, i) => i + 1),
-                              ];
-                              while (calCells.length % 7 !== 0) calCells.push(null);
+                                {/* FULL CALENDAR MODAL */}
+                                {movingTaskIdx === tIdx && (() => {
+                                  const CAL_HEADERS: string[] = t('planner_cal_headers') || ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+                                  const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+                                  const daysInCal = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+                                  const todayNow = new Date();
+                                  const calCells: (number | null)[] = [
+                                    ...Array(firstDay).fill(null),
+                                    ...Array.from({ length: daysInCal }, (_, i) => i + 1),
+                                  ];
+                                  while (calCells.length % 7 !== 0) calCells.push(null);
 
-                              return (
-                                <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
-                                  onClick={() => setMovingTaskIdx(null)}>
-                                  <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
-                                    onClick={e => e.stopPropagation()}>
-                                    <div className="bg-[#2d5a3d] px-6 py-5 text-center">
-                                      <p className="text-[10px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">Mover toda la lista</p>
-                                      <p className="text-white font-fraunces text-base font-bold italic opacity-80">Selecciona el día de destino</p>
-                                    </div>
-                                    <div className="flex items-center justify-between px-5 pt-5 pb-3">
-                                      <button onClick={() => { if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); } else setCalendarMonth(m => m - 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">‹</button>
-                                      <span className="font-fraunces font-black text-[#2d5a3d] text-lg capitalize">{months[calendarMonth]} {calendarYear}</span>
-                                      <button onClick={() => { if (calendarMonth === 11) { setCalendarMonth(0); setCalendarYear(y => y + 1); } else setCalendarMonth(m => m + 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">›</button>
-                                    </div>
-                                    <div className="grid grid-cols-7 px-4 pb-2">
-                                      {CAL_HEADERS.map((h, i) => (<div key={i} className="text-center text-[9px] font-black uppercase text-[#7a9b82] py-1">{h}</div>))}
-                                    </div>
-                                    <div className="grid grid-cols-7 px-4 pb-5 gap-y-1">
-                                      {calCells.map((d, i) => {
-                                        if (!d) return <div key={i} />;
-                                        const cellDate = new Date(calendarYear, calendarMonth, d);
-                                        const isToday2 = cellDate.toDateString() === todayNow.toDateString();
-                                        const isPast = cellDate < new Date(todayNow.getFullYear(), todayNow.getMonth(), todayNow.getDate());
-                                        return (
+                                  return (
+                                    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+                                      onClick={() => setMovingTaskIdx(null)}>
+                                      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
+                                        onClick={e => e.stopPropagation()}>
+
+                                        {/* Calendar Header */}
+                                        <div className="bg-[#2d5a3d] px-6 py-5">
+                                          <p className="text-[9px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">{t('planner_move_to_day')}</p>
+                                          <p className="text-white font-fraunces text-sm font-bold italic truncate opacity-80">&ldquo;{task.text}&rdquo;</p>
+                                        </div>
+
+                                        {/* Month Navigator */}
+                                        <div className="flex items-center justify-between px-5 pt-5 pb-3">
                                           <button
-                                            key={i}
-                                            disabled={isPast}
-                                            onClick={async () => {
-                                              const tasksToMove = localData[selectedDayIndex].tasks;
-                                              for (let j = tasksToMove.length - 1; j >= 0; j--) {
-                                                await moveTaskToDate(selectedDayIndex, j, cellDate);
-                                              }
-                                              setMovingTaskIdx(null);
+                                            onClick={() => {
+                                              if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); }
+                                              else setCalendarMonth(m => m - 1);
                                             }}
-                                            className={`aspect-square rounded-xl text-sm font-bold transition-all flex items-center justify-center ${isPast ? 'text-[#c8e6c9] cursor-not-allowed' : isToday2 ? 'bg-emerald-500 text-white shadow-lg' : 'text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white hover:scale-110'}`}
+                                            className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black hover:bg-[#2d5a3d] hover:text-white transition-all"
+                                          >‹</button>
+                                          <span className="font-fraunces font-black text-[#2d5a3d] text-lg capitalize">
+                                            {months[calendarMonth]} {calendarYear}
+                                          </span>
+                                          <button
+                                            onClick={() => {
+                                              if (calendarMonth === 11) { setCalendarMonth(0); setCalendarYear(y => y + 1); }
+                                              else setCalendarMonth(m => m + 1);
+                                            }}
+                                            className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black hover:bg-[#2d5a3d] hover:text-white transition-all"
+                                          >›</button>
+                                        </div>
+
+                                        {/* Day Headers */}
+                                        <div className="grid grid-cols-7 px-4 pb-2">
+                                          {CAL_HEADERS.map((h, i) => (
+                                            <div key={i} className="text-center text-[9px] font-black uppercase text-[#7a9b82] py-1">{h}</div>
+                                          ))}
+                                        </div>
+
+                                        {/* Calendar Grid */}
+                                        <div className="grid grid-cols-7 px-4 pb-5 gap-y-1">
+                                          {calCells.map((d, i) => {
+                                            if (!d) return <div key={i} />;
+                                            const cellDate = new Date(calendarYear, calendarMonth, d);
+                                            const isToday2 = cellDate.toDateString() === todayNow.toDateString();
+                                            const isPast = cellDate < new Date(todayNow.getFullYear(), todayNow.getMonth(), todayNow.getDate());
+                                            return (
+                                              <button
+                                                key={i}
+                                                disabled={isPast}
+                                                onClick={async () => {
+                                                  if (movingTaskIdx === -1) {
+                                                    // Move the whole list
+                                                    const tasksToMove = localData[selectedDayIndex].tasks;
+                                                    for (let i = tasksToMove.length - 1; i >= 0; i--) {
+                                                      await moveTaskToDate(selectedDayIndex, i, cellDate);
+                                                    }
+                                                  } else if (movingTaskIdx !== null) {
+                                                    await moveTaskToDate(selectedDayIndex, movingTaskIdx, cellDate);
+                                                  }
+                                                  setMovingTaskIdx(null);
+                                                }}
+                                                className={`aspect-square rounded-xl text-sm font-bold transition-all flex items-center justify-center
+                                            ${isPast ? 'text-[#c8e6c9] cursor-not-allowed' :
+                                                    isToday2 ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 font-black' :
+                                                      'text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white hover:scale-110'}`}
+                                              >
+                                                {d}
+                                              </button>
+                                            );
+                                          })}
+                                        </div>
+
+                                        {/* Footer */}
+                                        <div className="border-t border-[#d8eadb] px-5 py-3 flex justify-end">
+                                          <button
+                                            onClick={() => setMovingTaskIdx(null)}
+                                            className="text-[10px] font-black uppercase text-[#7a9b82] hover:text-[#2d5a3d] transition-colors px-4 py-2 rounded-lg hover:bg-[#f4faf6]"
                                           >
-                                            {d}
+                                            {t('planner_cancel')}
                                           </button>
-                                        );
-                                      })}
+                                        </div>
+                                      </div>
                                     </div>
-                                    <div className="border-t border-[#d8eadb] px-5 py-3 flex justify-end">
-                                      <button onClick={() => setMovingTaskIdx(null)} className="text-[10px] font-black uppercase text-[#7a9b82] hover:text-[#2d5a3d] transition-colors px-4 py-2 rounded-lg">{t('planner_cancel')}</button>
-                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            );
+                          })}
+
+                          {/* GLOBAL MOVE MODAL (when moving whole list) */}
+                          {movingTaskIdx === -1 && (() => {
+                            const CAL_HEADERS: string[] = t('planner_cal_headers') || ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+                            const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+                            const daysInCal = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+                            const todayNow = new Date();
+                            const calCells: (number | null)[] = [
+                              ...Array(firstDay).fill(null),
+                              ...Array.from({ length: daysInCal }, (_, i) => i + 1),
+                            ];
+                            while (calCells.length % 7 !== 0) calCells.push(null);
+
+                            return (
+                              <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+                                onClick={() => setMovingTaskIdx(null)}>
+                                <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
+                                  onClick={e => e.stopPropagation()}>
+                                  <div className="bg-[#2d5a3d] px-6 py-5 text-center">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">Mover toda la lista</p>
+                                    <p className="text-white font-fraunces text-base font-bold italic opacity-80">Selecciona el día de destino</p>
+                                  </div>
+                                  <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                                    <button onClick={() => { if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); } else setCalendarMonth(m => m - 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">‹</button>
+                                    <span className="font-fraunces font-black text-[#2d5a3d] text-lg capitalize">{months[calendarMonth]} {calendarYear}</span>
+                                    <button onClick={() => { if (calendarMonth === 11) { setCalendarMonth(0); setCalendarYear(y => y + 1); } else setCalendarMonth(m => m + 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">›</button>
+                                  </div>
+                                  <div className="grid grid-cols-7 px-4 pb-2">
+                                    {CAL_HEADERS.map((h, i) => (<div key={i} className="text-center text-[9px] font-black uppercase text-[#7a9b82] py-1">{h}</div>))}
+                                  </div>
+                                  <div className="grid grid-cols-7 px-4 pb-5 gap-y-1">
+                                    {calCells.map((d, i) => {
+                                      if (!d) return <div key={i} />;
+                                      const cellDate = new Date(calendarYear, calendarMonth, d);
+                                      const isToday2 = cellDate.toDateString() === todayNow.toDateString();
+                                      const isPast = cellDate < new Date(todayNow.getFullYear(), todayNow.getMonth(), todayNow.getDate());
+                                      return (
+                                        <button
+                                          key={i}
+                                          disabled={isPast}
+                                          onClick={async () => {
+                                            const tasksToMove = localData[selectedDayIndex].tasks;
+                                            for (let j = tasksToMove.length - 1; j >= 0; j--) {
+                                              await moveTaskToDate(selectedDayIndex, j, cellDate);
+                                            }
+                                            setMovingTaskIdx(null);
+                                          }}
+                                          className={`aspect-square rounded-xl text-sm font-bold transition-all flex items-center justify-center ${isPast ? 'text-[#c8e6c9] cursor-not-allowed' : isToday2 ? 'bg-emerald-500 text-white shadow-lg' : 'text-[#2d5a3d] hover:bg-[#2d5a3d] hover:text-white hover:scale-110'}`}
+                                        >
+                                          {d}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                  <div className="border-t border-[#d8eadb] px-5 py-3 flex justify-end">
+                                    <button onClick={() => setMovingTaskIdx(null)} className="text-[10px] font-black uppercase text-[#7a9b82] hover:text-[#2d5a3d] transition-colors px-4 py-2 rounded-lg">{t('planner_cancel')}</button>
                                   </div>
                                 </div>
-                              );
-                            })()}
-                          </div>
-              </div>
+                              </div>
+                            );
+                          })()}
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
                   ) : (
                   <div className="space-y-8 animate-in fade-in duration-700">
                     <section>
