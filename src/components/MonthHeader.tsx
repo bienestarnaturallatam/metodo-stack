@@ -14,7 +14,7 @@ interface Props {
 
 import { useTranslation } from '@/hooks/useTranslation';
 
-export default function MonthHeader({ month, year, habitCount, completed, pct, onNavigate, onOpenCalendar }: Props) {
+export default function MonthHeader({ month, year, habitCount, completed, pct, isCurrentMonth, onNavigate, onDateChange, onOpenCalendar }: Props) {
   const { t } = useTranslation();
 
   return (
