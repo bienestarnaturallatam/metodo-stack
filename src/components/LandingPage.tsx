@@ -80,26 +80,22 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section id="hero" className="pt-40 pb-20 px-6">
+      <section id="hero" className="pt-40 pb-20 px-6 min-h-[90vh] flex flex-col justify-center">
         <div className="max-w-5xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-8 animate-in slide-in-from-top duration-700">
               <Zap className="w-3 h-3 fill-[#00C853]" />
               {t('auth_tagline')}
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-8 animate-in slide-in-from-bottom duration-700 delay-100 uppercase">
-              {t('hero_title').split(' ').map((word: string, i: number) => (
-                <span key={i} className={i >= t('hero_title').split(' ').length - 2 ? 'text-[#00C853]' : ''}>
-                  {word}{' '}
-                </span>
-              ))}
+            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-8 animate-in slide-in-from-bottom duration-700 delay-100 uppercase leading-tight min-h-[1.2em]">
+              {t('hero_title')}
             </h1>
             
-            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-12 animate-in slide-in-from-bottom duration-700 delay-200">
+            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-12 animate-in slide-in-from-bottom duration-700 delay-200 min-h-[3em]">
               {t('hero_subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-700 delay-300">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-700 delay-300 min-h-[80px]">
               <Link 
                 href="/register" 
                 className="group relative px-10 py-5 bg-[#00C853] text-white rounded-2xl font-black italic text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30"
@@ -112,7 +108,7 @@ export default function LandingPage() {
             </div>
 
             {/* MOCKUP IMAGE */}
-            <div className="mt-20 relative group max-w-4xl mx-auto">
+            <div className="mt-20 relative group max-w-4xl mx-auto overflow-hidden">
               <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative aspect-[16/10] w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
                 <Image 
@@ -120,6 +116,7 @@ export default function LandingPage() {
                   alt="Plataforma Método Stack Real App" 
                   fill
                   priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"
                   className="object-cover"
                 />
               </div>

@@ -8,8 +8,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans:  ['DM Sans', 'sans-serif'],
-        mono:  ['DM Mono', 'monospace'],
+        sans: ['var(--font-dm-sans)', 'sans-serif'],
+        mono: ['var(--font-dm-mono)', 'monospace'],
       },
       colors: {
         // Core theme colors

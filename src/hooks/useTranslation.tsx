@@ -111,8 +111,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const months = (translations[lang] || translations.es).months || [];
 
-  // Prevent flash of untranslated content by using isMounted
-  if (!isMounted) return <div className="bg-black min-h-screen" />;
+  // Allow immediate rendering to improve FCP/LCP. Will hydrate language after mount.
 
   return (
     <I18nContext.Provider value={{ lang, setLang, t, months, translateText, currency, country }}>
