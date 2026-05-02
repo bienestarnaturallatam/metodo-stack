@@ -23,7 +23,7 @@ export default function CalendarView({ month, year, selectedDay, onSelectDay }: 
   return (
     <div className="bg-white border border-app-border rounded-xl p-4 shadow-sm">
       <div className="grid grid-cols-7 gap-1 mb-2">
-        {dayNames.map((d, i) => (
+        {dayNames.map((d: string, i: number) => (
           <div key={i} className="text-[10px] font-black text-app-text3 text-center uppercase py-1">
             {d}
           </div>

@@ -38,7 +38,7 @@ interface Props {
 }
 
 export default function RecursosClient({ userId, userEmail }: Props) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [selectedId, setSelectedId] = React.useState<number | null>(null);
   const [showModal, setShowModal] = useState(false); // Estado para los Planos (PPT)
 
@@ -275,7 +275,7 @@ export default function RecursosClient({ userId, userEmail }: Props) {
         <div className="space-y-6">
           <div className="flex justify-between items-center bg-[#f4faf6] p-4 rounded-2xl border border-[#d8eadb]">
             <span className="text-[10px] font-black uppercase text-[#2d5a3d] tracking-widest">
-              {(t('recursos_flashcards', { returnObjects: true }) as any[]).length} {t('recursos_flashcards_available')}
+              {(t('recursos_flashcards') as any[]).length} {t('recursos_flashcards_available')}
             </span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t('recursos_academy')}</span>
           </div>
@@ -358,10 +358,10 @@ export default function RecursosClient({ userId, userEmail }: Props) {
           <div className="bg-orange-500 rounded-[40px] p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
             <div className="relative z-10">
               <h3 className="text-3xl sm:text-4xl font-black uppercase italic tracking-tighter mb-4 leading-tight">
-                {t('recursos_guide.title' as any)}
+                {t('recursos_guide.title')}
               </h3>
               <p className="text-lg font-medium text-white/80 leading-relaxed max-w-2xl">
-                {t('recursos_guide.intro' as any)}
+                {t('recursos_guide.intro')}
               </p>
             </div>
             <GraduationCap className="absolute -bottom-8 -right-8 text-white/10 w-64 h-64" />
@@ -371,9 +371,9 @@ export default function RecursosClient({ userId, userEmail }: Props) {
           <section className="space-y-6">
             <div className="flex items-center gap-3 border-b border-orange-100 pb-4">
               <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center font-black">01</div>
-              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.questions_title' as any)}</h4>
+              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.questions_title')}</h4>
             </div>
-            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">{t('recursos_guide.questions_intro' as any)}</p>
+            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">{t('recursos_guide.questions_intro')}</p>
             <div className="grid gap-3">
               {(Array.isArray(t('recursos_guide.questions')) ? t('recursos_guide.questions') : []).map((q: string, i: number) => (
                 <div key={i} className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-orange-200 transition-colors flex gap-4">
@@ -388,7 +388,7 @@ export default function RecursosClient({ userId, userEmail }: Props) {
           <section className="space-y-6">
             <div className="flex items-center gap-3 border-b border-orange-100 pb-4">
               <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center font-black">02</div>
-              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.answers_title' as any)}</h4>
+              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.answers_title')}</h4>
             </div>
             <div className="space-y-4">
               {(Array.isArray(t('recursos_guide.answers')) ? t('recursos_guide.answers') : []).map((ans: string, i: number) => (
@@ -404,7 +404,7 @@ export default function RecursosClient({ userId, userEmail }: Props) {
           <section className="space-y-6">
             <div className="flex items-center gap-3 border-b border-orange-100 pb-4">
               <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center font-black">03</div>
-              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.essays_title' as any)}</h4>
+              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.essays_title')}</h4>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(Array.isArray(t('recursos_guide.essays')) ? t('recursos_guide.essays') : []).map((essay: string, i: number) => (
@@ -422,7 +422,7 @@ export default function RecursosClient({ userId, userEmail }: Props) {
           <section className="space-y-6">
             <div className="flex items-center gap-3 border-b border-orange-100 pb-4">
               <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center font-black">04</div>
-              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.glossary_title' as any)}</h4>
+              <h4 className="text-xl font-black text-[#2d5a3d] uppercase tracking-tighter italic">{t('recursos_guide.glossary_title')}</h4>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {(Array.isArray(t('recursos_guide.glossary')) ? t('recursos_guide.glossary') : []).map((item: any, i: number) => (
