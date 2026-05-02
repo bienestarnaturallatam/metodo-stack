@@ -147,12 +147,12 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
   }
 
   let streakLevel = t('streak_sub');
-  if (rachaActual >= 15) streakLevel = "¡Nivel Imparable!";
-  else if (rachaActual >= 4) streakLevel = "¡Estás en racha!";
-  else if (rachaActual >= 1) streakLevel = "¡Buen comienzo!";
+  if (rachaActual >= 15) streakLevel = t('dash_streak_unstoppable');
+  else if (rachaActual >= 4) streakLevel = t('dash_streak_onfire');
+  else if (rachaActual >= 1) streakLevel = t('dash_streak_start');
 
   const streakMsg = streakStartDate 
-    ? `¡No fallas desde el ${streakStartDate.getDate()} de ${months[streakStartDate.getMonth()]}! · ${streakLevel}`
+    ? t('dash_streak_msg', { day: String(streakStartDate.getDate()), month: months[streakStartDate.getMonth()], level: streakLevel })
     : streakLevel;
 
   return (
@@ -160,8 +160,8 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
       
       {/* CABECERA */}
       <div className="mb-8">
-         <h2 className="font-fraunces text-3xl font-black text-app-text tracking-tight">Centro Estratégico</h2>
-         <p className="text-[10px] uppercase font-bold tracking-widest text-app-text3 mt-1">Reflexión profunda y planificación anual</p>
+         <h2 className="font-fraunces text-3xl font-black text-app-text tracking-tight">{t('dash_title')}</h2>
+         <p className="text-[10px] uppercase font-bold tracking-widest text-app-text3 mt-1">{t('dash_subtitle')}</p>
       </div>
 
       {/* ── HIGHLIGHTS CARDS ── */}
@@ -171,7 +171,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
           emoji="🏆" 
           title={t('best_habit')} 
           value={habitCompletion?.name || '—'} 
-          subValue={habitCompletion ? `${habitCompletion.pct}%  ·  ${habitCompletion.count}/${currentMonthDays} días` : '—'}
+          subValue={habitCompletion ? `${habitCompletion.pct}%  ·  ${habitCompletion.count}/${currentMonthDays} ${t('common_days').toLowerCase()}` : '—'}
           color="bg-brand-green/10 text-brand-green"
           icon={getHabitIcon(habitCompletion?.name || '')}
         />
@@ -185,7 +185,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
         <HighlightCard 
           emoji="🔥" 
           title={t('best_streak')} 
-          value={`${rachaActual} ${rachaActual === 1 ? 'Día Consecutivo' : 'Días Consecutivos'}`} 
+          value={`${rachaActual} ${rachaActual === 1 ? t('dash_streak_day') : t('dash_streak_days')}`} 
           subValue={streakMsg}
           color="bg-brand-pink/10 text-brand-pink"
         />

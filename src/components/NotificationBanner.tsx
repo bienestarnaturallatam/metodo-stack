@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { usePushSubscription } from '@/hooks/useTracker';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const NEXT_PUBLIC_VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '';
 
@@ -16,6 +17,7 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 export default function NotificationBanner({ streak }: { streak: number }) {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const { saveSubscription } = usePushSubscription();
 
@@ -25,7 +27,6 @@ export default function NotificationBanner({ streak }: { streak: number }) {
         if (Notification.permission === 'default') {
           setShow(true);
         } else if (Notification.permission === 'granted') {
-          // If already granted, try to ensure we have a valid subscription in Supabase
           try {
             const registration = await navigator.serviceWorker.ready;
             let subscription = await registration.pushManager.getSubscription();
@@ -56,13 +57,13 @@ export default function NotificationBanner({ streak }: { streak: number }) {
         });
         await saveSubscription(subscription);
         setShow(false);
-        alert('¡Notificaciones activadas con éxito! Te avisaremos a las 8 AM.');
+        alert(t('notif_success'));
       } else {
         setShow(false);
       }
     } catch (err) {
       console.error('Failed to subscribe:', err);
-      alert('Hubo un error al activar las notificaciones.');
+      alert(t('notif_error'));
     }
   };
 
@@ -73,7 +74,7 @@ export default function NotificationBanner({ streak }: { streak: number }) {
       <div className="flex items-center gap-3">
         <span className="text-2xl">☕</span>
         <p className="text-sm font-medium">
-          ¿Quieres que el Método Stack te recuerde tu racha de {streak} días a las 8 AM? Activa las notificaciones.
+          {t('notif_banner_desc', { streak: String(streak) })}
         </p>
       </div>
       <div className="flex gap-2">
@@ -81,13 +82,13 @@ export default function NotificationBanner({ streak }: { streak: number }) {
           onClick={() => setShow(false)} 
           className="px-4 py-2 text-xs font-bold text-white/80 hover:text-white transition-colors"
         >
-          Ahora no
+          {t('notif_banner_not_now')}
         </button>
         <button 
           onClick={handleSubscribe} 
           className="px-4 py-2 bg-white text-[#3a7bc8] text-xs font-black rounded hover:bg-white/90 transition-colors"
         >
-          Activar
+          {t('notif_banner_activate')}
         </button>
       </div>
     </div>

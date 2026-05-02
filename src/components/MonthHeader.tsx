@@ -32,7 +32,7 @@ export default function MonthHeader({ month, year, habitCount, completed, pct, i
           <button 
             onClick={onOpenCalendar}
             className="w-9 h-9 rounded-lg bg-white border border-app-border flex items-center justify-center text-lg hover:bg-brand-green/5 hover:border-brand-green transition-all duration-200 shadow-sm"
-            title="Abrir calendario mensual"
+            title={t('common_open_calendar')}
           >
             📅
           </button>
@@ -56,7 +56,7 @@ export default function MonthHeader({ month, year, habitCount, completed, pct, i
           {/* SLIDERS MES Y AÑO */}
           <div className="flex flex-col gap-3 w-full sm:w-64 bg-black/5 p-3 rounded-xl sm:bg-transparent sm:p-0">
             <div className="flex items-center gap-4">
-              <span className="text-[9px] font-black text-app-text3 uppercase w-10">MES</span>
+              <span className="text-[9px] font-black text-app-text3 uppercase w-10">{t('common_month')}</span>
               <input 
                 type="range" 
                 min="0" 
@@ -67,7 +67,7 @@ export default function MonthHeader({ month, year, habitCount, completed, pct, i
               />
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-[9px] font-black text-app-text3 uppercase w-10">AÑO</span>
+              <span className="text-[9px] font-black text-app-text3 uppercase w-10">{t('common_year')}</span>
               <input 
                 type="range" 
                 min="2024" 
@@ -116,7 +116,7 @@ export default function MonthHeader({ month, year, habitCount, completed, pct, i
         {/* Progress % */}
         <div className="flex flex-col p-3 border-t md:border-t-0 border-app-border">
           <span className="text-[9px] font-bold uppercase tracking-widest text-app-text3 mb-1">
-            Progress in %
+            {t('common_progress_pct')}
           </span>
           <span className="text-[22px] font-light font-mono text-brand-green leading-none">
             {pct.toFixed(2)}%

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { Download, Trash2, Save, Check } from 'lucide-react';
 import { Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -195,7 +196,6 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
     return '✨';
   };
 
-  // Intermittent beep sound
   const playBellSound = () => {
     try {
       const AppAudioCtx = (window as any).AppAudioCtx || new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -210,6 +210,53 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
       osc.start();
       osc.stop(AppAudioCtx.currentTime + 0.15);
     } catch (e) { /* silent fallback */ }
+  };
+
+  const handleExportXLS = () => {
+    const day = localData[selectedDayIndex];
+    const dateObj = weekDates[selectedDayIndex];
+    const dateStr = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    
+    let html = `
+      <table border="1">
+        <thead>
+          <tr style="background-color: #2d5a3d; color: white;">
+            <th colspan="4" style="font-size: 16px; padding: 10px;">METODO STACK - ENFOQUE SEMANAL (${dateStr})</th>
+          </tr>
+          <tr style="background-color: #f4faf6;">
+            <th style="padding: 8px;">Estado</th>
+            <th style="padding: 8px;">Tarea / Propósito</th>
+            <th style="padding: 8px;">Prioridad</th>
+            <th style="padding: 8px;">Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    day.tasks.forEach(task => {
+      const pText = t(`planner_priority_${task.priority || 'important'}`);
+      const statusText = task.done ? 'COMPLETADA' : 'PENDIENTE';
+      html += `
+        <tr>
+          <td style="padding: 5px; text-align: center;">${statusText}</td>
+          <td style="padding: 5px;">${task.text}</td>
+          <td style="padding: 5px; text-align: center;">${pText}</td>
+          <td style="padding: 5px; text-align: center;">${task.scheduled_time || '-'}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+        </tbody>
+      </table>
+    `;
+
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Stack_Enfoque_${dateStr.replace(/\//g, '-')}.xls`;
+    a.click();
   };
 
   // Sound loop effect for intermittent ringing
@@ -314,6 +361,17 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
       mood: dayData.mood,
     }, { onConflict: 'user_id,week_start_date,day_index' });
   };
+
+  const deleteReflectionItem = (dayIndex: number, type: 'notes' | 'improve' | 'thanks', itemIndex: number) => {
+    const newData = [...localData];
+    newData[dayIndex].reflections[type].splice(itemIndex, 1);
+    if (newData[dayIndex].reflections[type].length === 0) {
+      newData[dayIndex].reflections[type] = [''];
+    }
+    setLocalData(newData);
+    saveDay(dayIndex, newData[dayIndex]);
+  };
+
 
   const handleTaskToggle = (dayIndex: number, taskIndex: number) => {
     const newData = [...localData];
@@ -548,6 +606,17 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
         </nav>
       )}
 
+      {/* HEADER DE BIENVENIDA */}
+      {!isDeepWork && (
+        <div className="bg-white px-7 pt-8 pb-4">
+          <div className="max-w-[1200px] mx-auto w-full">
+            <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#7a9b82] mb-1">
+              {t('planner_header')}
+            </h5>
+          </div>
+        </div>
+      )}
+
       {/* Control bar (Day Selector) */}
       <div className={`px-7 py-5 flex flex-col items-center gap-6 bg-white border-b border-[#d8eadb] shadow-sm transition-all duration-700 ${isDeepWork ? 'blur-xl opacity-20 pointer-events-none' : 'blur-0 opacity-100'}`}>
         <div className="w-full flex flex-wrap items-center justify-center sm:justify-between gap-3 sm:gap-6 max-w-[800px]">
@@ -581,7 +650,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
 
         {/* DAY SELECTOR BAR */}
         <div className="w-full overflow-x-auto no-scrollbar py-2">
-          <div className="flex justify-center min-w-max gap-2 sm:gap-4 p-1.5 bg-[#f4faf6] rounded-2xl border border-[#d8eadb] shadow-inner mx-auto">
+          <div className="flex justify-start sm:justify-center min-w-max gap-1.5 sm:gap-4 p-1 sm:p-1.5 bg-[#f4faf6] rounded-2xl border border-[#d8eadb] shadow-inner mx-auto w-fit">
             {ABBR.map((label, idx) => {
               const d = weekDates[idx];
               const isSel = selectedDayIndex === idx;
@@ -593,7 +662,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                 <button
                   key={idx}
                   onClick={() => setSelectedDayIndex(idx)}
-                  className={`relative flex flex-col items-center justify-center w-12 h-14 sm:w-16 sm:h-20 rounded-xl transition-all duration-300 group
+                  className={`relative flex flex-col items-center justify-center w-9 h-12 sm:w-16 sm:h-20 rounded-xl transition-all duration-300 group
                   ${isSel ? 'bg-[#2d5a3d] text-white shadow-xl scale-110 -translate-y-1' : 'bg-white text-[#7a9b82] hover:bg-[#ebf5ed] border border-[#d8eadb]'}`}
                 >
                   <span className={`text-[10px] font-black mb-1 ${isSel ? 'text-white/60' : 'text-[#7a9b82]'}`}>{label}</span>
@@ -615,7 +684,8 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
         </div>
       </div>
 
-      <main className="p-2 sm:p-10 max-w-[1200px] mx-auto min-h-[calc(100vh-250px)] flex flex-col items-center justify-center">
+      <main className="p-2 sm:p-10 max-w-[1200px] mx-auto min-h-[calc(100vh-250px)] flex flex-col items-center">
+
 
         {/* FOCUS CARD */}
         <div
@@ -665,30 +735,100 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
 
             {view === 'tasks' ? (
               <div className="space-y-4">
-                <div className="flex items-center justify-between mb-4 px-2">
-                  <div className="flex items-center gap-3">
-                    <h4 className="text-[11px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_stack_list')}</h4>
-                    <button
-                      onClick={() => {
-                        const dateObj = weekDates[selectedDayIndex];
-                        const dateStr = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-                        const tasksText = day.tasks.length > 0
-                          ? day.tasks.map((t, i) => `\n${i + 1}. ${t.text}`).join('')
-                          : `\n${t('planner_no_tasks')}`;
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-6 px-2">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <h4 className="text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-[#7a9b82] whitespace-nowrap">{t('planner_stack_list')}</h4>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const dateObj = weekDates[selectedDayIndex];
+                          const dateStr = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+                          const tasksText = day.tasks.length > 0
+                            ? day.tasks.map((t, i) => `\n${i + 1}. ${t.text}`).join('')
+                            : `\n${t('planner_no_tasks')}`;
 
-                        const message = t('planner_whatsapp_msg', { tasks: tasksText });
-                        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-                        window.open(whatsappUrl, '_blank');
-                      }}
-                      className="flex items-center gap-1.5 px-2 py-1 bg-[#25D366] text-white rounded-md hover:scale-105 transition-all shadow-sm group shrink-0"
-                    >
-                      <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                      </svg>
-                      <span className="text-[9px] font-black uppercase">WSP</span>
-                    </button>
+                          const message = t('planner_whatsapp_msg', { tasks: tasksText });
+                          const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+                          window.open(whatsappUrl, '_blank');
+                        }}
+                        className="flex items-center gap-1.5 px-2 py-1 bg-[#25D366] text-white rounded-md hover:scale-105 transition-all shadow-sm group shrink-0"
+                      >
+                        <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg>
+                        <span className="text-[9px] font-black uppercase">WSP</span>
+                      </button>
+
+                      <button
+                        onClick={handleExportXLS}
+                        className="flex items-center gap-1.5 px-3 py-1 bg-[#2d5a3d] text-white rounded-md hover:scale-105 transition-all shadow-sm shrink-0"
+                        title={t('common_export_excel')}
+                      >
+                        <Download size={12} />
+                        <span className="text-[9px] font-black uppercase">XLS</span>
+                      </button>
+                    </div>
                   </div>
-                  <span className="text-[11px] font-bold text-[#2d5a3d]">{dayStats[selectedDayIndex].done} / {dayStats[selectedDayIndex].total} {t('planner_completed')}</span>
+                  <span className="text-[10px] sm:text-[11px] font-bold text-[#2d5a3d] bg-[#f4faf6] px-3 py-1 rounded-full border border-[#d8eadb] shrink-0">
+                    {dayStats[selectedDayIndex].done} / {dayStats[selectedDayIndex].total} {t('planner_completed')}
+                  </span>
+                </div>
+
+                {/* QUICK ADD BLOCK (Moved here) */}
+                <div className={`transition-all duration-700 ${isDeepWork ? 'opacity-0 scale-90 pointer-events-none hidden' : 'opacity-100'}`}>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82] mb-3 px-2">{t('planner_add_task_global')}</h4>
+                  <div className="bg-[#f4faf6] border border-[#d8eadb] p-3 sm:p-5 rounded-[24px] shadow-inner group mb-6">
+                    <div className="flex items-center gap-3 bg-white border border-[#d8eadb] p-3 rounded-xl shadow-sm focus-within:border-[#2d5a3d] transition-all mb-3">
+                      <span className="text-xl opacity-40">+</span>
+                      <input
+                        type="text"
+                        value={newTaskText}
+                        onChange={(e) => setNewTaskText(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && addTask(selectedDayIndex, newTaskText)}
+                        placeholder={t('planner_add_placeholder')}
+                        className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-[#2d5a3d] placeholder-[#c8e6c9]"
+                      />
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      {['critical', 'important', 'growth'].map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => setNewTaskPriority(p as any)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${newTaskPriority === p ? 'bg-[#2d5a3d] text-white shadow-md' : 'bg-white border border-[#d8eadb] text-[#7a9b82] hover:bg-[#ebf5ed]'}`}
+                          title={t(`planner_priority_${p}`)}
+                        >
+                          <span className={`w-2 h-2 rounded-full ${p === 'critical' ? 'bg-rose-500' : p === 'important' ? 'bg-amber-400' : 'bg-emerald-500'}`} />
+                          <span className="inline">{t(`planner_priority_${p}`)}</span>
+                        </button>
+                      ))}
+                      <input
+                        type="time"
+                        value={newTaskTime}
+                        onChange={(e) => setNewTaskTime(e.target.value)}
+                        className="w-[72px] bg-[#f4faf6] border border-[#d8eadb] focus:border-[#2d5a3d] rounded-lg text-[11px] font-mono font-black text-center outline-none py-1 text-[#2d5a3d]"
+                      />
+                      <button
+                        onClick={() => {
+                          if (confirm(t('delete_confirm') || '¿Eliminar definitivamente?')) {
+                            const newData = [...localData];
+                            newData[selectedDayIndex].tasks = [];
+                            setLocalData(newData);
+                            saveDay(selectedDayIndex, newData[selectedDayIndex]);
+                          }
+                        }}
+                        className="p-2 text-[#e74b6c] hover:bg-red-50 rounded-xl transition-all"
+                        title={t('planner_delete_title')}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                      <button
+                        onClick={() => addTask(selectedDayIndex, newTaskText)}
+                        className="px-4 py-2 bg-[#2d5a3d] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md"
+                      >
+                        {t('planner_add_btn')}
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <div className={`space-y-3 min-h-[200px] transition-all duration-500 ${isDeepWork ? 'scale-105 origin-left' : ''}`}>
@@ -721,7 +861,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                                     onChange={() => handleTaskToggle(selectedDayIndex, tIdx)}
                                     className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-[#8fc99e] rounded-md text-[#2d5a3d] focus:ring-[#2d5a3d] cursor-pointer flex-shrink-0"
                                   />
-                                  <span className="text-base sm:text-xl flex-shrink-0" title="Auto-icono">
+                                  <span className="text-base sm:text-xl flex-shrink-0" title={t('common_auto_icon')}>
                                     {getTaskIcon(task.text)}
                                   </span>
                                   <textarea
@@ -778,7 +918,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                                         });
                                       }}
                                       className={`text-sm transition-all ${ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? 'animate-[bellShake_0.5s_ease-in-out_infinite] text-amber-500' : 'text-[#c8e6c9] hover:text-amber-400'}`}
-                                      title="Alarma"
+                                      title={t('common_alarm')}
                                     >
                                       {ringingTasks.has(`${selectedDayIndex}-${tIdx}`) ? '🔔' : '🔕'}
                                     </button>
@@ -930,8 +1070,8 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                               <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[360px] overflow-hidden animate-in zoom-in-95 duration-300"
                                 onClick={e => e.stopPropagation()}>
                                 <div className="bg-[#2d5a3d] px-6 py-5 text-center">
-                                  <p className="text-[10px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">Mover toda la lista</p>
-                                  <p className="text-white font-fraunces text-base font-bold italic opacity-80">Selecciona el día de destino</p>
+                                  <p className="text-[10px] font-black uppercase tracking-widest text-[#8fc99e] mb-1">{t('common_move_list')}</p>
+                                  <p className="text-white font-fraunces text-base font-bold italic opacity-80">{t('common_select_target_day')}</p>
                                 </div>
                                 <div className="flex items-center justify-between px-5 pt-5 pb-3">
                                   <button onClick={() => { if (calendarMonth === 0) { setCalendarMonth(11); setCalendarYear(y => y - 1); } else setCalendarMonth(m => m - 1); }} className="w-9 h-9 rounded-full bg-[#f4faf6] text-[#2d5a3d] flex items-center justify-center font-black">‹</button>
@@ -1013,33 +1153,14 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                         >
                           + Añadir
                         </button>
-                        <button
-                          onClick={() => saveDay(selectedDayIndex, day)}
-                          className="text-[9px] font-black uppercase text-[#2d5a3d] hover:underline"
-                        >
-                          Grabar
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (confirm('¿Borrar propósitos?')) {
-                              const newData = [...localData];
-                              newData[selectedDayIndex].reflections.notes = ['', '', ''];
-                              setLocalData(newData);
-                              saveDay(selectedDayIndex, newData[selectedDayIndex]);
-                            }
-                          }}
-                          className="text-[9px] font-black uppercase text-rose-500 hover:underline"
-                        >
-                          Borrar
-                        </button>
                       </div>
                     </div>
                     <div className="bg-white border border-[#d8eadb] rounded-2xl p-4 shadow-sm space-y-3">
                       {day.reflections.notes.map((txt, i) => (
-                        <div key={i} className="flex gap-3 items-start group">
-                          <span className="text-[11px] font-black text-[#6aaf7a] mt-2">{i + 1}.</span>
+                        <div key={i} className="flex gap-2 items-center group bg-[#f4faf6]/30 p-1 rounded-xl hover:bg-[#f4faf6] transition-all">
+                          <span className="text-[11px] font-black text-[#6aaf7a] min-w-[15px]">{i + 1}.</span>
                           <textarea
-                            className="flex-1 bg-transparent border-none outline-none text-sm font-medium resize-none text-[#1a2e1e]"
+                            className="flex-1 bg-transparent border-none outline-none text-sm font-medium resize-none text-[#1a2e1e] py-1"
                             rows={1}
                             placeholder={t('planner_notes_placeholder')}
                             value={txt}
@@ -1051,6 +1172,22 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                               el.style.height = el.scrollHeight + 'px';
                             }}
                           />
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => saveDay(selectedDayIndex, day)}
+                              className="p-1.5 text-emerald-600 hover:bg-white rounded-lg shadow-sm"
+                              title="Grabar"
+                            >
+                              <Save size={12} />
+                            </button>
+                            <button
+                              onClick={() => deleteReflectionItem(selectedDayIndex, 'notes', i)}
+                              className="p-1.5 text-rose-500 hover:bg-white rounded-lg shadow-sm"
+                              title="Eliminar"
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1071,37 +1208,35 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                           >
                             + Añadir
                           </button>
-                          <button
-                            onClick={() => saveDay(selectedDayIndex, day)}
-                            className="text-[9px] font-black uppercase text-[#2d5a3d] hover:underline"
-                          >
-                            Grabar
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (confirm('¿Borrar puntos de mejora?')) {
-                                const newData = [...localData];
-                                newData[selectedDayIndex].reflections.improve = ['', '', ''];
-                                setLocalData(newData);
-                                saveDay(selectedDayIndex, newData[selectedDayIndex]);
-                              }
-                            }}
-                            className="text-[9px] font-black uppercase text-rose-500 hover:underline"
-                          >
-                            Borrar
-                          </button>
                         </div>
                       </div>
                       <div className="bg-[#fff9f9] border border-[#ead8d8] rounded-2xl p-4 shadow-sm space-y-2">
                         {day.reflections.improve.map((txt, i) => (
-                          <input
-                            key={i}
-                            className="w-full bg-transparent border-none outline-none text-sm font-medium text-[#7a1a1a] placeholder-[#c49b9b]"
-                            placeholder={t('planner_improve_placeholder')}
-                            value={txt}
-                            onChange={(e) => handleReflectionChange(selectedDayIndex, 'improve', i, e.target.value)}
-                            onBlur={() => saveDay(selectedDayIndex, day)}
-                          />
+                          <div key={i} className="flex gap-2 items-center group bg-white/50 p-1 rounded-xl hover:bg-white transition-all">
+                            <input
+                              className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-[#7a1a1a] placeholder-[#c49b9b] py-1"
+                              placeholder={t('planner_improve_placeholder')}
+                              value={txt}
+                              onChange={(e) => handleReflectionChange(selectedDayIndex, 'improve', i, e.target.value)}
+                              onBlur={() => saveDay(selectedDayIndex, day)}
+                            />
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button
+                                onClick={() => saveDay(selectedDayIndex, day)}
+                                className="p-1.5 text-rose-600 hover:bg-white rounded-lg shadow-sm"
+                                title="Grabar"
+                              >
+                                <Save size={12} />
+                              </button>
+                              <button
+                                onClick={() => deleteReflectionItem(selectedDayIndex, 'improve', i)}
+                                className="p-1.5 text-rose-500 hover:bg-white rounded-lg shadow-sm"
+                                title="Eliminar"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -1119,37 +1254,35 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                           >
                             + Añadir
                           </button>
-                          <button
-                            onClick={() => saveDay(selectedDayIndex, day)}
-                            className="text-[9px] font-black uppercase text-[#2d5a3d] hover:underline"
-                          >
-                            Grabar
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (confirm('¿Borrar agradecimientos?')) {
-                                const newData = [...localData];
-                                newData[selectedDayIndex].reflections.thanks = ['', '', ''];
-                                setLocalData(newData);
-                                saveDay(selectedDayIndex, newData[selectedDayIndex]);
-                              }
-                            }}
-                            className="text-[9px] font-black uppercase text-rose-500 hover:underline"
-                          >
-                            Borrar
-                          </button>
                         </div>
                       </div>
                       <div className="bg-[#f9fff9] border border-[#d8eadb] rounded-2xl p-4 shadow-sm space-y-2">
                         {day.reflections.thanks.map((txt, i) => (
-                          <input
-                            key={i}
-                            className="w-full bg-transparent border-none outline-none text-sm font-medium text-[#2d5a3d] placeholder-[#9bc4a5]"
-                            placeholder={t('planner_thanks_placeholder')}
-                            value={txt}
-                            onChange={(e) => handleReflectionChange(selectedDayIndex, 'thanks', i, e.target.value)}
-                            onBlur={() => saveDay(selectedDayIndex, day)}
-                          />
+                          <div key={i} className="flex gap-2 items-center group bg-white/50 p-1 rounded-xl hover:bg-white transition-all">
+                            <input
+                              className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-[#2d5a3d] placeholder-[#9bc4a5] py-1"
+                              placeholder={t('planner_thanks_placeholder')}
+                              value={txt}
+                              onChange={(e) => handleReflectionChange(selectedDayIndex, 'thanks', i, e.target.value)}
+                              onBlur={() => saveDay(selectedDayIndex, day)}
+                            />
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button
+                                onClick={() => saveDay(selectedDayIndex, day)}
+                                className="p-1.5 text-emerald-600 hover:bg-white rounded-lg shadow-sm"
+                                title="Grabar"
+                              >
+                                <Save size={12} />
+                              </button>
+                              <button
+                                onClick={() => deleteReflectionItem(selectedDayIndex, 'thanks', i)}
+                                className="p-1.5 text-rose-500 hover:bg-white rounded-lg shadow-sm"
+                                title="Eliminar"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -1158,64 +1291,6 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
               </div>
             )}
 
-            {/* SIEMPRE VISIBLE: AGREGAR TAREA */}
-            <div className="mt-8 pt-8 border-t border-[#d8eadb] animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <h4 className="text-[11px] font-black uppercase tracking-widest text-[#7a9b82] mb-4 ml-2">{t('planner_add_task_global') || 'Rápido: Agregar Tarea'}</h4>
-              <div className="flex flex-col gap-3 p-3 sm:p-4 bg-[#f4faf6]/60 rounded-2xl border-2 border-dashed border-[#d8eadb] group focus-within:border-[#2d5a3d] transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 flex items-center justify-center text-[#6aaf7a] text-xl font-bold flex-shrink-0">
-                    {newTaskText.trim() ? getTaskIcon(newTaskText) : '+'}
-                  </div>
-                  <textarea
-                    id={`new-task-${selectedDayIndex}-global`}
-                    rows={1}
-                    placeholder={t('planner_add_placeholder')}
-                    value={newTaskText}
-                    onChange={(e) => setNewTaskText(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        addTask(selectedDayIndex, newTaskText);
-                        const el = e.target as HTMLTextAreaElement;
-                        el.style.height = 'auto';
-                      }
-                    }}
-                    onInput={(e) => {
-                      const el = e.target as HTMLTextAreaElement;
-                      el.style.height = 'auto';
-                      el.style.height = el.scrollHeight + 'px';
-                    }}
-                    className="flex-1 min-w-0 bg-transparent border-none outline-none text-sm sm:text-lg placeholder-[#8fc99e] text-[#2d5a3d] font-bold resize-none overflow-hidden"
-                  />
-                </div>
-                <div className="flex items-center gap-2 flex-wrap pl-8">
-                  {(['critical', 'important', 'growth'] as const).map(p => (
-                    <button
-                      key={p}
-                      onClick={() => setNewTaskPriority(p)}
-                      className={`flex flex-col items-center gap-0.5 rounded-xl px-2 py-1 transition-all ${newTaskPriority === p ? 'scale-110 ring-2 ring-offset-1 bg-white shadow-sm opacity-100' : 'opacity-80 hover:opacity-100'} ${p === 'critical' ? 'ring-rose-500' : p === 'growth' ? 'ring-emerald-500' : 'ring-amber-500'}`}
-                    >
-                      <span className="text-sm">{p === 'critical' ? '🔴' : p === 'growth' ? '🟢' : '🟡'}</span>
-                      <span className={`text-[8px] font-black uppercase tracking-tight ${p === 'critical' ? 'text-rose-600' : p === 'growth' ? 'text-emerald-600' : 'text-amber-600'}`}>
-                        {t(`planner_priority_${p}`)}
-                      </span>
-                    </button>
-                  ))}
-                  <input
-                    type="time"
-                    value={newTaskTime}
-                    onChange={(e) => setNewTaskTime(e.target.value)}
-                    className="w-[72px] bg-[#f4faf6] border border-[#d8eadb] focus:border-[#2d5a3d] rounded-lg text-[11px] font-mono font-black text-center outline-none py-1 text-[#2d5a3d]"
-                  />
-                  <button
-                    onClick={() => addTask(selectedDayIndex, newTaskText)}
-                    className="px-4 sm:px-6 py-2 bg-[#2d5a3d] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md ml-auto"
-                  >
-                    {t('planner_add_btn')}
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* IMPACT DONUT - RIGHT SIDE */}

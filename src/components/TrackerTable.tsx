@@ -23,7 +23,7 @@ export default function TrackerTable({
   habits, month, year, completionMap, moodMap,
   userId, onToggle, onDelete, onMoodChange, onRename, selectedDay
 }: Props) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const diaHoy = new Date().getDate();
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
@@ -75,7 +75,10 @@ export default function TrackerTable({
     <div className="bg-app-surface border border-app-border rounded-xl shadow-sm overflow-hidden text-[11px] text-app-text">
       <div className="p-4 border-b border-app-border bg-app-bg/30">
          <h2 className="text-lg font-black uppercase text-app-text2 tracking-tighter">
-           {new Date(year, month).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}
+           {new Date(year, month).toLocaleDateString(
+             lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', 
+             { month: 'long', year: 'numeric' }
+           )}
          </h2>
       </div>
       <div ref={scrollContainerRef} className="w-full overflow-x-auto scrollbar-thin">
@@ -154,7 +157,7 @@ export default function TrackerTable({
                               setEditingHabitId(hab.id);
                               setEditName(hab.name);
                             }}
-                            title="Editar hábito"
+                            title={t('edit_habit_title')}
                             className="p-1.5 rounded-lg text-app-text3 hover:bg-app-bg hover:text-brand-green transition-colors cursor-pointer text-[10px]"
                           >
                             ✏️
@@ -163,7 +166,7 @@ export default function TrackerTable({
                             onClick={() => {
                               if (confirm(t('delete_confirm'))) onDelete(hab.id, month, year);
                             }}
-                            title="Eliminar hábito"
+                            title={t('delete_habit_title')}
                             className="p-1.5 rounded-lg text-brand-pink hover:bg-brand-pink-light transition-colors cursor-pointer text-[10px]"
                           >
                             🗑️

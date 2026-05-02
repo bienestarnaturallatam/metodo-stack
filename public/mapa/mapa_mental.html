@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mental - Sabiduría Atómica</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F9FAF7;
+            --lvl1: #3B82F6;
+            --lvl2: #A855F7;
+            --lvl3: #F59E0B;
+            --lvl4: #F97316;
+            --lvl5: #EF4444;
+            --lvl6: #06B6D4;
+            --lvl7: #6366F1;
+            --lvl8: #475569;
+            --line: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: var(--bg);
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .map-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+        }
+
+        /* Estilo de los Niveles (Botones Principales) */
+        .level-group {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+        }
+
+        .level-button {
+            min-width: 280px;
+            padding: 16px 28px;
+            border-radius: 22px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: left;
+            z-index: 10;
+        }
+
+        .level-button:hover {
+            transform: translateX(8px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.25);
+        }
+
+        .level-button span {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .level-button h3 {
+            font-size: 17px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Ramas Desplegables */
+        .branches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            opacity: 0;
+            max-height: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .branches.active {
+            opacity: 1;
+            max-height: 300px;
+            transform: translateX(0);
+            pointer-events: all;
+            padding: 10px 0;
+        }
+
+        .node {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1E293B;
+            border: 1px solid var(--line);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .node:hover {
+            border-color: #94A3B8;
+            background: #F8FAFC;
+        }
+
+        /* Líneas de Conexión (Estilo Plano) */
+        .level-group::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            bottom: -25px;
+            width: 2px;
+            background: var(--line);
+        }
+
+        .level-group:last-child::before {
+            bottom: 50%;
+        }
+
+        .level-group::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: var(--line);
+        }
+
+        @media (max-width: 768px) {
+            .level-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .level-button {
+                min-width: 100%;
+            }
+
+            .branches {
+                margin-left: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="map-container">
+        <!-- Nivel 01 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl1);" onclick="t(1)">
+                <span>Nivel 01</span>
+                <h3>Fundamentos</h3>
+            </div>
+            <div class="branches" id="b1">
+                <div class="node">Interés compuesto de la superación</div>
+                <div class="node">Mejoras marginales del 1%</div>
+                <div class="node">Meseta de potencial latente</div>
+                <div class="node">Sistemas vs. Metas</div>
+            </div>
+        </div>
+
+        <!-- Nivel 02 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl2);" onclick="t(2)">
+                <span>Nivel 02</span>
+                <h3>Cambio de Identidad</h3>
+            </div>
+            <div class="branches" id="b2">
+                <div class="node">Capas: Resultados, Procesos, Identidad</div>
+                <div class="node">Enfoque en quién quieres llegar a ser</div>
+                <div class="node">Hábitos como votos de identidad</div>
+                <div class="node">Proceso de cambio en 2 pasos</div>
+            </div>
+        </div>
+
+        <!-- Nivel 03 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl3);" onclick="t(3)">
+                <span>Nivel 03</span>
+                <h3>El Ciclo del Hábito</h3>
+            </div>
+            <div class="branches" id="b3">
+                <div class="node">Señal</div>
+                <div class="node">Anhelo</div>
+                <div class="node">Respuesta</div>
+                <div class="node">Recompensa</div>
+            </div>
+        </div>
+
+        <!-- Nivel 04 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl4);" onclick="t(4)">
+                <span>Nivel 04</span>
+                <h3>1ra Ley: Hacerlo Obvio</h3>
+            </div>
+            <div class="branches" id="b4">
+                <div class="node">Registro de hábitos</div>
+                <div class="node">Intención de implementación</div>
+                <div class="node">Acumulación de hábitos</div>
+                <div class="node">Diseño del ambiente</div>
+            </div>
+        </div>
+
+        <!-- Nivel 05 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl5);" onclick="t(5)">
+                <span>Nivel 05</span>
+                <h3>2da Ley: Hacerlo Atractivo</h3>
+            </div>
+            <div class="branches" id="b5">
+                <div class="node">Acumulación de tentaciones</div>
+                <div class="node">Influencia del grupo</div>
+                <div class="node">Reprogramación mental</div>
+                <div class="node">Rituales de motivación</div>
+            </div>
+        </div>
+
+        <!-- Nivel 06 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl6);" onclick="t(6)">
+                <span>Nivel 06</span>
+                <h3>3ra Ley: Hacerlo Sencillo</h3>
+            </div>
+            <div class="branches" id="b6">
+                <div class="node">Ley del menor esfuerzo</div>
+                <div class="node">Regla de los 2 minutos</div>
+                <div class="node">Mecanismos de compromiso</div>
+                <div class="node">Automatización tecnológica</div>
+            </div>
+        </div>
+
+        <!-- Nivel 07 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl7);" onclick="t(7)">
+                <span>Nivel 07</span>
+                <h3>4ta Ley: Hacerlo Satisfactorio</h3>
+            </div>
+            <div class="branches" id="b7">
+                <div class="node">Regla cardinal: recompensa inmediata</div>
+                <div class="node">Reforzamiento de conductas</div>
+                <div class="node">Historial y seguimiento</div>
+                <div class="node">Contratos de hábitos</div>
+            </div>
+        </div>
+
+        <!-- Nivel 08 -->
+        <div class="level-group">
+            <div class="level-button" style="background: var(--lvl8);" onclick="t(8)">
+                <span>Nivel 08</span>
+                <h3>Tácticas Avanzadas</h3>
+            </div>
+            <div class="branches" id="b8">
+                <div class="node">Jugar donde tus genes favorezcan</div>
+                <div class="node">Regla de Ricitos de Oro</div>
+                <div class="node">Manejo del aburrimiento</div>
+                <div class="node">Reflexión y revisión periódica</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function t(id) {
+            const el = document.getElementById('b' + id);
+            el.classList.toggle('active');
+        }
+        // Iniciar con el primer nivel abierto
+        window.onload = () => t(1);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos de Arquitectura Conductual - Versión Completa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-paper: #FDFBF7;
+            --grid-line: #E2E8F0;
+            --emerald-stack: #2D5A3D;
+            --accent-orange: #F97316;
+            --slate-dark: #1E293B;
+            --text-main: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #E2E8F0;
+            overflow: hidden;
+            height: 100vh;
+            color: var(--slate-dark);
+        }
+
+        /* NAVEGACIÓN */
+        .nav-controls {
+            position: fixed;
+            bottom: 25px;
+            right: 40px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: var(--emerald-stack);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: bold;
+            font-size: 13px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #1a3d28;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .presentation-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ESTILO DE DIAPOSITIVA (PLANO) */
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 50px 80px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-color: var(--bg-paper);
+        }
+
+        /* CUADRÍCULA Y BORDES TÉCNICOS */
+        .slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 1px solid var(--emerald-stack);
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        /* HEADER Y FOOTER */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--emerald-stack);
+            padding-bottom: 12px;
+            margin-bottom: 35px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .slide-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px dashed var(--grid-line);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            color: #94A3B8;
+            z-index: 10;
+        }
+
+        .slide-num {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: bold;
+            color: var(--emerald-stack);
+            font-size: 12px;
+        }
+
+        /* TIPOGRAFÍA */
+        h1 {
+            font-size: 44px;
+            text-transform: uppercase;
+            color: var(--emerald-stack);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        h2 {
+            font-size: 30px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            color: #64748B;
+        }
+
+        /* COMPONENTES VISUALES */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 50px;
+            align-items: center;
+            flex: 1;
+            z-index: 10;
+        }
+
+        .visual-box {
+            background: white;
+            border: 1px solid var(--grid-line);
+            padding: 30px;
+            border-radius: 12px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        /* TABLAS */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #475569;
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 18px;
+            border: 1px solid var(--grid-line);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* GRÁFICOS SVG */
+        .chart-svg {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        /* DECORACIONES */
+        .math-box {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 26px;
+            color: var(--accent-orange);
+            font-weight: bold;
+            background: #FFF7ED;
+            padding: 20px;
+            border-left: 6px solid var(--accent-orange);
+            margin: 25px 0;
+        }
+
+        .quote-box {
+            border-left: 4px solid var(--emerald-stack);
+            padding-left: 20px;
+            font-style: italic;
+            font-size: 20px;
+            margin: 20px 0;
+            color: var(--emerald-stack);
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="moveSlide(-1)" disabled>ANTERIOR</button>
+        <button class="nav-btn" id="nextBtn" onclick="moveSlide(1)">SIGUIENTE</button>
+    </div>
+
+    <div class="presentation-container" id="container">
+
+        <!-- P1: PORTADA -->
+        <section class="slide">
+            <div class="slide-header">
+                <div><span class="mono">PLANO: 00 // VER: 2024</span>
+                    <h1>Sistemas de Hábitos</h1>
+                </div><span class="slide-num">P-01</span>
+            </div>
+            <div
+                style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                <h2 style="font-size: 70px; line-height: 1; margin-bottom: 10px;">Planos de Arquitectura</h2>
+                <h2 style="font-size: 70px; color: var(--accent-orange); line-height: 1;">Conductual</h2>
+                <div style="width:140px; height:5px; background:var(--accent-orange); margin:40px 0;"></div>
+                <p style="max-width:700px; font-size:24px;">El manual definitivo para diseñar hábitos atómicos,
+                    transformar tu identidad y dominar la ciencia de las pequeñas mejoras.</p>
+            </div>
+            <div class="slide-footer"><span>PROYECTO: ARQUITECTURA CONDUCTUAL</span><span>ESCALA: MACRO</span></div>
+        </section>
+
+        <!-- P2: INTERÉS COMPUESTO -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>El Interés Compuesto</h1><span class="slide-num">P-02</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <p>Un 1% de mejora diaria no parece mucho en el momento, pero el impacto a largo plazo es
+                        gigantesco.</p>
+                    <div class="math-box">ECUACIÓN DEL ÉXITO:<br>[1.01]³⁶⁵ = 37.78x MEJOR</div>
+                    <p style="font-style: italic;">El éxito es el producto de tus hábitos cotidianos, no de
+                        transformaciones drásticas.</p>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 400 300" class="chart-svg">
+                        <line x1="20" y1="280" x2="380" y2="280" stroke="#CBD5E1" stroke-width="1" />
+                        <path d="M 20 250 Q 150 245 370 50" fill="none" stroke="var(--accent-orange)"
+                            stroke-width="5" />
+                        <path d="M 20 250 L 370 278" fill="none" stroke="#94A3B8" stroke-width="2"
+                            stroke-dasharray="5,5" />
+                        <text x="250" y="40" font-family="IBM Plex Mono" font-size="12" font-weight="bold"
+                            fill="var(--accent-orange)">MEJORA 1%</text>
+                        <text x="250" y="270" font-family="IBM Plex Mono" font-size="10" fill="#94A3B8">PEOR 1%</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- P3: METAS VS SISTEMAS -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Metas vs. Sistemas</h1><span class="slide-num">P-03</span>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+                <div class="quote-box">"No te elevas al nivel de tus metas; desciendes al nivel de tus sistemas."</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">CONCEPTO: METAS</th>
+                            <th style="width: 50%; background: var(--accent-orange);">CONCEPTO: SISTEMAS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>El resultado futuro:</strong> Ganar el campeonato.</td>
+                            <td><strong>El proceso actual:</strong> Entrenar todos los días.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cambio momentáneo:</strong> Limpiar tu cuarto una vez.</td>
+                            <td><strong>Mejora continua:</strong> Desarrollar el hábito del orden.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Restringe la felicidad:</strong> "Seré feliz cuando..."</td>
+                            <td><strong>Libera la felicidad:</strong> "Soy feliz ejecutando el proceso."</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- P4: MESETA POTENCIAL -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>La Meseta de Potencial</h1><span class="slide-num">P-04</span>
+            </div>
+            <div class="content-grid">
+                <div class="visual-box">
+                    <svg viewBox="0 0 400 300" class="chart-svg">
+                        <line x1="20" y1="250" x2="350" y2="50" stroke="#CBD5E1" stroke-width="2"
+                            stroke-dasharray="4" />
+                        <path d="M 20 250 C 100 250 250 245 350 20" fill="none" stroke="var(--accent-orange)"
+                            stroke-width="5" />
+                        <rect x="50" y="210" width="180" height="35" fill="#F1F5F9" stroke="#94A3B8" />
+                        <text x="60" y="232" font-family="IBM Plex Mono" font-size="10">ABISMO DE DESILUSIÓN</text>
+                    </svg>
+                </div>
+                <div>
+                    <h2>El trabajo se acumula</h2>
+                    <p>Como el hielo que pasa de -4°C a -1°C sin derretirse, el trabajo invisible está creando la
+                        energía necesaria para cruzar el umbral.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- P5: LAS 3 CAPAS -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Las 3 Capas del Cambio</h1><span class="slide-num">P-05</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <div style="margin-bottom: 20px;"><strong>Resultados:</strong> Lo que obtienes.</div>
+                    <div style="margin-bottom: 20px;"><strong>Procesos:</strong> Lo que haces.</div>
+                    <div style="margin-bottom: 20px; color: var(--accent-orange); font-weight: bold;">
+                        <strong>Identidad:</strong> Lo que crees.
+                    </div>
+                    <p style="margin-top: 30px; font-style: italic;">"La meta no es leer un libro; la meta es
+                        convertirse en lector."</p>
+                </div>
+                <div style="display: flex; justify-content: center;">
+                    <svg width="350" height="350" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="#F8FAFC" stroke="#E2E8F0" />
+                        <circle cx="50" cy="50" r="32" fill="#F1F5F9" stroke="#CBD5E1" />
+                        <circle cx="50" cy="50" r="18" fill="var(--accent-orange)" />
+                        <text x="50" y="52" text-anchor="middle" fill="white" font-size="5"
+                            font-weight="bold">IDENTIDAD</text>
+                        <text x="50" y="12" text-anchor="middle" fill="#64748B" font-size="4">RESULTADOS</text>
+                        <text x="50" y="25" text-anchor="middle" fill="#475569" font-size="4">PROCESOS</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- P6: EL CICLO -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Ciclo de los Hábitos</h1><span class="slide-num">P-06</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; flex: 1; align-items: center;">
+                <div
+                    style="text-align: center; padding: 25px; border: 2px solid var(--grid-line); border-radius: 12px; background: white;">
+                    <span class="mono">01</span>
+                    <h3 style="margin: 10px 0; color: var(--emerald-stack)">SEÑAL</h3>
+                    <p style="font-size: 14px;">El disparador del problema.</p>
+                </div>
+                <div
+                    style="text-align: center; padding: 25px; border: 2px solid var(--grid-line); border-radius: 12px; background: white;">
+                    <span class="mono">02</span>
+                    <h3 style="margin: 10px 0; color: var(--emerald-stack)">ANHELO</h3>
+                    <p style="font-size: 14px;">El motor del deseo.</p>
+                </div>
+                <div
+                    style="text-align: center; padding: 25px; border: 2px solid var(--emerald-stack); border-radius: 12px; background: white;">
+                    <span class="mono">03</span>
+                    <h3 style="margin: 10px 0; color: var(--emerald-stack)">RESPUESTA</h3>
+                    <p style="font-size: 14px;">La acción ejecutada.</p>
+                </div>
+                <div
+                    style="text-align: center; padding: 25px; border: 2px solid var(--accent-orange); border-radius: 12px; background: #FFF7ED;">
+                    <span class="mono">04</span>
+                    <h3 style="margin: 10px 0; color: var(--accent-orange)">PREMIO</h3>
+                    <p style="font-size: 14px;">El alivio que satisface.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- P7: SISTEMA VOTACIÓN -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Sistema de Votación</h1><span class="slide-num">P-07</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <h2>¿Cómo se construye la identidad?</h2>
+                    <p>Cada acción es un **voto** depositado por la persona que quieres ser. No necesitas perfección,
+                        solo una mayoría simple.</p>
+                </div>
+                <div class="visual-box" style="align-items: center; justify-content: center;">
+                    <div style="font-size: 120px;">🗳️</div>
+                    <p class="mono" style="margin-top: 15px;">URNA DE IDENTIDAD</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- P8: MATRIZ INVERSIÓN -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Matriz de Inversión</h1><span class="slide-num">P-08</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="background: var(--accent-orange)">CREAR HÁBITO</th>
+                        <th style="background: var(--slate-dark)">ROMPER HÁBITO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1. SEÑAL: Hazlo Obvio</td>
+                        <td>1. INVERTIDA: Hazlo Invisible</td>
+                    </tr>
+                    <tr>
+                        <td>2. ANHELO: Hazlo Atractivo</td>
+                        <td>2. INVERTIDA: Hazlo Poco Atractivo</td>
+                    </tr>
+                    <tr>
+                        <td>3. RESPUESTA: Hazlo Sencillo</td>
+                        <td>3. INVERTIDA: Hazlo Difícil</td>
+                    </tr>
+                    <tr>
+                        <td>4. RECOMPENSA: Hazlo Satisfactorio</td>
+                        <td>4. INVERTIDA: Hazlo Insatisfactorio</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- P9: APILAMIENTO -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Apilamiento</h1><span class="slide-num">P-09</span>
+            </div>
+            <div style="flex:1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div
+                    style="font-family: 'IBM Plex Mono'; font-size: 32px; border: 4px solid var(--emerald-stack); padding: 40px; border-radius: 20px; text-align: center;">
+                    [Después de: <span style="color: #64748B">Hábito Actual</span>] <br>
+                    <span style="color: var(--accent-orange); font-size: 50px;">+</span> <br>
+                    [Yo haré: <span style="color: var(--emerald-stack)">Nuevo Hábito</span>]
+                </div>
+            </div>
+        </section>
+
+        <!-- P10: DOPAMINA -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Pico de Dopamina</h1><span class="slide-num">P-10</span>
+            </div>
+            <div class="content-grid">
+                <div class="visual-box">
+                    <svg viewBox="0 0 400 200" class="chart-svg">
+                        <path d="M 20 180 L 100 180 Q 140 10 180 180 L 380 180" fill="none"
+                            stroke="var(--accent-orange)" stroke-width="4" />
+                        <text x="110" y="30" font-family="IBM Plex Mono" font-size="10"
+                            fill="var(--accent-orange)">ANTICIPACIÓN</text>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Deseo vs. Placer</h2>
+                    <p>Tu cerebro libera más dopamina al <strong>esperar</strong> la recompensa que al recibirla.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- P11: DISEÑO AMBIENTAL -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Diseño Ambiental</h1><span class="slide-num">P-11</span>
+            </div>
+            <div class="content-grid">
+                <div>
+                    <p>Un solo lugar, un solo uso. No mezcles contextos.</p>
+                    <ul style="margin-top: 20px; line-height: 2;">
+                        <li>Sillón ➔ Solo para leer.</li>
+                        <li>Escritorio ➔ Solo para trabajar.</li>
+                    </ul>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 400 300" style="width: 100%;">
+                        <rect x="50" y="50" width="300" height="200" fill="none" stroke="var(--slate-dark)"
+                            stroke-width="2" />
+                        <line x1="200" y1="50" x2="200" y2="250" stroke="#CBD5E1" />
+                        <text x="125" y="100" font-size="10" font-family="IBM Plex Mono">TRABAJO</text>
+                        <text x="275" y="100" font-size="10" font-family="IBM Plex Mono">DESCANSO</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- P12: REGLA 2 MINUTOS -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Regla de 2 Minutos</h1><span class="slide-num">P-12</span>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                <div
+                    style="padding: 20px; background: var(--slate-dark); color: white; width: 80%; text-align: center; margin-bottom: 10px;">
+                    CORRER MARATÓN</div>
+                <div
+                    style="padding: 20px; background: #475569; color: white; width: 60%; text-align: center; margin-bottom: 10px;">
+                    CAMINAR 10 MIN</div>
+                <div
+                    style="padding: 20px; background: var(--accent-orange); color: white; width: 40%; text-align: center;">
+                    PONERSE ZAPATILLAS</div>
+                <p style="margin-top: 40px; font-weight: bold; font-size: 22px;">"ESTANDARIZAR ANTES DE OPTIMIZAR"</p>
+            </div>
+        </section>
+
+        <!-- P13: ESTRATEGIA CLIP -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Estrategia del Clip</h1><span class="slide-num">P-13</span>
+            </div>
+            <div class="content-grid">
+                <div class="visual-box" style="align-items: center;">🫙<br><span class="mono">FRASCO VACÍO</span></div>
+                <div class="visual-box" style="align-items: center;">🍯<br><span class="mono">FRASCO LLENO</span></div>
+            </div>
+            <p style="text-align: center; margin-top: 30px;">Mueve un clip por cada tarea terminada. Haz visible tu
+                progreso.</p>
+        </section>
+
+        <!-- P14: JUEGO ÓPTIMO -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>Terreno Óptimo</h1><span class="slide-num">P-14</span>
+            </div>
+            <div style="flex:1; display: flex; justify-content: center; align-items: center; position: relative;">
+                <div
+                    style="width: 250px; height: 250px; border: 2px solid var(--slate-dark); border-radius: 50%; position: absolute; left: 25%; display: flex; align-items: center; justify-content: center; background: rgba(59, 130, 246, 0.05);">
+                    GENES</div>
+                <div
+                    style="width: 250px; height: 250px; border: 2px solid var(--slate-dark); border-radius: 50%; position: absolute; right: 25%; display: flex; align-items: center; justify-content: center; background: rgba(16, 185, 129, 0.05);">
+                    HÁBITOS</div>
+                <div
+                    style="width: 250px; height: 250px; border: 2px solid var(--slate-dark); border-radius: 50%; position: absolute; top: 10%; display: flex; align-items: center; justify-content: center; background: rgba(249, 115, 22, 0.05);">
+                    CONTEXTO</div>
+                <div style="z-index: 10; font-weight: bold; color: var(--accent-orange); font-size: 20px;">ÉXITO</div>
+            </div>
+        </section>
+
+        <!-- P15: REGLA DE ORO -->
+        <section class="slide">
+            <div class="slide-header">
+                <h1>La Regla de Oro</h1><span class="slide-num">P-15</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="display: flex; gap: 8px; margin-bottom: 40px;">
+                    <div style="width: 40px; height: 40px; background: var(--accent-orange); border-radius: 4px;"></div>
+                    <div style="width: 40px; height: 40px; background: var(--accent-orange); border-radius: 4px;"></div>
+                    <div
+                        style="width: 40px; height: 40px; border: 2px dashed #EF4444; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #EF4444; font-weight: bold;">
+                        X</div>
+                    <div style="width: 40px; height: 40px; background: var(--accent-orange); border-radius: 4px;"></div>
+                </div>
+                <h2 style="font-size: 50px; text-align: center;">NUNCA ROMPAS LA CADENA<br><span
+                        style="color: var(--accent-orange)">DOS VECES.</span></h2>
+                <p style="margin-top: 30px; text-align: center; max-width: 600px;">Faltar un día es un accidente; faltar
+                    dos veces es el principio de un nuevo mal hábito.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 15;
+        const container = document.getElementById('container');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // LOCALIZACIÓN
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang') || 'es';
+
+        const translations = {
+            es: { prev: 'ANTERIOR', next: 'SIGUIENTE' },
+            en: { prev: 'PREVIOUS', next: 'NEXT' },
+            pt: { prev: 'ANTERIOR', next: 'PRÓXIMO' }
+        };
+
+        const t = translations[lang] || translations.es;
+        prevBtn.innerText = t.prev;
+        nextBtn.innerText = t.next;
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') moveSlide(1);
+            if (e.key === 'ArrowLeft') moveSlide(-1);
+        });
+    </script>
+</body>
+
+</html>

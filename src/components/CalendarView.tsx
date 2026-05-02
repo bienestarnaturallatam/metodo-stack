@@ -18,7 +18,7 @@ export default function CalendarView({ month, year, selectedDay, onSelectDay }: 
   const days = Array.from({ length: totalDays }, (_, i) => i + 1);
   const blanks = Array.from({ length: firstDayOfMonth }, (_, i) => i);
 
-  const dayNames = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+  const dayNames = t('planner_cal_headers');
 
   return (
     <div className="bg-white border border-app-border rounded-xl p-4 shadow-sm">

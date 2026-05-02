@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   CheckCircle2, 
   ChevronDown, 
@@ -33,16 +34,10 @@ export default function LandingPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const faqs = [
-    {
-      q: t('faq_1_q'),
-      a: t('faq_1_a')
-    },
-    {
-      q: t('faq_2_q'),
-      a: t('faq_2_a')
-    }
-  ];
+  const faqs = Array.from({ length: 7 }, (_, i) => ({
+    q: t(`faq_${i + 1}_q`),
+    a: t(`faq_${i + 1}_a`)
+  }));
 
   return (
     <div className="min-h-screen bg-white text-[#111111] font-sans selection:bg-[#00C853]/20">
@@ -119,16 +114,15 @@ export default function LandingPage() {
             {/* MOCKUP IMAGE */}
             <div className="mt-20 relative group max-w-4xl mx-auto">
               <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-              <img 
-                src={lang === 'en' ? "/real_en.png" : "/real_es.png"} 
-                alt="Plataforma Método Stack Real App" 
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = "/metodo_stack_mockup_clinical.png";
-                }}
-                className="relative w-full h-auto drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl transition-all duration-700 group-hover:scale-[1.01]"
-              />
+              <div className="relative aspect-[16/10] w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
+                <Image 
+                  src="/metodo_stack_mockup_clinical.png" 
+                  alt="Plataforma Método Stack Real App" 
+                  fill
+                  priority
+                  className="object-cover"
+                />
+              </div>
             </div>
         </div>
       </section>
@@ -216,25 +210,29 @@ export default function LandingPage() {
             <div className="w-24 h-1.5 bg-[#00C853] mx-auto rounded-full" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
               { name: t('pricing_basic'), price: "0", period: t('pricing_per_year'), features: t('features_basic'), cta: t('pricing_start_free'), popular: false },
-              { name: t('pricing_habitos'), price: currency === 'S/' ? "135" : "7.90", period: t('pricing_per_year'), features: t('features_habitos'), cta: t('pricing_activate'), popular: false },
-              { name: t('pricing_enfoque'), price: currency === 'S/' ? "135" : "7.90", period: t('pricing_per_year'), features: t('features_enfoque'), cta: t('pricing_activate'), popular: false },
-              { name: t('pricing_max'), price: currency === 'S/' ? "245" : "13.90", period: t('pricing_per_year'), features: t('features_max'), cta: t('pricing_activate'), popular: true },
+              { name: t('pricing_habitos'), price: "7.90", period: t('pricing_per_year'), features: t('features_habitos'), cta: t('pricing_activate'), popular: false },
+              { name: t('pricing_enfoque'), price: "7.90", period: t('pricing_per_year'), features: t('features_enfoque'), cta: t('pricing_activate'), popular: false },
+              { name: t('pricing_finanzas'), price: "7.90", period: t('pricing_per_year'), features: t('features_finanzas'), cta: t('pricing_activate'), popular: false },
+              { name: t('pricing_max'), price: "14.90", period: t('pricing_per_year'), features: t('features_max'), cta: t('pricing_activate'), popular: true },
             ].map((plan, i) => (
-              <div key={i} className={`p-8 rounded-[40px] border flex flex-col transition-all duration-500 ${plan.popular ? 'border-[#00C853] shadow-2xl' : 'border-black/5'}`}>
-                <h3 className="text-lg font-black uppercase italic mb-2">{plan.name}</h3>
-                <div className="text-3xl font-black mb-8 italic">{plan.price === '0' ? 'FREE' : `${currency} ${plan.price}`} <span className="text-[10px] font-bold text-black/30 not-italic uppercase tracking-widest">{plan.period}</span></div>
-                <ul className="space-y-4 mb-10 flex-grow">
+              <div key={i} className={`p-6 rounded-[32px] border flex flex-col transition-all duration-500 ${plan.popular ? 'border-[#00C853] shadow-2xl scale-[1.02] bg-white' : 'border-black/5 bg-white/50'}`}>
+                <h3 className="text-xs font-black uppercase italic mb-2">{plan.name}</h3>
+                <div className="text-2xl font-black mb-6 italic">
+                  {plan.price === '0' ? 'FREE' : `$ ${plan.price}`} 
+                  <span className="text-[8px] font-bold text-black/30 not-italic uppercase tracking-widest ml-1">{plan.period}</span>
+                </div>
+                <ul className="space-y-3 mb-8 flex-grow">
                   {plan.features.map((item: string, idx: number) => (
-                    <li key={idx} className="flex items-center gap-3 text-xs font-bold text-[#111111]/60">
-                      <CheckCircle2 className="w-4 h-4 text-[#00C853]" />
+                    <li key={idx} className="flex items-start gap-2 text-[10px] font-bold text-[#111111]/60 leading-tight">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#00C853] shrink-0" />
                       {item}
                     </li>
                   ))}
                 </ul>
-                <Link href="/register" className={`w-full py-4 rounded-full text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-white hover:scale-105' : 'border-2 border-black hover:bg-black hover:text-white'}`}>{plan.cta}</Link>
+                <Link href="/register" className={`w-full py-3 rounded-full text-center text-[10px] font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-white hover:scale-105' : 'border-2 border-black hover:bg-black hover:text-white'}`}>{plan.cta}</Link>
               </div>
             ))}
           </div>
@@ -294,9 +292,15 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] mb-8">{t('footer_platform')}</h4>
               <ul className="space-y-4">
-                {['nav_home', 'nav_benefits', 'nav_pricing'].map(key => (
-                  <li key={key}>
-                    <a href={`#${key.split('_')[1]}`} className="text-white/40 text-xs font-bold hover:text-[#00C853] transition-colors uppercase tracking-widest">{t(key)}</a>
+                {[
+                  { key: 'nav_home', href: '#hero' },
+                  { key: 'nav_benefits', href: '#beneficios' },
+                  { key: 'nav_pricing', href: '#precios' }
+                ].map((item) => (
+                  <li key={item.key}>
+                    <a href={item.href} className="text-white/40 text-xs font-bold hover:text-[#00C853] transition-colors uppercase tracking-widest">
+                      {t(item.key)}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -305,9 +309,15 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] mb-8">{t('footer_legal')}</h4>
               <ul className="space-y-4">
-                {['auth_terms', 'auth_privacy', 'auth_cookies'].map(key => (
-                  <li key={key}>
-                    <Link href={`/${key.split('_')[1]}`} className="text-white/40 text-xs font-bold hover:text-[#00C853] transition-colors uppercase tracking-widest">{t(key)}</Link>
+                {[
+                  { key: 'auth_terms', href: '/terminos' },
+                  { key: 'auth_privacy', href: '/privacidad' },
+                  { key: 'auth_cookies', href: '/cookies' }
+                ].map((link) => (
+                  <li key={link.key}>
+                    <Link href={link.href} className="text-white/40 text-xs font-bold hover:text-[#00C853] transition-colors uppercase tracking-widest">
+                      {t(link.key)}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -332,11 +342,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.2em]">
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+            <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">
               {t('footer_copyright')}
             </p>
-            <p className="text-white/10 text-[9px] font-bold max-w-md text-center md:text-right leading-relaxed uppercase tracking-[0.2em]">
+            <p className="text-white/40 text-[10px] font-medium max-w-2xl text-center md:text-right leading-relaxed uppercase tracking-wider">
               {t('footer_disclaimer')}
             </p>
           </div>

@@ -26,56 +26,93 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setIsMounted(true);
-    const saved = localStorage.getItem('app-lang') as Lang;
+    const savedLang = localStorage.getItem('app-lang') as Lang;
+    const savedCountry = localStorage.getItem('app-country');
     
-    if (saved && ['es', 'en', 'pt'].includes(saved)) {
-      setLangState(saved);
-      if (saved === 'en' || saved === 'pt' || saved === 'es') setCurrency('$');
+    if (savedLang && ['es', 'en', 'pt'].includes(savedLang)) {
+      setLangState(savedLang);
+      if (savedCountry) {
+        setCountry(savedCountry);
+        setCurrency(savedCountry === 'PE' ? 'S/' : '$');
+      }
     } else {
-      // Auto-detect language based on IP
+      // Auto-detect language and country based on IP
       fetch('https://ipapi.co/json/')
         .then(res => res.json())
         .then(data => {
           const code = data.country_code;
           setCountry(code);
-          if (code === 'US') {
+          localStorage.setItem('app-country', code);
+          
+          // Currency logic: S/ for Peru, $ for everything else
+          const cur = code === 'PE' ? 'S/' : '$';
+          setCurrency(cur);
+
+          // Language logic
+          if (['US', 'GB', 'CA', 'AU', 'NZ'].includes(code)) {
             setLangState('en');
-            setCurrency('$');
-          } else if (code === 'BR' || code === 'PT') {
+            localStorage.setItem('app-lang', 'en');
+          } else if (['BR', 'PT'].includes(code)) {
             setLangState('pt');
-            setCurrency('$');
+            localStorage.setItem('app-lang', 'pt');
           } else {
             setLangState('es');
-            setCurrency('$');
+            localStorage.setItem('app-lang', 'es');
           }
         })
-        .catch(() => setLangState('es'));
+        .catch(() => {
+           setLangState('es');
+           setCurrency('$');
+        });
     }
   }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
     localStorage.setItem('app-lang', l);
-    setCurrency('$');
   };
 
-  const t = (key: string, params?: Record<string, string>) => {
+  const t = (key: string, params?: Record<string, any>) => {
     const dict = translations[lang] || translations.es;
-    let text = dict[key] || translations.es[key] || key;
-
-    if (params) {
-      Object.entries(params).forEach(([k, v]) => {
-        text = text.replace(`{${k}}`, v);
-      });
+    
+    // Support for nested keys (e.g., "recursos_guide.title")
+    const keys = key.split('.');
+    let value: any = dict;
+    for (const k of keys) {
+      value = value?.[k];
+      if (value === undefined) break;
     }
-    return text;
+
+    // Fallback to Spanish if not found in current language
+    if (value === undefined) {
+      value = translations.es;
+      for (const k of keys) {
+        value = value?.[k];
+        if (value === undefined) break;
+      }
+    }
+
+    // If still undefined, return original key
+    if (value === undefined) return key;
+
+    // Process parameters {key}
+    if (params && typeof value === 'string') {
+      let str = value;
+      Object.entries(params).forEach(([k, v]) => {
+        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      });
+      return str;
+    }
+
+    return value;
   };
 
   const translateText = async (text: string) => text;
 
   const months = (translations[lang] || translations.es).months || [];
 
-  if (!isMounted) return null;
+  // Prevent flash of untranslated content by using isMounted
+  if (!isMounted) return <div className="bg-black min-h-screen" />;
 
   return (
     <I18nContext.Provider value={{ lang, setLang, t, months, translateText, currency, country }}>
