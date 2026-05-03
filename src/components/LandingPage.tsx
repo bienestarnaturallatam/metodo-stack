@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 
 import { useTranslation } from '@/hooks/useTranslation';
+import CarruselModulos from '@/components/CarruselModulos';
 
 export default function LandingPage() {
   const { lang, setLang, t, currency } = useTranslation();
@@ -113,14 +114,18 @@ export default function LandingPage() {
             {/* MOCKUP IMAGE */}
             <div className="mt-20 relative group max-w-4xl mx-auto overflow-hidden">
               <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative aspect-[16/10] w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
-                <Image 
-                  src="/metodo_stack_mockup_espanol.png" 
-                  alt="Plataforma Método Stack Real App" 
-                  fill
+              <div className="relative aspect-[3/2] w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
+                <Image
+                  src="/metodo_stack_mockup_espanol.png"
+                  alt="Plataforma Método Stack — App de hábitos y finanzas"
+                  width={1200}
+                  height={800}
+                  quality={80}
                   priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"
-                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 
+                         (max-width: 1200px) 80vw, 
+                         1200px"
+                  className="w-full h-auto object-contain"
                 />
               </div>
             </div>
@@ -159,73 +164,98 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-              {/* TODO: reemplazar con testimonios reales cuando estén disponibles */}
-              
-              {/* Tarjeta 1 — Hábitos */}
-              <div className="bg-white p-10 rounded-[32px] border border-black/5 shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:border-[#00C853]/30 transition-all group flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-full bg-[#00C853] flex items-center justify-center text-white font-black text-xl">
-                    CR
-                  </div>
-                  <div>
-                    <h4 className="font-black uppercase italic text-sm">Carlos R., 28 años</h4>
-                    <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-widest">Lima, Perú · Plan Hábitos</p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 items-stretch">
+              {/* Tarjeta 1 — Carlos R. */}
+              <div className="bg-white border-[0.5px] border-[#E5E5E5] rounded-[16px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col h-full hover:border-[#00C853]/30 transition-all group">
+                {/* Captura real */}
+                <div className="p-[12px_12px_0] bg-[#F8F8F8]">
+                  <Image
+                    src="/testimonios/testimonio-1.png"
+                    alt="Mensaje real de Carlos R. sobre Método STACK"
+                    width={400}
+                    height={300}
+                    quality={85}
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
+                  />
                 </div>
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
+                {/* Transcripción */}
+                <div className="p-[16px] flex flex-col flex-grow">
+                  <div className="flex items-center gap-[10px] mb-[8px]">
+                    <div className="w-[36px] h-[36px] rounded-full bg-[#00C853] text-black text-[12px] font-semibold flex items-center justify-center shrink-0">CR</div>
+                    <div>
+                      <p className="text-[13px] font-semibold m-0 leading-tight">Carlos R., 28 años</p>
+                      <p className="text-[11px] text-[#888] m-0">Lima, Perú · Plan Hábitos</p>
+                    </div>
+                  </div>
+                  <div className="text-[13px] my-[6px]">⭐⭐⭐⭐⭐</div>
+                  <p className="text-[13px] text-[#333] leading-[1.6] m-0">
+                    "Llevaba 3 años queriendo hacer ejercicio todos los días. Con STACK llevo 47 días seguidos sin fallar. El streak visible me da un miedo terrible a romperlo."
+                  </p>
                 </div>
-                <p className="text-lg font-medium text-[#111111]/70 leading-snug flex-grow">
-                  "Llevaba 3 años queriendo hacer ejercicio todos los días. Con STACK llevo 47 días seguidos sin fallar. El streak visible me da un miedo terrible a romperlo."
-                </p>
               </div>
 
-              {/* Tarjeta 2 — Finanzas (Destacada) */}
-              <div className="bg-white p-10 rounded-[32px] border-2 border-[#00C853] shadow-2xl scale-[1.05] relative z-10 flex flex-col h-full">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00C853] text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-                  Más popular
+              {/* Tarjeta 2 — María A. (Destacada) */}
+              <div className="bg-white border-2 border-[#00C853] rounded-[16px] overflow-hidden shadow-2xl scale-[1.05] relative z-10 flex flex-col h-full">
+                <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#00C853] text-white px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest z-20">
+                  MÁS POPULAR
                 </div>
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-full bg-[#1565C0] flex items-center justify-center text-white font-black text-xl">
-                    MA
+                {/* Captura real */}
+                <div className="p-[16px_12px_0] bg-[#F8F8F8]">
+                  <Image
+                    src="/testimonios/testimonio-2.png"
+                    alt="Mensaje real de María A. sobre Método STACK"
+                    width={400}
+                    height={300}
+                    quality={85}
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
+                  />
+                </div>
+                {/* Transcripción */}
+                <div className="p-[20px_16px_16px] flex flex-col flex-grow">
+                  <div className="flex items-center gap-[10px] mb-[8px]">
+                    <div className="w-[36px] h-[36px] rounded-full bg-[#1565C0] text-white text-[12px] font-semibold flex items-center justify-center shrink-0">MA</div>
+                    <div>
+                      <p className="text-[13px] font-bold m-0 leading-tight">María A., 34 años</p>
+                      <p className="text-[11px] text-[#888] m-0">Bogotá, Colombia · Plan Max ⭐</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-black uppercase italic text-sm">María A., 34 años</h4>
-                    <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-widest">Bogotá, Colombia · Plan Max ⭐</p>
-                  </div>
+                  <div className="text-[13px] my-[6px]">⭐⭐⭐⭐⭐</div>
+                  <p className="text-[13px] text-[#111] font-bold leading-[1.6] m-0 italic">
+                    "El módulo financiero me mostró que gastaba S/400 al mes en cosas que ni recordaba. En 60 días ahorré lo que no había ahorrado en un año."
+                  </p>
                 </div>
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-lg font-black text-[#111111] leading-snug italic flex-grow">
-                  "El módulo financiero me mostró que gastaba S/400 al mes en cosas que ni recordaba. En 60 días ahorré lo que no había ahorrado en un año."
-                </p>
               </div>
 
-              {/* Tarjeta 3 — Enfoque */}
-              <div className="bg-white p-10 rounded-[32px] border border-black/5 shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:border-[#00C853]/30 transition-all group flex flex-col h-full">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-full bg-[#6A1B9A] flex items-center justify-center text-white font-black text-xl">
-                    JP
-                  </div>
-                  <div>
-                    <h4 className="font-black uppercase italic text-sm">Jorge P., 41 años</h4>
-                    <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-widest">Ciudad de México · Plan Enfoque</p>
-                  </div>
+              {/* Tarjeta 3 — Jorge P. */}
+              <div className="bg-white border-[0.5px] border-[#E5E5E5] rounded-[16px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col h-full hover:border-[#00C853]/30 transition-all group">
+                {/* Captura real */}
+                <div className="p-[12px_12px_0] bg-[#F8F8F8]">
+                  <Image
+                    src="/testimonios/testimonio-3.png"
+                    alt="Mensaje real de Jorge P. sobre Método STACK"
+                    width={400}
+                    height={300}
+                    quality={85}
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
+                  />
                 </div>
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
+                {/* Transcripción */}
+                <div className="p-[16px] flex flex-col flex-grow">
+                  <div className="flex items-center gap-[10px] mb-[8px]">
+                    <div className="w-[36px] h-[36px] rounded-full bg-[#6A1B9A] text-white text-[12px] font-semibold flex items-center justify-center shrink-0">JP</div>
+                    <div>
+                      <p className="text-[13px] font-semibold m-0 leading-tight">Jorge P., 41 años</p>
+                      <p className="text-[11px] text-[#888] m-0">Ciudad de México · Plan Enfoque</p>
+                    </div>
+                  </div>
+                  <div className="text-[13px] my-[6px]">⭐⭐⭐⭐⭐</div>
+                  <p className="text-[13px] text-[#333] leading-[1.6] m-0">
+                    "El planeador semanal es lo que diferencia a STACK. Tengo TDAH y por primera vez siento que controlo mis días en vez de que ellos me controlen a mí."
+                  </p>
                 </div>
-                <p className="text-lg font-medium text-[#111111]/70 leading-snug flex-grow">
-                  "El planeador semanal es lo que diferencia a STACK. Tengo TDAH y por primera vez siento que controlo mis días en vez de que ellos me controlen a mí."
-                </p>
               </div>
             </div>
 
@@ -238,8 +268,13 @@ export default function LandingPage() {
                 Unirme a ellos — Es gratis
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <p className="text-sm font-bold text-[#111111]/40 uppercase tracking-widest">
+              <p className="text-sm font-bold text-[#111111]/40 uppercase tracking-widest mb-10">
                 Sin tarjeta de crédito · Cancela cuando quieras
+              </p>
+              
+              {/* PRIVACIDAD */}
+              <p className="text-[10px] text-center text-gray-400 font-medium uppercase tracking-wider">
+                Testimonios publicados con autorización de los usuarios. Nombres visibles con su consentimiento.
               </p>
             </div>
           </div>
@@ -405,14 +440,21 @@ export default function LandingPage() {
               { 
                 name: "PLAN BÁSICO", 
                 price: "0", 
-                period: "año", 
-                features: ["Control de Hábitos (Básico)", "Registro de Ánimo", "Análisis Mensual"], 
+                period: "3 días", 
+                features: [
+                  "Hábitos — acceso parcial", 
+                  "Enfoque Semanal — acceso parcial", 
+                  "Finanzas — acceso parcial", 
+                  "Recursos: Hábitos Atómicos — acceso parcial"
+                ], 
                 blockedFeatures: [],
                 cta: "EMPEZAR GRATIS", 
                 popular: false,
-                badge: null,
+                badge: "Entrada gratuita",
+                isTrial: true,
                 subtag: null,
-                note: null
+                note: "Acceso por 3 días para probar el sistema completo sin compromiso.",
+                noteColor: "text-gray-400"
               },
               { 
                 name: "PLANES INDIVIDUALES", 
@@ -448,9 +490,11 @@ export default function LandingPage() {
                 badge: "Sistema completo",
                 subtag: null,
                 note: "Los 4 módulos completos. El sistema entero.",
-                noteColor: "text-purple-600"
+                noteColor: "text-red-600 animate-blink-red font-black text-sm uppercase tracking-tight"
               },
-            ].map((plan, i) => (
+            ].map((plan, i) => i === 1 ? (
+              <CarruselModulos key={i} />
+            ) : (
               <div key={i} className={`p-8 rounded-[40px] border flex flex-col transition-all duration-500 relative ${plan.popular ? 'border-[#00C853] border-2 shadow-2xl scale-[1.05] bg-white z-10' : 'border-black/5 bg-white/50'}`}>
                 {plan.badge && (
                   <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${plan.popular ? 'bg-[#00C853] text-white' : 'bg-black/10 text-black/40'}`}>
@@ -468,9 +512,14 @@ export default function LandingPage() {
                   <div className="text-4xl font-black mb-1 italic">
                     {plan.price === '0' ? 'FREE' : `USD $${plan.price}`} 
                   </div>
-                  <div className="text-[10px] font-bold text-black/30 uppercase tracking-widest">
-                    {plan.price === '0' ? 'GRATIS PARA SIEMPRE' : `/ ${plan.period}`}
+                  <div className={`text-[10px] font-bold uppercase tracking-widest ${plan.price === '0' ? 'text-[#00C853]' : 'text-black/30'}`}>
+                    {plan.price === '0' ? 'GRATIS — ACCESO 3 DÍAS' : `/ ${plan.period}`}
                   </div>
+                  {plan.isTrial && (
+                    <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-[9px] font-black uppercase tracking-wider">
+                      <span>⏱</span> Trial 3 días — sin tarjeta
+                    </div>
+                  )}
                 </div>
 
                 <ul className="space-y-4 mb-8 flex-grow">

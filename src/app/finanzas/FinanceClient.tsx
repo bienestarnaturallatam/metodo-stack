@@ -86,35 +86,15 @@ type Meta = {
 };
 
 // --- INITIAL DATA ---
-const INITIAL_TX: Transaccion[] = [
-  { id: 1, type: 'income', desc: 'Sueldo mensual', amount: 5500, cat: 'Sueldo', date: '2026-04-01' },
-  { id: 2, type: 'income', desc: 'Freelance diseño', amount: 800, cat: 'Freelance', date: '2026-04-05', note: 'Proyecto web' },
-  { id: 3, type: 'expense', desc: 'Supermercado Wong', amount: 380, cat: 'Alimentación', date: '2026-04-02' },
-  { id: 4, type: 'expense', desc: 'Uber', amount: 65, cat: 'Transporte', date: '2026-04-03' },
-  { id: 5, type: 'expense', desc: 'Netflix + Spotify', amount: 45, cat: 'Entretenimiento', date: '2026-04-04' },
-  { id: 6, type: 'expense', desc: 'Farmacia', amount: 120, cat: 'Salud', date: '2026-04-06' },
-  { id: 7, type: 'expense', desc: 'Luz y agua', amount: 290, cat: 'Servicios', date: '2026-04-08' },
-  { id: 8, type: 'expense', desc: 'Almuerzo trabajo', amount: 210, cat: 'Alimentación', date: '2026-04-10' },
-  { id: 9, type: 'expense', desc: 'Gasolina', amount: 180, cat: 'Transporte', date: '2026-04-12' },
-  { id: 10, type: 'expense', desc: 'Gym', amount: 80, cat: 'Salud', date: '2026-04-14' },
-  { id: 11, type: 'income', desc: 'Bono productividad', amount: 400, cat: 'Bono', date: '2026-04-15' },
-  { id: 12, type: 'expense', desc: 'Cine con familia', amount: 95, cat: 'Entretenimiento', date: '2026-04-18' },
-  { id: 13, type: 'expense', desc: 'Ropa tienda', amount: 160, cat: 'Ropa', date: '2026-04-20' },
-  { id: 14, type: 'expense', desc: 'Curso online', amount: 150, cat: 'Educación', date: '2026-04-22' },
-  { id: 15, type: 'expense', desc: 'Mercado fresco', amount: 140, cat: 'Alimentación', date: '2026-04-25' }
-];
+const INITIAL_TX: Transaccion[] = [];
 
 const INITIAL_BUDGET: Presupuesto = {
-  Alimentación: 1200, Transporte: 400, Vivienda: 1500,
-  Salud: 300, Entretenimiento: 500, Educación: 400,
-  Servicios: 350, Ropa: 200, Otros: 300
+  Alimentación: 0, Transporte: 0, Vivienda: 0,
+  Salud: 0, Entretenimiento: 0, Educación: 0,
+  Servicios: 0, Ropa: 0, Otros: 0
 };
 
-const INITIAL_GOALS: Meta[] = [
-  { id: 1, name: 'Fondo de emergencia', icon: '🏦', target: 15000, current: 8500 },
-  { id: 2, name: 'Vacaciones Lima-Cusco', icon: '✈️', target: 3000, current: 1200 },
-  { id: 3, name: 'Laptop nueva', icon: '💻', target: 4500, current: 900 }
-];
+const INITIAL_GOALS: Meta[] = [];
 
 export default function FinanceClient({ userId, userEmail, onPageChange }: { userId: string, userEmail: string, onPageChange?: (page: any) => void }) {
   const [activeModule, setActiveModule] = useState<'dashboard' | 'transactions' | 'budget' | 'goals' | 'reports'>('dashboard');
@@ -136,42 +116,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange }: { use
     router.push('/login');
   }
 
-  // Initial Sample Data (Demo)
-  useEffect(() => {
-    if (userId) {
-      const sampleTx: Transaccion[] = [
-        { id: 1, type: 'income', amount: 5500, cat: 'Sueldo', desc: 'Sueldo mensual', date: '2026-04-01', note: 'Depósito principal' },
-        { id: 2, type: 'income', amount: 800, cat: 'Freelance', desc: 'Freelance diseño', date: '2026-04-05', note: 'Proyecto web' },
-        { id: 3, type: 'expense', amount: 380, cat: 'Alimentación', desc: 'Supermercado Wong', date: '2026-04-02' },
-        { id: 4, type: 'expense', amount: 65, cat: 'Transporte', desc: 'Uber', date: '2026-04-03' },
-        { id: 5, type: 'expense', amount: 45, cat: 'Entretenimiento', desc: 'Netflix + Spotify', date: '2026-04-04' },
-        { id: 6, type: 'expense', amount: 120, cat: 'Salud', desc: 'Farmacia', date: '2026-04-06' },
-        { id: 7, type: 'expense', amount: 290, cat: 'Servicios', desc: 'Luz y agua', date: '2026-04-08' },
-        { id: 8, type: 'expense', amount: 210, cat: 'Alimentación', desc: 'Almuerzo trabajo', date: '2026-04-10' },
-        { id: 9, type: 'expense', amount: 180, cat: 'Transporte', desc: 'Gasolina', date: '2026-04-12' },
-        { id: 10, type: 'expense', amount: 80, cat: 'Salud', desc: 'Gym', date: '2026-04-14' },
-      ];
-      if (transacciones.length === 0) {
-        setTransacciones(sampleTx);
-        localStorage.setItem(`finanzas_tx_${userId}`, JSON.stringify(sampleTx));
-      }
-
-      if (Object.keys(presupuesto).length === 0) {
-        const sampleBudget = { Alimentación: 1000, Transporte: 500, Entretenimiento: 300, Salud: 400 };
-        setPresupuesto(sampleBudget);
-        localStorage.setItem(`finanzas_budget_${userId}`, JSON.stringify(sampleBudget));
-      }
-
-      if (metas.length === 0) {
-        const sampleMetas = [
-          { id: 1, name: 'Fondo de Emergencia', icon: '🏦', target: 5000, current: 1500 },
-          { id: 2, name: 'Viaje a Cusco', icon: '✈️', target: 2000, current: 800 }
-        ];
-        setMetas(sampleMetas);
-        localStorage.setItem(`finanzas_goals_${userId}`, JSON.stringify(sampleMetas));
-      }
-    }
-  }, [userId]);
+  // Data loading from localStorage
 
   // Persistence
   useEffect(() => {

@@ -68,18 +68,43 @@ function TrackerContent({ userId, userEmail }: Props) {
           setPage('planner');
         }
 
-        // Lógica de Onboarding Refinada
         const isNew = new URLSearchParams(window.location.search).get('new');
+        
+        // --- DATA RESET FOR NEW TRIAL USERS ---
+        if (isNew === 'true' && profile.tier === 'trial') {
+          console.log('Resetting data for new trial user:', userId);
+          
+          // 1. Clear LocalStorage
+          localStorage.removeItem(`finanzas_tx_${userId}`);
+          localStorage.removeItem(`finanzas_budget_${userId}`);
+          localStorage.removeItem(`finanzas_goals_${userId}`);
+          localStorage.removeItem(`stack_onboarding_${userId}`);
+          
+          // 2. Clear Supabase Tables
+          try {
+            await Promise.all([
+              supabase.from('habits').delete().eq('user_id', userId),
+              supabase.from('habit_completions').delete().eq('user_id', userId),
+              supabase.from('mood_logs').delete().eq('user_id', userId),
+              supabase.from('weekly_planner_data').delete().eq('user_id', userId)
+            ]);
+            console.log('Supabase data wiped for fresh trial.');
+          } catch (err) {
+            console.error('Error wiping data:', err);
+          }
+          
+          // Refresh page without the 'new' param to avoid re-wiping and clean URL
+          router.replace('/tracker', { scroll: false });
+        }
+
+        // Lógica de Onboarding Refinada
         const isPaidMember = profile.is_paid || (profile.tier && profile.tier !== 'trial');
 
         if (isPaidMember) {
-          // Usuarios con suscripción NUNCA ven el onboarding
           setShowOnboarding(false);
         } else if (isNew === 'true') {
-          // Recién registrados
           setShowOnboarding(true);
         } else {
-          // Usuarios recurrentes o en trial
           const hasShown = localStorage.getItem(`stack_onboarding_${userId}`);
           if (!hasShown && profile.tier === 'trial') {
             setShowOnboarding(true);
@@ -90,7 +115,7 @@ function TrackerContent({ userId, userEmail }: Props) {
       }
     }
     initUser();
-  }, [userId, supabase]);
+  }, [userId, supabase, router]);
 
   const { habits, loading, add, remove, archiveFromMonth, rename } = useHabits();
   const { completions, toggle }          = useCompletions(year, month);
