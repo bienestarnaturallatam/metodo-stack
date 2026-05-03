@@ -447,7 +447,12 @@ function TrackerContent({ userId, userEmail }: Props) {
 
       {page === 'recursos' && (
         <div className="animate-in fade-in duration-500">
-           <RecursosClient userId={userId} userEmail={userEmail} />
+           <RecursosClient 
+             userId={userId} 
+             userEmail={userEmail} 
+             userTier={userTier}
+             isPaid={isPaid}
+           />
         </div>
       )}
 
