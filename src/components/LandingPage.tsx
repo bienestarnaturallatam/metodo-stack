@@ -84,18 +84,18 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section id="hero" className="pt-40 pb-20 px-6 min-h-[90vh] flex flex-col justify-center">
+      <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center">
         <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-8 animate-in slide-in-from-top duration-700">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4 animate-in slide-in-from-top duration-700">
               <Zap className="w-3 h-3 fill-[#00C853]" />
               {t('auth_tagline')}
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-8 animate-in slide-in-from-bottom duration-700 delay-100 uppercase leading-tight min-h-[1.2em]">
+            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-4 animate-in slide-in-from-bottom duration-700 delay-100 uppercase leading-tight min-h-[1.2em]">
               {t('hero_title')}
             </h1>
             
-            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-12 animate-in slide-in-from-bottom duration-700 delay-200 min-h-[3em]">
+            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-8 animate-in slide-in-from-bottom duration-700 delay-200 min-h-[3em]">
               {t('hero_subtitle')}
             </p>
 
@@ -112,7 +112,7 @@ export default function LandingPage() {
             </div>
 
             {/* MOCKUP IMAGE */}
-            <div className="mt-20 relative group max-w-4xl mx-auto overflow-hidden">
+            <div className="mt-10 relative group max-w-4xl mx-auto overflow-hidden">
               <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative aspect-[3/2] w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
                 <Image
@@ -153,10 +153,10 @@ export default function LandingPage() {
         </div>
 
         {/* TESTIMONIALS GRID */}
-        <div className="py-24 bg-white px-6">
+        <div className="py-12 bg-white px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-[#111111] mb-6 uppercase">
+            <div className="text-center mb-10">
+              <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-[#111111] mb-4 uppercase">
                 Lo que dicen quienes ya cambiaron su sistema
               </h2>
               <p className="text-xl font-bold text-[#111111]/40 uppercase tracking-[0.3em]">
@@ -164,7 +164,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 items-stretch">
               {/* Tarjeta 1 — Carlos R. */}
               <div className="bg-white border-[0.5px] border-[#E5E5E5] rounded-[16px] overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col h-full hover:border-[#00C853]/30 transition-all group">
                 {/* Captura real */}
@@ -282,9 +282,9 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES GRID */}
-      <section id="beneficios" className="py-24 bg-[#F9F9F9] px-6">
+      <section id="beneficios" className="py-16 bg-[#F9F9F9] px-6">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
+          <div className="text-center mb-12">
             <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-[#111111] mb-6 uppercase">
               {t('pilares_title')}
             </h2>
@@ -326,38 +326,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* AUTHORITY & GIFT */}
-      <section className="py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-[#00C853] rounded-[48px] p-10 md:p-20 text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="relative z-10 max-w-3xl mx-auto">
-              <span className="inline-block px-4 py-1.5 bg-white text-[#00C853] text-[10px] font-black uppercase tracking-widest rounded-full mb-8">
-                {t('gift_tag')}
-              </span>
-              <h2 className="text-4xl md:text-6xl font-black italic text-white mb-4 leading-tight uppercase">
-                {t('gift_title')} <br />
-                <span className="text-white/80">{t('gift_subtitle')}</span>
-              </h2>
-              <p className="text-white/60 text-lg md:text-xl font-bold mb-12 uppercase tracking-widest">
-                {t('gift_format')}
-              </p>
-              <Link 
-                href="/register" 
-                className="inline-flex items-center gap-3 px-10 py-5 bg-white text-[#00C853] rounded-2xl font-black italic text-lg tracking-widest hover:scale-105 transition-all shadow-xl"
-              >
-                {t('pricing_start_free')}
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* SECCIÓN DE REGALO ELIMINADA POR SOLICITUD */}
 
       {/* SECTION A — ¿PARA QUIÉN ES STACK? */}
-      <section id="para-quien" className="py-24 bg-white px-6">
+      <section id="para-quien" className="py-12 bg-white px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-[#111111] mb-4 uppercase">
               STACK es para ti si...
             </h2>
@@ -366,10 +340,10 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* SÍ es para ti */}
             <div className="bg-[#F0FFF4] p-10 rounded-[24px] border-l-[3px] border-[#00C853] shadow-sm animate-in fade-in slide-in-from-left duration-700">
-              <h3 className="text-2xl font-black uppercase italic mb-8 text-[#00C853]">SÍ es para ti</h3>
+              <h3 className="text-2xl font-black uppercase italic mb-4 text-[#00C853]">SÍ es para ti</h3>
               <ul className="space-y-6">
                 {[
                   "Empiezas proyectos pero no los terminas",
@@ -389,7 +363,7 @@ export default function LandingPage() {
 
             {/* NO es para ti */}
             <div className="bg-[#F5F5F5] p-10 rounded-[24px] border-l-[3px] border-[#CCCCCC] shadow-sm animate-in fade-in slide-in-from-right duration-700">
-              <h3 className="text-2xl font-black uppercase italic mb-8 text-[#111111]/40">NO es para ti</h3>
+              <h3 className="text-2xl font-black uppercase italic mb-4 text-[#111111]/40">NO es para ti</h3>
               <ul className="space-y-6">
                 {[
                   "Buscas resultados sin esfuerzo ni constancia",
@@ -407,7 +381,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-center">
-            <p className="text-sm font-black text-[#00C853] uppercase tracking-widest mb-8 italic">
+            <p className="text-sm font-black text-[#00C853] uppercase tracking-widest mb-6 italic">
               "Si te identificaste con el lado izquierdo, STACK fue diseñado exactamente para ti."
             </p>
             <Link 
@@ -422,9 +396,9 @@ export default function LandingPage() {
       </section>
 
       {/* PRICING TABLE */}
-      <section id="precios" className="py-24 px-6">
+      <section id="precios" className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
+          <div className="text-center mb-10">
             <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-[#111111] mb-6 uppercase">
               {t('pricing_title')}
             </h2>
@@ -432,7 +406,7 @@ export default function LandingPage() {
               Precios en dólares americanos (USD). <br className="md:hidden" />
               Pago anual único — sin sorpresas ni renovaciones.
             </p>
-            <div className="w-24 h-1.5 bg-[#00C853] mx-auto rounded-full mt-6" />
+            <div className="w-24 h-1.5 bg-[#00C853] mx-auto rounded-full mt-4" />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -458,7 +432,7 @@ export default function LandingPage() {
               },
               { 
                 name: "PLANES INDIVIDUALES", 
-                price: "7.90", 
+                price: "7.90 Cada módulo", 
                 period: "módulo / año · via Hotmart", 
                 features: [
                   "Solo Hábitos — $7.90",
@@ -502,7 +476,7 @@ export default function LandingPage() {
                   </div>
                 )}
                 
-                <div className="mb-8">
+                <div className="mb-6">
                   <h3 className="text-xs font-black uppercase italic mb-2 opacity-40">{plan.name}</h3>
                   {plan.subtag && (
                     <div className="text-[10px] font-bold text-[#00C853] uppercase tracking-wider mb-2">
@@ -522,7 +496,7 @@ export default function LandingPage() {
                   )}
                 </div>
 
-                <ul className="space-y-4 mb-8 flex-grow">
+                <ul className="space-y-4 mb-6 flex-grow">
                   {plan.features.map((item: string, idx: number) => (
                     <li key={idx} className="flex items-start gap-3 text-[12px] font-bold text-[#111111]/80 leading-tight">
                       <CheckCircle2 className="w-4 h-4 text-[#00C853] shrink-0" />
@@ -553,14 +527,14 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ SECTION */}
-      <section id="faq" className="py-24 bg-[#F9F9F9] px-6">
+      <section id="faq" className="py-12 bg-[#F9F9F9] px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="mb-16 text-center">
+          <div className="mb-8 text-center">
             <h2 className="text-4xl font-black uppercase italic tracking-tighter mb-4">{t('faq_title')}</h2>
             <p className="text-sm font-bold text-black/30 uppercase tracking-[0.3em]">{t('faq_subtitle')}</p>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-2">
             {faqs.map((faq, i) => (
               <div key={i} className="bg-white rounded-2xl border border-black/5 overflow-hidden">
                 <button 
@@ -582,15 +556,15 @@ export default function LandingPage() {
       </section>
 
       {/* SECTION B — CTA FINAL DE CIERRE */}
-      <section id="cta-final" className="py-24 bg-[#0A0A0A] px-6 text-center overflow-hidden relative">
+      <section id="cta-final" className="py-16 bg-[#0A0A0A] px-6 text-center overflow-hidden relative">
         <div className="max-w-4xl mx-auto relative z-10 animate-in fade-in slide-in-from-bottom duration-1000">
-          <span className="text-[#00C853] text-sm font-black uppercase tracking-[0.4em] mb-6 block">
+          <span className="text-[#00C853] text-sm font-black uppercase tracking-[0.4em] mb-4 block">
             SIN EXCUSAS. SIN ESPERAR.
           </span>
-          <h2 className="text-4xl md:text-6xl font-black italic text-white mb-6 uppercase tracking-tighter">
+          <h2 className="text-4xl md:text-6xl font-black italic text-white mb-4 uppercase tracking-tighter">
             Tu sistema empieza hoy.
           </h2>
-          <p className="text-[#AAAAAA] text-lg font-bold mb-12 max-w-2xl mx-auto uppercase tracking-widest">
+          <p className="text-[#AAAAAA] text-lg font-bold mb-8 max-w-2xl mx-auto uppercase tracking-widest">
             En 5 minutos configuras tus primeros hábitos y tu planeador de la semana. Gratis.
           </p>
 

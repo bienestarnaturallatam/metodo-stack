@@ -21,7 +21,7 @@ export default function PlannerPanel({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
   const [newTaskText, setNewTaskText] = useState('');
   const supabase = createClient();
-  
+
   const todayStr = toISODate(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
   // 1. Lógica Server Component (Simulada en montaje para obtener fecha y tareas de HOY)
@@ -88,7 +88,7 @@ export default function PlannerPanel({ userId }: { userId: string }) {
       .filter(t => !t.done)
       .map((t, i) => `${i + 1}. ${t.text}`)
       .join('\n');
-    
+
     const message = `${t('planner_whatsapp_critical')}\n\n${criticalTasks || t('planner_whatsapp_no_tasks')}\n\n${t('planner_whatsapp_touch_format')}\n${t('planner_whatsapp_zero_friction')}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
@@ -138,8 +138,8 @@ export default function PlannerPanel({ userId }: { userId: string }) {
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">{todayStr}</p>
             </div>
           </div>
-          
-          <button 
+
+          <button
             onClick={shareToWhatsApp}
             className="flex items-center gap-2 px-6 py-2 bg-emerald-600/10 border border-emerald-500/30 text-emerald-500 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all glow-green"
           >
@@ -155,7 +155,7 @@ export default function PlannerPanel({ userId }: { userId: string }) {
               <div className="w-8 h-8 rounded-full border-2 border-red-500/50 flex items-center justify-center text-red-500 text-xl font-black glow-red bg-red-950/20">
                 +
               </div>
-              <input 
+              <input
                 type="text"
                 placeholder={t('planner_add_critical_placeholder')}
                 className="flex-1 bg-transparent border-none outline-none text-lg font-bold placeholder:text-gray-700"
@@ -164,7 +164,7 @@ export default function PlannerPanel({ userId }: { userId: string }) {
                 onKeyDown={(e) => e.key === 'Enter' && addCriticalTask()}
               />
             </div>
-            <button 
+            <button
               onClick={addCriticalTask}
               className="px-10 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-red-500 transition-all active:scale-95 shadow-[0_0_20px_rgba(239,68,68,0.4)]"
             >
@@ -185,13 +185,13 @@ export default function PlannerPanel({ userId }: { userId: string }) {
             </div>
           ) : (
             tasks.map(task => (
-              <div 
+              <div
                 key={task.id}
                 className={`group relative p-6 rounded-[24px] border-2 transition-all duration-700 flex items-center gap-6
                   ${task.done ? 'bg-emerald-950/10 border-emerald-900/30 opacity-40' : 'bg-gray-900/60 border-gray-800 hover:border-red-500/50 hover:bg-gray-900'}
                 `}
               >
-                <button 
+                <button
                   onClick={() => toggleTask(task)}
                   className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
                     ${task.done ? 'bg-emerald-500 border-emerald-500 text-black glow-green' : 'border-red-500/50 text-red-500 hover:scale-110 glow-red bg-red-950/20'}
@@ -211,9 +211,9 @@ export default function PlannerPanel({ userId }: { userId: string }) {
                 </div>
 
                 <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <div className="w-10 h-10 rounded-xl bg-blue-900/20 border border-blue-500/30 flex items-center justify-center text-blue-400 glow-blue text-xs font-black">
-                      {t('planner_finish')}
-                   </div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-900/20 border border-blue-500/30 flex items-center justify-center text-blue-400 glow-blue text-xs font-black">
+                    {t('planner_finish')}
+                  </div>
                 </div>
               </div>
             ))

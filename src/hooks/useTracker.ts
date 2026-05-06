@@ -37,7 +37,7 @@ export function useHabits() {
 
   const add = async (name: string, month?: number, year?: number) => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) return null;
     const pos = habits.length;
     // Use first day of the viewed month as created_at so the habit
     // only appears from that month forward, not in previous months.
@@ -49,7 +49,11 @@ export function useHabits() {
       .insert({ name, user_id: user.id, position: pos, created_at: createdAt })
       .select()
       .single();
-    if (!error && data) setHabits(prev => [...prev, data]);
+    if (!error && data) {
+      setHabits(prev => [...prev, data]);
+      return data;
+    }
+    return null;
   };
 
   const remove = async (id: string) => {

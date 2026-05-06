@@ -66,28 +66,30 @@ export default function TrackerTable({
   };
   const isS = (d: number) => d === selectedDay;
 
-  const TH2 = 'sticky left-0 z-40 bg-white w-[280px] min-w-[280px] max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)] text-left px-5 font-black uppercase text-brand-green tracking-wider';
-  const TD2 = 'sticky left-0 z-30 w-[280px] min-w-[280px] max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)] bg-white px-5 py-3.5 font-bold text-app-text overflow-hidden';
+  const TH2 = 'sticky left-0 z-40 bg-white w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)] text-left px-3 sm:px-5 font-black uppercase text-brand-green tracking-wider';
+  const TD2 = 'sticky left-0 z-30 w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)] bg-white px-3 sm:px-5 py-2 sm:py-3.5 font-bold text-app-text overflow-hidden';
 
-  const dayCell = 'w-[46px] min-w-[46px] max-w-[46px] border-r border-b border-app-border text-center';
+  const dayCell = 'w-[40px] sm:w-[46px] min-w-[40px] sm:min-w-[46px] max-w-[40px] sm:max-w-[46px] border-r border-b border-app-border text-center';
 
   return (
-    <div className="bg-app-surface border border-app-border rounded-xl shadow-sm overflow-hidden text-[11px] text-app-text">
-      <div className="p-4 border-b border-app-border bg-app-bg/30">
-         <h2 className="text-lg font-black uppercase text-app-text2 tracking-tighter">
+    <div className="bg-app-surface border border-app-border rounded-xl shadow-sm overflow-hidden text-[10px] sm:text-[11px] text-app-text relative">
+      <div className="sm:hidden absolute top-0 right-0 bg-brand-green text-white text-[7px] font-black px-2 py-0.5 rounded-bl-lg z-[50] animate-pulse uppercase tracking-tighter">Desliza →</div>
+      <div className="p-3 sm:p-4 border-b border-app-border bg-app-bg/30">
+         <h2 className="text-base sm:text-lg font-black uppercase text-app-text2 tracking-tighter">
+           {isCM && <span className="mr-2 text-brand-green">{String(diaHoy).padStart(2, '0')}</span>}
            {new Date(year, month).toLocaleDateString(
              lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', 
              { month: 'long', year: 'numeric' }
            )}
          </h2>
       </div>
-      <div ref={scrollContainerRef} className="w-full overflow-x-auto scrollbar-thin">
+      <div ref={scrollContainerRef} className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-emerald-100 scrollbar-track-transparent">
         <table className="w-full min-w-max border-collapse">
           <thead>
             <tr>
-              <th className="sticky left-0 z-40 bg-white w-[280px] min-w-[280px] max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)]"></th>
+              <th className="sticky left-0 z-40 bg-white w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)]"></th>
               {weeks.map((w, wi) => (
-                <th key={wi} colSpan={w.end - w.start + 1} className="text-[10px] font-black text-app-text3 border-b border-app-border uppercase text-center border-r bg-app-bg/20 py-2 tracking-widest">
+                <th key={wi} colSpan={w.end - w.start + 1} className="text-[9px] sm:text-[10px] font-black text-app-text3 border-b border-app-border uppercase text-center border-r bg-app-bg/20 py-2 tracking-widest">
                   {w.label}
                 </th>
               ))}
@@ -102,9 +104,9 @@ export default function TrackerTable({
                   <th
                     key={d}
                     id={`day-${d}`}
-                    className={`${dayCell} h-12 font-mono text-center transition-all duration-300 
-                      ${selected ? 'bg-brand-green/20 border-l-2 border-r-2 border-brand-green text-brand-green z-20 font-black text-[13px] scale-105 shadow-md' : 
-                        today ? 'bg-green-50/30 border-l-2 border-r-2 border-green-500 text-green-700 font-black text-[13px]' : 
+                    className={`${dayCell} h-10 sm:h-12 font-mono text-center transition-all duration-300 
+                      ${selected ? 'bg-brand-green/20 border-l-2 border-r-2 border-brand-green text-brand-green z-20 font-black text-[11px] sm:text-[13px] scale-105 shadow-md' : 
+                        today ? 'bg-green-50 border-l-2 border-r-2 border-green-600 text-green-700 font-black text-[12px] sm:text-[13px] z-20 ring-2 ring-green-100' : 
                         weekend ? 'bg-brand-pink-light text-brand-pink font-black' : 'bg-app-bg/10 text-app-text3'}`}
                   >
                     {d}
@@ -118,15 +120,15 @@ export default function TrackerTable({
             {habits.map((hab: Habit, idx: number) => (
               <tr key={hab.id} className="group hover:bg-app-bg transition-colors">
                 <td className={TD2} title={hab.name}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-app-text3 font-mono text-[10px] w-4 shrink-0">{String(idx + 1).padStart(2, '0')}</span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <span className="text-app-text3 font-mono text-[9px] sm:text-[10px] w-3 sm:w-4 shrink-0">{String(idx + 1).padStart(2, '0')}</span>
                     <span className="shrink-0">{getHabitIcon(hab.name)}</span>
                     
                     {editingHabitId === hab.id ? (
-                      <div className="flex items-center gap-2 flex-1">
+                      <div className="flex items-center gap-1 sm:gap-2 flex-1">
                         <input
                           autoFocus
-                          className="w-full bg-app-bg border border-brand-green rounded px-2 py-1 text-[11px] outline-none"
+                          className="w-full bg-app-bg border border-brand-green rounded px-1.5 py-0.5 text-[10px] sm:text-[11px] outline-none"
                           value={editName}
                           onChange={e => setEditName(e.target.value)}
                           onKeyDown={e => {
@@ -143,22 +145,22 @@ export default function TrackerTable({
                             onRename?.(hab.id, editName);
                             setEditingHabitId(null);
                           }}
-                          className="text-brand-green font-bold text-[14px]"
+                          className="text-brand-green font-bold text-[12px] sm:text-[14px]"
                         >
                           ✓
                         </button>
                       </div>
                     ) : (
                       <>
-                        <span className="flex-1 break-words">{hab.name}</span>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="flex-1 break-words line-clamp-2">{hab.name}</span>
+                        <div className="flex gap-0.5 sm:gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
                           <button
                             onClick={() => {
                               setEditingHabitId(hab.id);
                               setEditName(hab.name);
                             }}
                             title={t('edit_habit_title')}
-                            className="p-1.5 rounded-lg text-app-text3 hover:bg-app-bg hover:text-brand-green transition-colors cursor-pointer text-[10px]"
+                            className="p-1 rounded-lg text-app-text3 hover:bg-app-bg hover:text-brand-green transition-colors cursor-pointer text-[10px]"
                           >
                             ✏️
                           </button>
@@ -167,7 +169,7 @@ export default function TrackerTable({
                               if (confirm(t('delete_confirm'))) onDelete(hab.id, month, year);
                             }}
                             title={t('delete_habit_title')}
-                            className="p-1.5 rounded-lg text-brand-pink hover:bg-brand-pink-light transition-colors cursor-pointer text-[10px]"
+                            className="p-1 rounded-lg text-brand-pink hover:bg-brand-pink-light transition-colors cursor-pointer text-[10px]"
                           >
                             🗑️
                           </button>
@@ -182,9 +184,9 @@ export default function TrackerTable({
                   const weekend = isW(d);
                   const selected = isS(d);
                   return (
-                    <td key={d} className={`${dayCell} transition-all duration-300 ${selected ? 'bg-brand-green/10 border-l-2 border-r-2 border-brand-green' : today ? 'bg-green-50/30 border-l-2 border-r-2 border-green-500' : weekend ? 'bg-brand-pink-light/30' : ''}`}>
+                    <td key={d} className={`${dayCell} transition-all duration-300 ${selected ? 'bg-brand-green/10 border-l-2 border-r-2 border-brand-green' : today ? 'bg-green-50 border-l-2 border-r-2 border-green-500 z-10' : weekend ? 'bg-brand-pink-light/30' : ''}`}>
                       <div className="flex items-center justify-center p-2 h-full w-full">
-                        <span onClick={() => onToggle(hab.id, toISODate(year, month, d), userId)} className={`habit-cb cursor-pointer ${on ? 'checked' : ''} ${selected ? 'border-brand-green ring-2 ring-brand-green/30' : today ? 'border-green-500 ring-2 ring-green-100' : 'border-app-border'}`} />
+                        <span onClick={() => onToggle(hab.id, toISODate(year, month, d), userId)} className={`habit-cb cursor-pointer ${on ? 'checked' : ''} ${selected ? 'border-brand-green ring-2 ring-brand-green/30' : today ? 'border-green-600 ring-2 ring-green-100 scale-110' : 'border-app-border'}`} />
                       </div>
                     </td>
                   );
@@ -209,14 +211,18 @@ export default function TrackerTable({
 
             <tr>
                 <th className={TH2}>{t('daily_mood_header')}</th>
-               {dr.map(d => (
-                 <td key={d} className={`${dayCell} h-12 font-mono text-center transition-all duration-300 font-black text-[12px] 
-                   ${isS(d) ? 'bg-brand-green text-white z-20 border-brand-green' : 
-                     isT(d) ? 'bg-brand-blue text-white z-20 border-b-brand-blue' : 
-                     isW(d) ? 'bg-brand-pink-light text-brand-pink' : 'bg-app-surface text-app-text3'}`}>
-                   {d}
-                 </td>
-               ))}
+               {dr.map(d => {
+                 const today = isT(d);
+                 return (
+                   <td key={d} className={`${dayCell} h-12 font-mono text-center transition-all duration-300 font-black text-[12px] relative
+                     ${isS(d) ? 'bg-brand-green text-white z-20 border-brand-green' : 
+                       today ? 'bg-brand-green text-white z-30 border-l-2 border-r-2 border-green-700 shadow-lg scale-105' : 
+                       isW(d) ? 'bg-brand-pink-light text-brand-pink' : 'bg-app-surface text-app-text3'}`}>
+                     {today && <div className="absolute -top-1 left-1/2 -translate-x-1/2 text-[6px] font-black bg-white text-brand-green px-1 rounded-sm shadow-sm border border-brand-green uppercase tracking-tighter">Hoy</div>}
+                     {d}
+                   </td>
+                 );
+               })}
             </tr>
 
             <MoodEntry label={t('mood_btn')} field="mood" color="text-brand-pink" dr={dr} isT={isT} isW={isW} moodMap={moodMap} onMoodChange={onMoodChange} year={year} month={month} userId={userId} TD2={TD2} dayCell={dayCell} />

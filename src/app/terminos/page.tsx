@@ -74,12 +74,16 @@ export default function TerminosPage() {
             <div className="flex flex-col gap-3">
               {[
                 { 
-                  plan: 'Plan Individual (Hábitos O Tareas)', 
-                  desc: 'Acceso completo a la Plataforma SaaS Método Stack (un módulo). Gestión inteligente desde cualquier dispositivo.' 
+                  plan: 'Plan Básico (Free)', 
+                  desc: 'Acceso de cortesía por 3 días para probar la plataforma completa y familiarizarse con la metodología.' 
                 },
                 { 
-                  plan: 'Plan Dúo (Hábitos + Tareas)', 
-                  desc: 'Acceso completo a la Plataforma SaaS Método Stack (ambos módulos). Gestión inteligente multidispositivo.' 
+                  plan: 'Módulo Individual (Cualquiera de los 4 módulos)', 
+                  desc: 'Acceso completo a un módulo específico de la Plataforma SaaS Método Stack (Hábitos, Enfoque, Finanzas o Recursos).' 
+                },
+                { 
+                  plan: 'Stack Completo (Los 4 módulos)', 
+                  desc: 'Acceso total y sin restricciones a todos los módulos de la plataforma. Gestión integral de hábitos, planificación, finanzas y sabiduría atómica.' 
                 },
               ].map((item) => (
                 <div key={item.plan} className="flex items-start gap-4 p-4 border border-app-border rounded-sm bg-app-surface">
@@ -87,7 +91,9 @@ export default function TerminosPage() {
                     <p className="text-[12px] font-semibold text-app-text">{item.plan}</p>
                     <p className="text-[11px] text-app-text3 mt-1 leading-tight">{item.desc}</p>
                   </div>
-                  <span className="text-[10px] font-bold text-brand-green uppercase tracking-widest bg-brand-green/5 px-2 py-1 rounded">Pago Único Anual</span>
+                  <span className="text-[10px] font-bold text-brand-green uppercase tracking-widest bg-brand-green/5 px-2 py-1 rounded">
+                    {item.plan.includes('Free') ? 'Gratis' : 'Pago Único Anual'}
+                  </span>
                 </div>
               ))}
             </div>

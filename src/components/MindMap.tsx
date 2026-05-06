@@ -115,114 +115,85 @@ const mindMapData: Branch[] = [
 ];
 
 export default function MindMap() {
-  const BRANCH_HEIGHT = 110; // Slightly more compact but still spacious
+  const BRANCH_HEIGHT = 100;
   const totalHeight = mindMapData.length * BRANCH_HEIGHT;
   
   return (
-    <div className="w-full overflow-x-auto py-12 sm:py-20 px-6 sm:px-12 scrollbar-hide bg-[#fdfdfd] rounded-[32px] sm:rounded-[48px] relative">
-      <div className="flex items-center gap-6 sm:gap-12 min-w-max relative pr-20">
+    <div className="w-full overflow-x-auto overflow-y-hidden py-10 sm:py-20 px-4 sm:px-12 bg-[#fdfdfd] rounded-[24px] sm:rounded-[48px] relative border border-gray-100">
+      <div className="sm:hidden absolute top-4 right-4 bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-md z-50 animate-pulse uppercase">Desliza →</div>
+      
+      <div className="flex items-center gap-0 min-w-max relative pr-10" style={{ height: `${totalHeight + 40}px` }}>
         
         {/* CENTRAL NODE */}
         <div className="relative z-30 shrink-0">
-          <div className="bg-[#1a2e1e] text-white px-5 py-3.5 sm:px-10 sm:py-6 rounded-2xl sm:rounded-[32px] shadow-2xl border-2 sm:border-4 border-emerald-500 font-black text-sm sm:text-2xl italic uppercase tracking-tighter hover:scale-105 transition-all duration-500 shadow-emerald-900/20">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-emerald-500 rounded-lg sm:rounded-2xl flex items-center justify-center animate-pulse shadow-lg shadow-emerald-500/40">
-                <Zap className="w-4 h-4 sm:w-7 sm:h-7 fill-white text-white" />
+          <div className="bg-[#1a2e1e] text-white px-4 py-3 sm:px-10 sm:py-6 rounded-xl sm:rounded-[32px] shadow-2xl border sm:border-4 border-emerald-500 font-black text-[10px] sm:text-2xl italic uppercase tracking-tighter shadow-emerald-900/20">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="w-6 h-6 sm:w-12 sm:h-12 bg-emerald-500 rounded-lg sm:rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/40">
+                <Zap className="w-3 h-3 sm:w-7 sm:h-7 fill-white text-white" />
               </div>
               <div className="flex flex-col items-start leading-none">
-                <span className="text-[6px] sm:text-[9px] text-emerald-400 font-black tracking-[0.2em] mb-1">ARQUITECTURA</span>
+                <span className="text-[5px] sm:text-[9px] text-emerald-400 font-black tracking-[0.2em] mb-0.5 uppercase">Arquitectura</span>
                 <span>HÁBITOS</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* CONNECTOR & BRANCHES CONTAINER */}
-        <div className="relative flex items-center" style={{ height: `${totalHeight + 40}px` }}>
-          {/* SVG CONNECTORS - Wider for smoother curves */}
-          <div className="w-24 sm:w-48 pointer-events-none z-10 h-full relative">
-            <svg className="w-full h-full overflow-visible" viewBox={`0 0 100 ${totalHeight}`}>
-              <defs>
-                {mindMapData.map((branch) => (
-                  <marker
-                    key={`arrow-${branch.id}`}
-                    id={`arrow-${branch.id}`}
-                    viewBox="0 0 10 10"
-                    refX="9"
-                    refY="5"
-                    markerWidth="4"
-                    markerHeight="4"
-                    orient="auto-start-reverse"
-                  >
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill={branch.color} />
-                  </marker>
-                ))}
-              </defs>
-              {mindMapData.map((branch, i) => {
-                const startY = totalHeight / 2;
-                const endY = (i * BRANCH_HEIGHT) + (BRANCH_HEIGHT / 2);
-                
-                // Adjusted Bezier points for better curvature
-                return (
-                  <path
-                    key={i}
-                    d={`M 0,${startY} C 70,${startY} 30,${endY} 100,${endY}`}
-                    stroke={branch.color}
-                    strokeWidth="2.5"
-                    fill="none"
-                    markerEnd={`url(#arrow-${branch.id})`}
-                    className="opacity-60 transition-opacity hover:opacity-100 duration-300"
-                  />
-                );
-              })}
-            </svg>
-          </div>
+        {/* SVG CONNECTORS */}
+        <div className="w-16 sm:w-40 h-full relative z-10 pointer-events-none">
+          <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox={`0 0 100 ${totalHeight}`}>
+            {mindMapData.map((branch, i) => {
+              const startY = totalHeight / 2;
+              const endY = (i * BRANCH_HEIGHT) + (BRANCH_HEIGHT / 2);
+              
+              return (
+                <path
+                  key={branch.id}
+                  d={`M 0,${startY} C 50,${startY} 50,${endY} 100,${endY}`}
+                  stroke={branch.color}
+                  strokeWidth="3"
+                  fill="none"
+                  className="opacity-40 transition-opacity hover:opacity-100 duration-300"
+                />
+              );
+            })}
+          </svg>
+        </div>
 
-          {/* BRANCHES COLUMN */}
-          <div className="flex flex-col relative z-20" style={{ height: `${totalHeight}px` }}>
-            {mindMapData.map((branch, idx) => (
-              <div 
-                key={branch.id} 
-                className="flex items-center gap-6 sm:gap-16 group animate-in fade-in slide-in-from-right-8 duration-700 fill-mode-both" 
-                style={{ height: `${BRANCH_HEIGHT}px`, animationDelay: `${idx * 40}ms` }}
-              >
-                {/* BRANCH NODE */}
-                <div className="relative">
-                  <div 
-                    className="px-5 py-3 sm:px-10 sm:py-5 rounded-xl sm:rounded-[24px] shadow-lg border-2 sm:border-4 border-white font-black text-white transition-all duration-500 min-w-[170px] sm:min-w-[300px] text-left relative z-10 overflow-hidden cursor-default hover:translate-x-2"
-                    style={{ backgroundColor: branch.color }}
-                  >
-                    <div className="text-[7px] sm:text-[10px] opacity-80 uppercase tracking-[0.2em] font-black mb-0.5">{branch.level}</div>
-                    <div className="uppercase text-xs sm:text-xl tracking-tighter italic leading-none">{branch.label}</div>
-                    <div className="absolute -right-3 -bottom-3 opacity-10 scale-[1.5] rotate-12">
-                      <Zap size={40} />
-                    </div>
-                  </div>
-                  
-                  {/* Connector to sub-items */}
-                  <div className="absolute top-1/2 left-full w-8 sm:w-20 h-px bg-current opacity-30" style={{ color: branch.color }}>
-                     <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-current" />
-                  </div>
+        {/* BRANCHES COLUMN */}
+        <div className="flex flex-col relative z-20" style={{ height: `${totalHeight}px` }}>
+          {mindMapData.map((branch, idx) => (
+            <div 
+              key={branch.id} 
+              className="flex items-center gap-4 sm:gap-10 group" 
+              style={{ height: `${BRANCH_HEIGHT}px` }}
+            >
+              {/* BRANCH NODE */}
+              <div className="relative">
+                <div 
+                  className="px-3 py-2 sm:px-8 sm:py-4 rounded-lg sm:rounded-[20px] shadow-lg border sm:border-2 border-white font-black text-white transition-all duration-300 min-w-[130px] sm:min-w-[280px] text-left relative z-10 overflow-hidden"
+                  style={{ backgroundColor: branch.color }}
+                >
+                  <div className="text-[5px] sm:text-[9px] opacity-80 uppercase tracking-widest font-black mb-0.5">{branch.level}</div>
+                  <div className="uppercase text-[9px] sm:text-lg tracking-tighter italic leading-none">{branch.label}</div>
                 </div>
-
-                {/* SUB-ITEMS - Elegant horizontal list */}
-                <div className="relative pl-4">
-                  <div className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full opacity-20" style={{ backgroundColor: branch.color }} />
-                  
-                  <div className="flex flex-col gap-1.5 sm:gap-2">
-                    {branch.items.slice(0, 3).map((item, i) => (
-                      <div key={item.id} className="flex items-center gap-3">
-                        <div className="w-3 sm:w-6 h-px bg-current opacity-20" style={{ color: branch.color }} />
-                        <div className="px-3 py-1.5 sm:px-5 sm:py-2.5 bg-white border border-gray-100 rounded-lg sm:rounded-xl text-[9px] sm:text-[13px] font-bold text-gray-500 min-w-[130px] sm:min-w-[220px] shadow-sm hover:shadow-md transition-all">
-                          {item.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                
+                {/* Connector to sub-items */}
+                <div className="absolute top-1/2 left-full w-4 sm:w-10 h-px bg-current opacity-20" style={{ color: branch.color }}>
+                   <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-current" />
                 </div>
               </div>
-            ))}
-          </div>
+
+              {/* SUB-ITEMS */}
+              <div className="flex flex-col gap-1 sm:gap-1.5 pl-2 sm:pl-4 border-l border-gray-100">
+                {branch.items.slice(0, 2).map((item) => (
+                  <div key={item.id} className="px-2 py-1 sm:px-4 sm:py-1.5 bg-white border border-gray-50 rounded-md text-[7px] sm:text-[11px] font-bold text-gray-400 min-w-[100px] sm:min-w-[180px] shadow-sm">
+                    {item.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

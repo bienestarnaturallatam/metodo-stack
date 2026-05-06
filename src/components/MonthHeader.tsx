@@ -53,31 +53,6 @@ export default function MonthHeader({ month, year, habitCount, completed, pct, i
             ))}
           </div>
           
-          {/* SLIDERS MES Y AÑO */}
-          <div className="flex flex-col gap-3 w-full sm:w-64 bg-black/5 p-3 rounded-xl sm:bg-transparent sm:p-0">
-            <div className="flex items-center gap-4">
-              <span className="text-[9px] font-black text-app-text3 uppercase w-10">{t('common_month')}</span>
-              <input 
-                type="range" 
-                min="0" 
-                max="11" 
-                value={month} 
-                onChange={(e) => onDateChange(parseInt(e.target.value), year)}
-                className="flex-1 h-1.5 bg-app-border rounded-lg appearance-none cursor-pointer accent-brand-green"
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-[9px] font-black text-app-text3 uppercase w-10">{t('common_year')}</span>
-              <input 
-                type="range" 
-                min="2024" 
-                max="2030" 
-                value={year} 
-                onChange={(e) => onDateChange(month, parseInt(e.target.value))}
-                className="flex-1 h-1.5 bg-app-border rounded-lg appearance-none cursor-pointer accent-brand-green"
-              />
-            </div>
-          </div>
         </div>
       </div>
 

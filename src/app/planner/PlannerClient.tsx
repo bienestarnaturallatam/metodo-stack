@@ -16,6 +16,7 @@ import {
 import { createClient } from '@/lib/client';
 import { toISODate } from '@/lib/dateUtils';
 import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
+import LegalFooter from '@/components/LegalFooter';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
@@ -46,13 +47,13 @@ interface PlannerData {
   };
 }
 
-export default function PlannerClient({ userId, userEmail = '', asEmbedded = false }: { userId: string; userEmail?: string; asEmbedded?: boolean }) {
+export default function PlannerClient({ userId, userEmail = '', asEmbedded = false, isPaid: initialIsPaid = false, userTier: initialUserTier = 'trial' }: { userId: string; userEmail?: string; asEmbedded?: boolean, isPaid?: boolean, userTier?: string }) {
   return (
-    <PlannerContent userId={userId} userEmail={userEmail} asEmbedded={asEmbedded} />
+    <PlannerContent userId={userId} userEmail={userEmail} asEmbedded={asEmbedded} isPaid={initialIsPaid} userTier={initialUserTier} />
   );
 }
 
-function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId: string; userEmail?: string; asEmbedded?: boolean }) {
+function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: initialIsPaid = false, userTier: initialUserTier = 'trial' }: { userId: string; userEmail?: string; asEmbedded?: boolean, isPaid?: boolean, userTier?: string }) {
   const { t, lang, months } = useTranslation();
 
   const DAYS: string[] = t('planner_days') || ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -92,8 +93,9 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
   );
 
   const [loading, setLoading] = useState(true);
-  const [userTier, setUserTier] = useState<string>('trial');
-  const [isPaid, setIsPaid] = useState(false);
+  const [userTier, setUserTier] = useState<string>(initialUserTier);
+  const [isPaid, setIsPaid] = useState(initialIsPaid);
+  const [isExpired, setIsExpired] = useState(false);
   const [showLockedModal, setShowLockedModal] = useState(false);
   const supabase = createClient();
 
@@ -101,13 +103,29 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
     async function checkUserPlan() {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('tier, is_paid')
+        .select('tier, is_paid, created_at')
         .eq('id', userId)
         .single();
 
       if (profile) {
         setUserTier(profile.tier || 'trial');
         setIsPaid(profile.is_paid || false);
+
+        // Verificación de Expiración de Prueba (72h)
+        const isTrialUser = !profile.is_paid || profile.tier === 'trial' || profile.tier === 'free' || profile.tier === 'gratis';
+        if (isTrialUser && profile.created_at) {
+          const start = new Date(profile.created_at);
+          const now = new Date();
+          const diffHours = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+          if (diffHours >= 72) {
+            setIsExpired(true);
+          }
+        }
+
+        // Verificación de Suspensión
+        if (profile.tier?.startsWith('suspended_')) {
+          setIsExpired(true);
+        }
 
         // Si no es embedded y el plan es habitos (y es de pago), bloquear
         if (!asEmbedded && profile.is_paid && profile.tier === 'habitos') {
@@ -407,6 +425,16 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
     if (!text.trim()) return;
     const newData = [...localData];
     const dayData = { ...newData[dayIndex] };
+
+    // Validar límite de 3 tareas críticas (STACK TIP)
+    if (newTaskPriority === 'critical') {
+      const criticalCount = dayData.tasks.filter(t => t.priority === 'critical' && !t.done).length;
+      if (criticalCount >= 3) {
+        alert("STACK TIP: Si todo es prioridad, nada es prioridad. Elige solo tus 3 batallas críticas de hoy.");
+        return;
+      }
+    }
+
     dayData.tasks = [...dayData.tasks, { text, done: false, priority: newTaskPriority, created_at: new Date().toISOString(), scheduled_time: newTaskTime || undefined }];
     newData[dayIndex] = dayData;
     setLocalData(newData);
@@ -609,10 +637,16 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
       {/* HEADER DE BIENVENIDA */}
       {!isDeepWork && (
         <div className="bg-white px-7 pt-8 pb-4">
-          <div className="max-w-[1200px] mx-auto w-full">
+          <div className="max-w-[1200px] mx-auto w-full flex items-center gap-6">
             <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#7a9b82] mb-1">
               {t('planner_header')}
             </h5>
+            {(!isPaid || userTier === 'trial' || userTier === 'free' || userTier === 'gratis') && (
+              <div className="bg-emerald-100 text-emerald-700 px-6 py-2 rounded-full text-[10px] font-black uppercase flex items-center gap-3 border border-emerald-200 animate-pulse mb-1 shadow-sm">
+                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                Trial Activo: 72h restantes
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -776,7 +810,14 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
 
                 {/* QUICK ADD BLOCK (Moved here) */}
                 <div className={`transition-all duration-700 ${isDeepWork ? 'opacity-0 scale-90 pointer-events-none hidden' : 'opacity-100'}`}>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82] mb-3 px-2">{t('planner_add_task_global')}</h4>
+                  <div className="flex items-center justify-between mb-3 px-2">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_add_task_global')}</h4>
+                    {newTaskPriority === 'critical' && (
+                      <div className="bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg animate-in fade-in slide-in-from-right-4">
+                        <p className="text-[9px] font-black text-amber-700 uppercase italic">✨ "Elige tus 3 batallas de hoy."</p>
+                      </div>
+                    )}
+                  </div>
                   <div className="bg-[#f4faf6] border border-[#d8eadb] p-3 sm:p-5 rounded-[24px] shadow-inner group mb-6">
                     <div className="flex items-center gap-3 bg-white border border-[#d8eadb] p-3 rounded-xl shadow-sm focus-within:border-[#2d5a3d] transition-all mb-3">
                       <span className="text-xl opacity-40">+</span>
@@ -1120,6 +1161,15 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
             ) : (
               <div className="space-y-8 animate-in fade-in duration-700">
                 <section>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20">🧠</span>
+                      <div>
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#2d5a3d]">Vaciado Mental (Brain Dump)</h4>
+                        <p className="text-[10px] text-[#7a9b82] font-bold">Libera el ruido: escribe todo lo que tienes en la mente antes de priorizar.</p>
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-3 mb-4">
                     <span className="w-8 h-8 rounded-full bg-[#f4faf6] flex items-center justify-center text-sm shadow-sm">😊</span>
                     <h4 className="text-[11px] font-black uppercase tracking-widest text-[#7a9b82]">{t('planner_mood_question')}</h4>
@@ -1284,6 +1334,22 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
                             </div>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center px-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[#7a9b82]">Rediseño de Sistema (Revisión)</label>
+                      </div>
+                      <div className="bg-[#fff9ed] border border-[#ead8c8] rounded-2xl p-6 shadow-sm">
+                        <p className="text-[11px] font-black text-amber-700 uppercase tracking-widest mb-3 italic">¿Qué sistema falló esta semana y cómo lo rediseñamos?</p>
+                        <textarea
+                          className="w-full bg-white/50 border border-amber-200 p-4 rounded-xl text-sm font-medium outline-none focus:border-amber-500 transition-all text-amber-900 resize-none"
+                          rows={3}
+                          placeholder="Analiza el error y describe la mejora técnica..."
+                          value={day.reflections.notes[10] || ''}
+                          onChange={(e) => handleReflectionChange(selectedDayIndex, 'notes', 10, e.target.value)}
+                          onBlur={() => saveDay(selectedDayIndex, day)}
+                        />
                       </div>
                     </div>
                   </div>
@@ -1498,6 +1564,46 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false }: { userId
           </div>
         </div>
       )}
+      {/* MODAL DE PRUEBA EXPIRADA (BLOQUEO TOTAL Standalone) */}
+      {isExpired && !asEmbedded && (
+        <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in duration-500">
+          <div className="bg-white border border-[#d8eadb] p-8 sm:p-14 rounded-[48px] w-full max-w-xl shadow-2xl text-center animate-in zoom-in-95 duration-500">
+            <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+              <span className="text-5xl">⏳</span>
+            </div>
+            <h2 className="text-4xl font-black text-[#2d5a3d] mb-4 uppercase tracking-tight italic">Prueba Finalizada</h2>
+            <p className="text-[#4B4F56] text-sm sm:text-base leading-relaxed mb-10 px-4 font-medium">
+              Tu periodo de prueba de 72 horas ha expirado. Esperamos que hayas disfrutado la experiencia del MÉTODO STACK.
+              <br/><br/>
+              Para continuar dominando tus hábitos y gestionando tu enfoque, activa tu membresía anual ahora.
+            </p>
+            <div className="flex flex-col gap-4">
+              <button 
+                onClick={() => {
+                  const msg = `Hola Orlando, mi prueba de 3 días expiró y quiero activar mi cuenta. Mi correo es: ${userEmail}`;
+                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                }}
+                className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-black uppercase text-sm hover:bg-emerald-600 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-3"
+              >
+                <span>🚀 ACTIVAR MI CUENTA AHORA</span>
+              </button>
+              <button 
+                onClick={() => {
+                  supabase.auth.signOut().then(() => {
+                    window.location.href = '/login';
+                  });
+                }}
+                className="w-full py-4 text-[#7a9b82] font-bold uppercase text-[10px] tracking-widest hover:text-[#2d5a3d] transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+            <p className="text-[10px] font-bold text-[#8D949E] uppercase tracking-[0.2em] mt-10">MÉTODO STACK · INGENIERÍA CONDUCTUAL</p>
+          </div>
+        </div>
+      )}
+
+      {!asEmbedded && <LegalFooter />}
     </div>
   );
 }

@@ -15,11 +15,13 @@ import PlannerClient from '@/app/planner/PlannerClient';
 import FinanceClient from '@/app/finanzas/FinanceClient';
 import NotificationBanner from '@/components/NotificationBanner';
 import RecursosClient from '@/components/RecursosClient';
+import ModulosClient from '@/components/ModulosClient';
 import Link from 'next/link';
 import { useHabits, useCompletions, useMoodLogs } from '@/hooks/useTracker';
 import { daysInMonth, toISODate } from '@/lib/dateUtils';
 import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
 import CalendarView from '@/components/CalendarView';
+import LegalFooter from '@/components/LegalFooter';
 
 interface Props { userId: string; userEmail: string; }
 
@@ -41,7 +43,7 @@ function TrackerContent({ userId, userEmail }: Props) {
   };
   const userName = formatName(userEmail);
 
-  const [page, setPage]   = useState<'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos'>('tracker');
+  const [page, setPage]   = useState<'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos' | 'modulos'>('tracker');
   const [month, setMonth] = useState(now.getMonth());
   const [year, setYear]   = useState(now.getFullYear());
   const [selectedDay, setSelectedDay] = useState(now.getDate());
@@ -49,23 +51,45 @@ function TrackerContent({ userId, userEmail }: Props) {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userTier, setUserTier] = useState<string>('trial');
   const [isPaid, setIsPaid] = useState(false);
-  const [showLockedModal, setShowLockedModal] = useState<'tracker' | 'planner' | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
+  const [showLockedModal, setShowLockedModal] = useState<'tracker' | 'planner' | 'finances' | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     async function initUser() {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('tier, is_paid')
+        .select('tier, is_paid, created_at')
         .eq('id', userId)
         .single();
       
       if (profile) {
         setUserTier(profile.tier || 'trial');
         setIsPaid(profile.is_paid || false);
+
+        // Verificación de Expiración de Prueba (72h)
+        const isTrialUser = !profile.is_paid || profile.tier === 'trial' || profile.tier === 'free' || profile.tier === 'gratis';
+        if (isTrialUser && profile.created_at) {
+          const start = new Date(profile.created_at);
+          const now = new Date();
+          const diffHours = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+          if (diffHours >= 72) {
+            setIsExpired(true);
+          }
+        }
+
+        // Verificación de Suspensión
+        if (profile.tier?.startsWith('suspended_')) {
+          setIsExpired(true); // Reutilizamos el estado de bloqueo
+        }
         
         // Redirección inicial por plan
-        if (profile.is_paid && profile.tier === 'tareas') {
-          setPage('planner');
+        if (profile.is_paid) {
+          if (profile.tier === 'tareas' || profile.tier === 'enfoque') {
+            setPage('planner');
+          } else if (profile.tier === 'finanzas') {
+            setPage('finances');
+          }
         }
 
         const isNew = new URLSearchParams(window.location.search).get('new');
@@ -120,6 +144,35 @@ function TrackerContent({ userId, userEmail }: Props) {
   const { habits, loading, add, remove, archiveFromMonth, rename } = useHabits();
   const { completions, toggle }          = useCompletions(year, month);
   const { logs, upsert }                 = useMoodLogs(year, month);
+
+  // SEED DATA FOR DEMO/VALIDATION (Request: LLENA DE DATOS EL MES)
+  useEffect(() => {
+    if (!loading && habits.length === 0 && month === 4 && year === 2026) {
+      console.log('Seeding habits for demo...');
+      async function seed() {
+        // 1. Add 3 essential habits
+        const h1 = await add("Leer 20 min");
+        const h2 = await add("Hacer Ejercicio");
+        const h3 = await add("Beber 2L Agua");
+
+        const ids = [h1?.id, h2?.id, h3?.id].filter(Boolean) as string[];
+        
+        // 2. Random completions for the first 5 days
+        for (let d = 1; d <= 5; d++) {
+          const date = toISODate(2026, 4, d);
+          for (const id of ids) {
+            if (Math.random() > 0.3) {
+              await toggle(id, date, userId);
+            }
+          }
+          // 3. Random Mood Logs
+          await upsert(date, 'mood', Math.floor(Math.random() * 3) + 3, userId);
+          await upsert(date, 'motivation', Math.floor(Math.random() * 3) + 3, userId);
+        }
+      }
+      seed();
+    }
+  }, [loading, habits.length, month, year, userId]);
   
   // LOGICA DE SEGURIDAD Y DISPOSITIVOS
   const [sessionCount, setSessionCount] = useState(1);
@@ -213,26 +266,38 @@ function TrackerContent({ userId, userEmail }: Props) {
 
   const isTrackerSection = page === 'tracker' || page === 'dashboard';
 
-  const handlePageChange = (p: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos') => {
-    if (p === 'finances' || p === 'recursos') {
+  const handlePageChange = (p: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos' | 'modulos') => {
+    if (p === 'recursos' || p === 'modulos') {
       setPage(p);
       return;
     }
     
-    // Si es trial o duo, permitir todo
-    if (!isPaid || userTier === 'duo' || userTier === 'trial') {
+    // Si es trial o stack completo/duo, permitir todo
+    if (!isPaid || ['duo', 'max', 'stack completo', 'completo', 'trial', 'free', 'gratis'].includes(userTier)) {
       setPage(p);
       return;
     }
 
-    // Restricciones por plan
-    if (p === 'planner' && userTier === 'habitos') {
-      setShowLockedModal('planner');
-      return;
+    // Restricciones por plan pagado (tiers individuales)
+    if (userTier === 'habitos') {
+      if (p !== 'tracker' && p !== 'dashboard') {
+        setShowLockedModal(p === 'finances' ? 'finances' : 'planner');
+        return;
+      }
     }
-    if ((p === 'tracker' || p === 'dashboard') && userTier === 'tareas') {
-      setShowLockedModal('tracker');
-      return;
+    
+    if (userTier === 'tareas' || userTier === 'enfoque') {
+      if (p !== 'planner') {
+        setShowLockedModal(p === 'finances' ? 'finances' : 'tracker');
+        return;
+      }
+    }
+    
+    if (userTier === 'finanzas') {
+      if (p !== 'finances') {
+        setShowLockedModal(p === 'planner' ? 'planner' : 'tracker');
+        return;
+      }
     }
 
     setPage(p);
@@ -252,47 +317,55 @@ function TrackerContent({ userId, userEmail }: Props) {
 
       {isTrackerSection && (
         <div className="px-6 py-8 max-w-[1400px] mx-auto animate-in fade-in duration-500">
-          <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            <div>
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
               <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text3 mb-2">
                 {t('tracker_header')}
               </h5>
+              {(!isPaid || userTier === 'trial' || userTier === 'free' || userTier === 'gratis') && (
+                <div className="bg-emerald-100 text-emerald-700 px-6 py-2 rounded-full text-[10px] font-black uppercase flex items-center gap-3 border border-emerald-200 animate-pulse mb-2 shadow-sm">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                  Trial Activo: 72h restantes
+                </div>
+              )}
             </div>
             
             <div className="flex flex-col items-start sm:items-end gap-3">
-              {/* SECURITY BADGE */}
-              <div className="relative">
-                <div 
-                  onMouseEnter={() => setIsSecurityTooltipOpen(true)}
-                  onMouseLeave={() => setIsSecurityTooltipOpen(false)}
-                  onClick={() => setIsSecurityTooltipOpen(!isSecurityTooltipOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-white/50 backdrop-blur-sm border border-app-border rounded-full cursor-help hover:bg-white transition-all shadow-sm"
-                >
-                  <div className={`w-2 h-2 rounded-full animate-pulse ${sessionCount >= 3 ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]' : 'bg-brand-green shadow-[0_0_10px_rgba(45,159,108,0.5)]'}`} />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-app-text2">
-                    {t('common_authorized_device')}
-                  </span>
-                  <svg className={`w-3 h-3 ${sessionCount >= 3 ? 'text-orange-500' : 'text-brand-green'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.333 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                </div>
-
-                {isSecurityTooltipOpen && (
-                  <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-2 w-64 p-4 bg-white border border-app-border rounded-xl shadow-2xl z-[110] animate-in fade-in zoom-in-95 duration-200">
-                    <p className="text-[11px] font-bold text-app-text mb-2 uppercase tracking-tight">{t('common_security_access')}</p>
-                    <p className="text-[10px] text-app-text3 leading-relaxed">
-                      {t('common_active_sessions', { count: String(sessionCount), total: '3' })}
-                      <br /><br />
-                      {t('common_security_disclaimer')}
-                    </p>
-                    <div className="mt-3 pt-3 border-t border-app-border/50">
-                      <p className="text-[9px] text-brand-pink/80 italic leading-snug">
-                        {t('common_sharing_forbidden')}
-                      </p>
-                    </div>
+              {/* SECURITY BADGE (Solo para miembros) */}
+              {isPaid && (
+                <div className="relative">
+                  <div 
+                    onMouseEnter={() => setIsSecurityTooltipOpen(true)}
+                    onMouseLeave={() => setIsSecurityTooltipOpen(false)}
+                    onClick={() => setIsSecurityTooltipOpen(!isSecurityTooltipOpen)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white/50 backdrop-blur-sm border border-app-border rounded-full cursor-help hover:bg-white transition-all shadow-sm"
+                  >
+                    <div className={`w-2 h-2 rounded-full animate-pulse ${sessionCount >= 3 ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]' : 'bg-brand-green shadow-[0_0_10px_rgba(45,159,108,0.5)]'}`} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-app-text2">
+                      {t('common_authorized_device')}
+                    </span>
+                    <svg className={`w-3 h-3 ${sessionCount >= 3 ? 'text-orange-500' : 'text-brand-green'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.333 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                    </svg>
                   </div>
-                )}
-              </div>
+
+                  {isSecurityTooltipOpen && (
+                    <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-2 w-64 p-4 bg-white border border-app-border rounded-xl shadow-2xl z-[110] animate-in fade-in zoom-in-95 duration-200">
+                      <p className="text-[11px] font-bold text-app-text mb-2 uppercase tracking-tight">{t('common_security_access')}</p>
+                      <p className="text-[10px] text-app-text3 leading-relaxed">
+                        {t('common_active_sessions', { count: String(sessionCount), total: '3' })}
+                        <br /><br />
+                        {t('common_security_disclaimer')}
+                      </p>
+                      <div className="mt-3 pt-3 border-t border-app-border/50">
+                        <p className="text-[9px] text-brand-pink/80 italic leading-snug">
+                          {t('common_sharing_forbidden')}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* SUB-TABS */}
               <div className="flex bg-white/60 backdrop-blur-md border border-app-border rounded-2xl p-1.5 w-fit shadow-sm">
@@ -318,7 +391,7 @@ function TrackerContent({ userId, userEmail }: Props) {
 
           {page === 'tracker' ? (
             <div className="animate-in fade-in duration-700">
-              <div className="mb-6">
+              <div className="mt-6">
                 <MonthHeader
                   month={month} year={year}
                   habitCount={headerHabits}
@@ -342,44 +415,43 @@ function TrackerContent({ userId, userEmail }: Props) {
                 />
               </div>
 
-              {/* CALENDAR MODAL */}
+              {/* PREMIUM CALENDAR MODAL */}
               {isCalendarOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
-                  <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-                    <div className="p-4 border-b border-app-border flex items-center justify-between bg-app-bg/10">
+                <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/5 backdrop-blur-sm animate-in fade-in duration-300">
+                  <div className="relative w-[380px] bg-white border border-[#e8f1e9] rounded-[40px] p-8 shadow-2xl shadow-green-900/10 animate-in zoom-in-95 duration-300">
+                    <div className="flex items-center justify-between gap-4 mb-6">
+                      <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1a2e1e] whitespace-nowrap">Seleccionar Día</h4>
+                      
                       <div className="flex items-center gap-2">
-                        <h3 className="font-black text-app-text uppercase text-[11px] tracking-widest mr-2">
-                          {t('common_select_day')}
-                        </h3>
-                        <div className="flex items-center gap-1">
-                          <select 
-                            value={month}
-                            onChange={(e) => setMonth(parseInt(e.target.value))}
-                            className="bg-white border border-app-border rounded-lg px-2 py-1 text-[10px] font-black uppercase outline-none focus:border-brand-green transition-colors"
-                          >
-                            {t('months').map((m: string, i: number) => (
-                              <option key={i} value={i}>{m}</option>
-                            ))}
-                          </select>
-                          <select 
-                            value={year}
-                            onChange={(e) => setYear(parseInt(e.target.value))}
-                            className="bg-white border border-app-border rounded-lg px-2 py-1 text-[10px] font-black uppercase outline-none focus:border-brand-green transition-colors"
-                          >
-                            {[2024, 2025, 2026, 2027, 2028, 2029, 2030].map(y => (
-                              <option key={y} value={y}>{y}</option>
-                            ))}
-                          </select>
-                        </div>
+                        {/* MONTH SELECTOR */}
+                        <select 
+                          value={month}
+                          onChange={(e) => setMonth(parseInt(e.target.value))}
+                          className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-1.5 text-[10px] font-black uppercase text-[#2d5a3d] outline-none cursor-pointer hover:bg-white transition-all"
+                        >
+                          {t('months').map((m: string, i: number) => (
+                            <option key={i} value={i}>{m}</option>
+                          ))}
+                        </select>
+
+                        {/* YEAR SELECTOR */}
+                        <select 
+                          value={year}
+                          onChange={(e) => setYear(parseInt(e.target.value))}
+                          className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-1.5 text-[10px] font-black uppercase text-[#2d5a3d] outline-none cursor-pointer hover:bg-white transition-all"
+                        >
+                          {Array.from({ length: 2040 - 2024 + 1 }, (_, i) => 2024 + i).map(y => (
+                            <option key={y} value={y}>{y}</option>
+                          ))}
+                        </select>
                       </div>
-                      <button 
-                        onClick={() => setIsCalendarOpen(false)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white transition-colors text-app-text2"
-                      >
-                        ✕
+
+                      <button onClick={() => setIsCalendarOpen(false)} className="text-gray-300 hover:text-gray-500 transition-colors">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                       </button>
                     </div>
-                    <div className="p-6">
+
+                    <div className="border-t border-gray-50 pt-6">
                       <CalendarView 
                         month={month} 
                         year={year} 
@@ -395,7 +467,11 @@ function TrackerContent({ userId, userEmail }: Props) {
                 </div>
               )}
 
-              <div className="mb-4">
+              <div className="mb-4 space-y-4">
+                 <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl animate-in fade-in slide-in-from-left-4">
+                    <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1 italic">✨ STACK TIP</p>
+                    <p className="text-xs text-amber-800 font-medium italic">"Elige un hábito que tome menos de 2 minutos. No busques perfección, busca asistencia."</p>
+                 </div>
                  <AddHabitRow onAdd={add} month={month} year={year} />
               </div>
 
@@ -411,13 +487,54 @@ function TrackerContent({ userId, userEmail }: Props) {
                     completionMap={completionMap}
                     moodMap={moodMap}
                     userId={userId}
-                    onToggle={toggle}
+                    onToggle={async (h, d, u) => {
+                      const isCompleting = !completionMap.get(h)?.has(d);
+                      await toggle(h, d, u);
+                      if (isCompleting) {
+                        setToast("¡Voto depositado! Estás un paso más cerca de tu nueva identidad.");
+                        setTimeout(() => setToast(null), 3000);
+                      }
+                    }}
                     onDelete={archiveFromMonth}
                     onMoodChange={upsert}
                     onRename={rename}
                     selectedDay={selectedDay}
                   />
                 )}
+
+                {/* TOAST NOTIFICATION */}
+                {toast && (
+                  <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] bg-[#2d5a3d] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl animate-in fade-in slide-in-from-bottom-10 duration-300 flex items-center gap-3">
+                    <span className="text-xl">🗳️</span>
+                    {toast}
+                  </div>
+                )}
+
+                {/* REGLA DE ORO (Nunca falles dos veces) */}
+                {(() => {
+                  const yesterday = new Date();
+                  yesterday.setDate(yesterday.getDate() - 1);
+                  const yDate = toISODate(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+                  
+                  // Verificar si ayer hubo 0 cumplimientos
+                  let totalAyer = 0;
+                  displayHabits.forEach(h => {
+                    if (completionMap.get(h.id)?.has(yDate)) totalAyer++;
+                  });
+
+                  if (totalAyer === 0 && displayHabits.length > 0 && month === now.getMonth() && year === now.getFullYear()) {
+                    return (
+                      <div className="bg-rose-50 border-2 border-rose-100 p-6 rounded-[32px] flex items-center gap-6 animate-pulse mt-4">
+                        <div className="w-12 h-12 bg-rose-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">⚠️</div>
+                        <div>
+                          <h4 className="text-xs font-black text-rose-700 uppercase tracking-widest mb-1">Regla de Oro: Nunca falles dos veces</h4>
+                          <p className="text-[11px] text-rose-600 font-bold italic">"¡Hoy es el día de retomar la cadena! No permitas que un tropiezo se convierta en un hábito."</p>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
 
                 <div className="bg-app-surface border border-app-border rounded-xl shadow-card p-4">
                   <p className="text-[9px] font-black uppercase tracking-widest text-app-text3 mb-3">{t('mood_scale_title')}</p>
@@ -460,13 +577,13 @@ function TrackerContent({ userId, userEmail }: Props) {
 
       {page === 'planner' && (
         <div className="animate-in fade-in duration-500">
-           <PlannerClient userId={userId} userEmail={userEmail} asEmbedded />
+           <PlannerClient userId={userId} userEmail={userEmail} asEmbedded isPaid={isPaid} userTier={userTier} />
         </div>
       )}
 
       {page === 'finances' && (
         <div className="animate-in fade-in duration-500">
-           <FinanceClient userId={userId} userEmail={userEmail} onPageChange={setPage} />
+           <FinanceClient userId={userId} userEmail={userEmail} onPageChange={setPage} isPaid={isPaid} userTier={userTier} asEmbedded={true} />
         </div>
       )}
 
@@ -477,7 +594,53 @@ function TrackerContent({ userId, userEmail }: Props) {
              userEmail={userEmail} 
              userTier={userTier}
              isPaid={isPaid}
+             asEmbedded={true}
            />
+        </div>
+      )}
+      
+      {page === 'modulos' && (
+        <div className="animate-in fade-in duration-500">
+           <ModulosClient />
+        </div>
+      )}
+
+      {/* MODAL DE PRUEBA EXPIRADA (BLOQUEO TOTAL) */}
+      {isExpired && (
+        <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-in fade-in duration-500">
+          <div className="bg-white border border-app-border p-8 sm:p-14 rounded-[48px] w-full max-w-xl shadow-2xl text-center animate-in zoom-in-95 duration-500">
+            <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+              <span className="text-5xl">⏳</span>
+            </div>
+            <h2 className="text-4xl font-black text-app-text mb-4 uppercase tracking-tight italic">Prueba Finalizada</h2>
+            <p className="text-[#4B4F56] text-sm sm:text-base leading-relaxed mb-10 px-4 font-medium">
+              Tu periodo de prueba de 72 horas ha expirado. Esperamos que hayas disfrutado la experiencia del MÉTODO STACK.
+              <br/><br/>
+              Para continuar dominando tus hábitos y gestionando tu enfoque, activa tu membresía anual ahora.
+            </p>
+            <div className="flex flex-col gap-4">
+              <button 
+                onClick={() => {
+                  const msg = `Hola Orlando, mi prueba de 3 días expiró y quiero activar mi cuenta. Mi correo es: ${userEmail}`;
+                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                }}
+                className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-black uppercase text-sm hover:bg-emerald-600 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-3"
+              >
+                <span>🚀 ACTIVAR MI CUENTA AHORA</span>
+              </button>
+              <button 
+                onClick={() => {
+                  supabase.auth.signOut().then(() => {
+                    window.location.href = '/login';
+                  });
+                }}
+                className="w-full py-4 text-app-text3 font-bold uppercase text-[10px] tracking-widest hover:text-app-text transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+            <p className="text-[10px] font-bold text-[#8D949E] uppercase tracking-[0.2em] mt-10">MÉTODO STACK · INGENIERÍA CONDUCTUAL</p>
+          </div>
         </div>
       )}
 
@@ -491,17 +654,17 @@ function TrackerContent({ userId, userEmail }: Props) {
             <h2 className="text-2xl font-black text-app-text mb-4 uppercase tracking-tight">Módulo Bloqueado</h2>
             <p className="text-app-text2 text-sm leading-relaxed mb-8">
               Este módulo no está incluido en tu plan actual (**Plan {userTier.toUpperCase()}**). 
-              Pásate al **Plan Dúo** para activarlo y desbloquear todo el potencial del MÉTODO STACK.
+              Pásate al **Plan Stack Completo** para activarlo y desbloquear todo el potencial del MÉTODO STACK.
             </p>
             <div className="flex flex-col gap-3">
               <button 
                 onClick={() => {
-                  const msg = `Hola Orlando, quiero mi Plan Dúo. Mi correo es: ${userEmail}`;
+                  const msg = `Hola Orlando, quiero mi Plan Stack Completo. Mi correo es: ${userEmail}`;
                   window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-xs hover:bg-brand-green/90 transition-all shadow-lg shadow-brand-green/20 flex items-center justify-center gap-2"
               >
-                <span>🚀 Quiero mi Plan Dúo (Upgrade)</span>
+                <span>🚀 Quiero mi Plan Completo (Upgrade)</span>
               </button>
               <button 
                 onClick={() => setShowLockedModal(null)}
@@ -535,6 +698,8 @@ function TrackerContent({ userId, userEmail }: Props) {
           </div>
         </div>
       )}
+      
+      <LegalFooter />
     </div>
   );
 }

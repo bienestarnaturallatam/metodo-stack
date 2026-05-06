@@ -1,50 +1,39 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { I18nProvider } from '@/hooks/useTranslation';
+import { Sora, DM_Sans, DM_Mono } from 'next/font/google';
 
+// 1. CONFIGURACIÓN DE METADATOS Y PWA
+// Esto conecta tu archivo public/manifest.json con el navegador
 export const metadata: Metadata = {
   metadataBase: new URL('https://metodo-stack.vercel.app'),
   title: {
-    default: 'Método STACK — Tracker de Hábitos, Enfoque y Finanzas para Latinoamérica',
+    default: 'Método STACK — Tracker de Hábitos, Enfoque y Finanzas',
     template: '%s | Método STACK',
   },
-  description: 'Método STACK es el sistema que convierte tus intenciones en rutinas reales. Control de hábitos, planeador semanal y motor financiero en un solo lugar. Empieza gratis hoy.',
-  keywords: ['tracker de hábitos', 'productividad personal', 'control financiero', 'planeador semanal', 'Perú', 'Latinoamérica', 'método STACK', 'alto rendimiento'],
-  openGraph: {
-    title: 'Método STACK — Domina tus hábitos con un sistema',
-    description: 'Tracker de hábitos + planeador semanal + control financiero. Empieza gratis.',
-    url: 'https://metodo-stack.vercel.app',
-    siteName: 'Método STACK',
-    locale: 'es_PE',
-    type: 'website',
-    images: [{
-      url: '/og-image.png',
-      width: 1200,
-      height: 630,
-      alt: 'Método STACK — Tracker de hábitos y finanzas',
-    }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Método STACK — Domina tus hábitos',
-    description: 'Sistema completo: hábitos + enfoque + finanzas. Empieza gratis hoy.',
-    images: ['/og-image.png'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  description: 'Sistema integral para convertir intenciones en rutinas reales.',
+  manifest: '/manifest.json', // <-- Esta línea es la que activa el icono en el celular
   icons: {
     icon: '/icon.png',
     apple: '/icon.png',
   },
-  alternates: {
-    canonical: 'https://metodo-stack.vercel.app',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Método STACK',
   },
 };
 
-import { I18nProvider } from '@/hooks/useTranslation';
+// Configuración del color de la barra superior en móviles (Verde Stack)
+export const viewport: Viewport = {
+  themeColor: '#2d5a3d',
+};
 
-import { DM_Sans, DM_Mono } from 'next/font/google';
+const sora = Sora({
+  subsets: ['latin'],
+  variable: '--font-sora',
+  display: 'swap',
+});
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -62,10 +51,30 @@ const dmMono = DM_Mono({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sans antialiased`}>
+      <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>
         <I18nProvider>
           {children}
         </I18nProvider>
+
+        {/* 2. REGISTRO DEL MOTOR DE INSTALACIÓN (Service Worker) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(
+                    function(registration) {
+                      console.log('ServiceWorker registrado con éxito');
+                    },
+                    function(err) {
+                      console.log('Error al registrar ServiceWorker:', err);
+                    }
+                  );
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

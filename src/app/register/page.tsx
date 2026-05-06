@@ -1,20 +1,19 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { X, Eye, EyeOff, Mail, Lock, Phone } from 'lucide-react';
+import { X, Eye, EyeOff, Mail, Lock, Phone, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/client';
 import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
 
 export default function RegisterPage() {
   const { t } = useTranslation();
   const [email, setEmail]       = useState('');
-  const [phone, setPhone]       = useState('');
+  const [codigoPais, setCodigoPais] = useState('+51');
+  const [telefono, setTelefono]   = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
-  const [country, setCountry]   = useState({ code: '+51', flag: '🇵🇪' });
-  const [showCountries, setShowCountries] = useState(false);
 
   const countries = [
     { code: '+51', flag: '🇵🇪', name: 'Perú', iso: 'PE' },
@@ -49,7 +48,7 @@ export default function RegisterPage() {
         const data = await res.json();
         if (data.country_code) {
           const match = countries.find(c => c.iso === data.country_code);
-          if (match) setCountry({ code: match.code, flag: match.flag });
+          if (match) setCodigoPais(match.code);
         }
       } catch (e) {
         console.error('Error detectando país:', e);
@@ -60,7 +59,16 @@ export default function RegisterPage() {
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
-    setError(''); setLoading(true);
+    setError(''); 
+
+    // VALIDACIÓN BÁSICA DEL TELÉFONO
+    const soloNumeros = telefono.replace(/\D/g, '');
+    if (soloNumeros.length < 7 || soloNumeros.length > 12) {
+      setError('El teléfono debe tener entre 7 y 12 dígitos (solo números).');
+      return;
+    }
+
+    setLoading(true);
 
     // Limpiar sesión corrupta previa
     await supabase.auth.signOut();
@@ -87,12 +95,14 @@ export default function RegisterPage() {
       const detected_country = geoData.country_code || 'PE';
       const detected_lang = detected_country === 'US' ? 'en' : detected_country === 'BR' ? 'pt' : 'es';
 
+      const numeroCompleto = codigoPais + soloNumeros;
+
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
           id: authData.user.id,
           email,
-          phone_number: `${country.code}${phone}`,
+          phone_number: numeroCompleto,
           country_code: detected_country,
           detected_lang: detected_lang,
           tier: 'trial',
@@ -133,9 +143,10 @@ export default function RegisterPage() {
       {/* Volver a inicio */}
       <Link 
         href="/" 
-        className="absolute top-6 right-6 z-[100] w-10 h-10 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all group"
+        className="absolute top-6 left-6 z-[100] h-10 px-4 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full flex items-center justify-center gap-2 shadow-lg hover:bg-white transition-all group"
       >
-        <X className="w-5 h-5 text-black/40 group-hover:text-[#00C853] group-hover:scale-110 transition-all" />
+        <ChevronRight className="w-5 h-5 text-black/40 group-hover:text-[#00C853] rotate-180 transition-all" />
+        <span className="text-[10px] font-bold uppercase tracking-widest text-black/40 group-hover:text-[#00C853]">Volver</span>
       </Link>
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
@@ -172,47 +183,71 @@ export default function RegisterPage() {
             {/* Teléfono FIRST */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-[#4B4F56] uppercase tracking-wider px-1">{t('auth_phone')}</label>
-              <div className="flex items-center bg-[#F5F6F7] border border-[#DDDFE2] rounded-lg focus-within:border-[#28A745] transition-colors relative">
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setShowCountries(!showCountries)}
-                    className="flex items-center gap-1 px-3 py-3 hover:bg-black/5 transition-colors border-r border-[#DDDFE2] rounded-l-lg"
-                  >
-                    <span className="text-sm">{country.flag}</span>
-                    <span className="text-[13px] font-bold text-[#4B4F56]">{country.code}</span>
-                    <svg className="w-3 h-3 text-[#8D949E]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  {showCountries && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border border-[#DDDFE2] rounded-lg shadow-xl z-[999] w-48 max-h-48 overflow-y-auto">
-                      {countries.map(c => (
-                        <button
-                          key={c.code}
-                          type="button"
-                          onClick={() => { setCountry(c); setShowCountries(false); }}
-                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-[#F5F6F7] text-left text-xs font-semibold text-[#4B4F56]"
-                        >
-                          <span>{c.flag}</span>
-                          <span>{c.name} ({c.code})</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 flex-1 px-3">
-                  <Phone className="w-4 h-4 text-[#28A745]" />
-                  <input
-                    type="tel"
-                    required
-                    value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                    placeholder={t('auth_phone_placeholder')}
-                    className="bg-transparent border-none outline-none text-sm text-[#1C1E21] w-full placeholder:text-[#8D949E] font-medium"
-                  />
-                </div>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {/* Selector de país */}
+                <select
+                  value={codigoPais}
+                  onChange={(e) => setCodigoPais(e.target.value)}
+                  style={{
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    padding: '12px 8px',
+                    fontSize: '13px',
+                    width: '130px',
+                    flexShrink: 0,
+                    background: 'white',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="+51">🇵🇪 PE +51</option>
+                  <option value="+56">🇨🇱 CL +56</option>
+                  <option value="+52">🇲🇽 MX +52</option>
+                  <option value="+57">🇨🇴 CO +57</option>
+                  <option value="+54">🇦🇷 AR +54</option>
+                  <option value="+593">🇪🇨 EC +593</option>
+                  <option value="+591">🇧🇴 BO +591</option>
+                  <option value="+595">🇵🇾 PY +595</option>
+                  <option value="+598">🇺🇾 UY +598</option>
+                  <option value="+58">🇻🇪 VE +58</option>
+                  <option value="+502">🇬🇹 GT +502</option>
+                  <option value="+503">🇸🇻 SV +503</option>
+                  <option value="+504">🇭🇳 HN +504</option>
+                  <option value="+505">🇳🇮 NI +505</option>
+                  <option value="+506">🇨🇷 CR +506</option>
+                  <option value="+507">🇵🇦 PA +507</option>
+                  <option value="+1">🇺🇸 US +1</option>
+                  <option value="+34">🇪🇸 ES +34</option>
+                </select>
+
+                {/* Campo número */}
+                <input
+                  type="tel"
+                  placeholder="Número WhatsApp"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                  style={{
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    fontSize: '14px',
+                    flex: 1
+                  }}
+                />
               </div>
+
+              {/* Texto de confianza debajo del campo */}
+              <p style={{
+                fontSize: '11px',
+                color: '#999',
+                margin: '4px 0 0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                🔒 Solo para enviarte tu acceso por WhatsApp. 
+                Sin spam.
+              </p>
             </div>
             
             {/* Correo SECOND */}
@@ -268,6 +303,10 @@ export default function RegisterPage() {
             >
               {loading ? t('auth_loading_register') : t('auth_trial_btn')}
             </button>
+
+            <p style={{ fontSize: '11px', color: '#aaa', textAlign: 'center', marginTop: '-10px' }}>
+              Al registrarte aceptas recibir mensajes de bienvenida por WhatsApp.
+            </p>
 
             <div className="text-center pt-2">
               <Link href="/login" className="text-[11px] text-[#4B4F56] hover:text-[#28A745] transition-colors font-medium">

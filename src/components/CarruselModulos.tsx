@@ -7,7 +7,7 @@ const modulos = [
     badge: "MÓDULO 1 DE 4",
     icono: "📋",
     nombre: "MÓDULO HÁBITOS",
-    precio: "USD $7.90",
+    precio: "USD $7.90 Cada módulo",
     periodo: "/ año · via Hotmart",
     features: [
       "Hábitos ilimitados",
@@ -23,7 +23,7 @@ const modulos = [
     badge: "MÓDULO 2 DE 4",
     icono: "🎯",
     nombre: "MÓDULO ENFOQUE",
-    precio: "USD $7.90",
+    precio: "USD $7.90 Cada módulo",
     periodo: "/ año · via Hotmart",
     features: [
       "Planeador semanal",
@@ -39,7 +39,7 @@ const modulos = [
     badge: "MÓDULO 3 DE 4",
     icono: "💰",
     nombre: "MÓDULO FINANZAS",
-    precio: "USD $7.90",
+    precio: "USD $7.90 Cada módulo",
     periodo: "/ año · via Hotmart",
     features: [
       "Motor financiero personal",
@@ -55,13 +55,13 @@ const modulos = [
     badge: "MÓDULO 4 DE 4",
     icono: "📖",
     nombre: "MÓDULO RECURSOS",
-    precio: "USD $7.90",
+    precio: "USD $7.90 Cada módulo",
     periodo: "/ año · via Hotmart",
     features: [
       "Guía de hábitos (PDF)",
       "Plano interactivo",
       "Síntesis ejecutiva",
-      "Acceso de por vida"
+      "Acceso por 1 año"
     ],
     cta: "ACTIVAR RECURSOS",
     link: "#",
@@ -175,7 +175,14 @@ export default function CarruselModulos() {
           margin: '0 0 2px',
           fontStyle: 'italic'
         }}>
-          {modulo.precio}
+          {modulo.precio.includes('Cada módulo') ? (
+            <>
+              {modulo.precio.split('Cada módulo')[0]}
+              <span style={{ fontSize: '16px', marginLeft: '4px', verticalAlign: 'middle', opacity: 0.8 }}>
+                Cada módulo
+              </span>
+            </>
+          ) : modulo.precio}
         </p>
         
         <p style={{ 

@@ -2,11 +2,11 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/client';
 import { useRouter } from 'next/navigation';
-import { Wallet, Target, Layers, BookOpen } from 'lucide-react';
+import { Wallet, Target, Layers, BookOpen, Component } from 'lucide-react';
 
 interface Props {
-  page: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos';
-  setPage: (p: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos') => void;
+  page: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos' | 'modulos';
+  setPage: (p: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos' | 'modulos') => void;
   userEmail: string;
   userTier?: string;
   isPaid?: boolean;
@@ -30,15 +30,16 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
     { id: 'planner' as const, label: t('planner_tab'), icon: <Layers className="w-3.5 h-3.5" /> },
     { id: 'finances' as const, label: t('finances_tab'), icon: <Wallet className="w-3.5 h-3.5" /> },
     { id: 'recursos' as const, label: t('recursos_tab'), icon: <BookOpen className="w-3.5 h-3.5" /> },
+    { id: 'modulos' as const, label: t('modulos_tab'), icon: <Component className="w-3.5 h-3.5" /> },
   ];
 
   return (
-    <nav className="bg-app-surface border-b border-app-border sticky top-0 z-[999] pt-10 sm:pt-0 flex flex-col">
+    <nav className="bg-app-surface border-b border-app-border sticky top-0 z-[999] pt-6 sm:pt-0 flex flex-col">
       <div className="px-3 sm:px-6 flex items-center w-full">
         {/* Sandwich Menu Button - Always Visible */}
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 -ml-2 mr-2 text-app-text hover:bg-app-surface2 rounded-lg transition-colors flex-shrink-0 -translate-y-3 sm:translate-y-0"
+          className="p-2 -ml-2 mr-2 text-app-text hover:bg-app-surface2 rounded-lg transition-colors flex-shrink-0 -translate-y-1 sm:translate-y-0"
         >
           <div className="space-y-1">
             <div className={`w-5 h-0.5 bg-current transition-all ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
@@ -48,7 +49,7 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
         </button>
 
         {/* Logo */}
-        <div className="flex items-center gap-1.5 text-[11px] sm:text-[14px] font-black tracking-tighter py-3.5 mr-2 sm:mr-6 shrink-0 -translate-y-3 sm:translate-y-0">
+        <div className="flex items-center gap-1.5 text-[11px] sm:text-[14px] font-black tracking-tighter py-3.5 mr-2 sm:mr-6 shrink-0 -translate-y-1 sm:translate-y-0">
           <div className="w-2 h-2 bg-brand-green rounded-full" />
           <span className="hidden xs:inline">MÉTODO STACK</span>
         </div>
@@ -61,7 +62,14 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
         </div>
 
       {/* Right side */}
-      <div className="ml-auto flex items-center gap-5 -translate-y-3 sm:translate-y-0">
+      <div className="ml-auto flex items-center gap-5 -translate-y-1 sm:translate-y-0">
+        {(!isPaid || userTier === 'trial' || userTier === 'free' || userTier === 'gratis') && (
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[9px] font-black uppercase border border-emerald-200 shadow-sm animate-pulse">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+            Trial Activo: 72h restantes
+          </div>
+        )}
+        
         {/* Language Selector */}
         <div className="relative group/lang z-[1000]">
           <select 
@@ -92,10 +100,12 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
         <div className="w-full bg-app-surface border-t border-app-border shadow-lg absolute top-full left-0 animate-in slide-in-from-top-2 duration-200 z-[1001]">
           {tabs.map((tab) => {
             const { id, label, icon } = tab;
-            const isLocked = isPaid && (
-              (id === 'planner' && userTier === 'habitos') ||
-              (id === 'tracker' && userTier === 'tareas')
-            );
+            let isLocked = false;
+            if (isPaid && userTier && !['duo', 'max', 'stack completo', 'completo', 'trial', 'free', 'gratis'].includes(userTier)) {
+              if (userTier === 'habitos' && id !== 'tracker' && id !== 'recursos' && id !== 'modulos') isLocked = true;
+              if ((userTier === 'tareas' || userTier === 'enfoque') && id !== 'planner' && id !== 'recursos' && id !== 'modulos') isLocked = true;
+              if (userTier === 'finanzas' && id !== 'finances' && id !== 'recursos' && id !== 'modulos') isLocked = true;
+            }
 
             return (
               <button
