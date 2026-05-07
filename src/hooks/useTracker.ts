@@ -91,6 +91,9 @@ export function useHabits() {
   };
 
   const hardDelete = async (id: string) => {
+    // Eliminar completions primero para evitar errores de Foreign Key si ON DELETE CASCADE no está configurado
+    await supabase.from('completions').delete().eq('habit_id', id);
+    
     const { error } = await supabase
       .from('habits')
       .delete()
@@ -146,8 +149,13 @@ export function useCompletions(year: number, month: number) {
   const toggle = async (habitId: string, date: string, userId: string) => {
     const existing = completions.find(c => c.habit_id === habitId && c.date === date);
     if (existing) {
-      await supabase.from('completions').delete().eq('id', existing.id);
-      setCompletions(prev => prev.filter(c => c.id !== existing.id));
+      await supabase
+        .from('completions')
+        .delete()
+        .eq('habit_id', habitId)
+        .eq('date', date)
+        .eq('user_id', userId);
+      setCompletions(prev => prev.filter(c => !(c.habit_id === habitId && c.date === date)));
     } else {
       const { data, error } = await supabase
         .from('completions')

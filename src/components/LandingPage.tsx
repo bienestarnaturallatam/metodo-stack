@@ -23,7 +23,16 @@ import {
 } from 'lucide-react';
 
 import { useTranslation } from '@/hooks/useTranslation';
-import CarruselModulos from '@/components/CarruselModulos';
+import dynamic from 'next/dynamic';
+
+const CarruselModulos = dynamic(() => import('@/components/CarruselModulos'), {
+  loading: () => <div className="h-[420px] w-full bg-black/5 animate-pulse rounded-[40px]" />,
+  ssr: false
+});
+
+const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup'), {
+  ssr: false
+});
 
 export default function LandingPage() {
   const { lang, setLang, t, currency } = useTranslation();
@@ -698,6 +707,8 @@ export default function LandingPage() {
           </div>
         </Link>
       </div>
+      {/* EXIT INTENT POPUP (LOADED DYNAMICALLY) */}
+      <ExitIntentPopup />
     </div>
   );
 }

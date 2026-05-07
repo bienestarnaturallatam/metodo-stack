@@ -104,11 +104,12 @@ export default function TrackerTable({
                   <th
                     key={d}
                     id={`day-${d}`}
-                    className={`${dayCell} h-10 sm:h-12 font-mono text-center transition-all duration-300 
+                    className={`${dayCell} h-10 sm:h-12 font-mono text-center transition-all duration-300 relative
                       ${selected ? 'bg-brand-green/20 border-l-2 border-r-2 border-brand-green text-brand-green z-20 font-black text-[11px] sm:text-[13px] scale-105 shadow-md' : 
                         today ? 'bg-green-50 border-l-2 border-r-2 border-green-600 text-green-700 font-black text-[12px] sm:text-[13px] z-20 ring-2 ring-green-100' : 
                         weekend ? 'bg-brand-pink-light text-brand-pink font-black' : 'bg-app-bg/10 text-app-text3'}`}
                   >
+                    {today && <div className="absolute -top-1 left-1/2 -translate-x-1/2 text-[6px] font-black bg-white text-brand-green px-1 rounded-sm shadow-sm border border-brand-green uppercase tracking-tighter">Hoy</div>}
                     {d}
                   </th>
                 );

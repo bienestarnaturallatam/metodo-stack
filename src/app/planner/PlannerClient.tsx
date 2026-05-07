@@ -17,6 +17,8 @@ import { createClient } from '@/lib/client';
 import { toISODate } from '@/lib/dateUtils';
 import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
 import LegalFooter from '@/components/LegalFooter';
+import TourBienvenida from '@/components/TourBienvenida';
+import SignatureFooter from '@/components/SignatureFooter';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
@@ -274,6 +276,74 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
     const a = document.createElement('a');
     a.href = url;
     a.download = `Stack_Enfoque_${dateStr.replace(/\//g, '-')}.xls`;
+    a.click();
+  };
+
+  const handleExportMonthXLS = () => {
+    const monthName = months[monthModalMonth];
+    const daysInMonthNum = new Date(monthModalYear, monthModalMonth + 1, 0).getDate();
+    
+    let html = `
+      <table border="1">
+        <thead>
+          <tr style="background-color: #2d5a3d; color: white;">
+            <th colspan="5" style="font-size: 16px; padding: 10px;">METODO STACK - VISTA MENSUAL (${monthName} ${monthModalYear})</th>
+          </tr>
+          <tr style="background-color: #f4faf6;">
+            <th style="padding: 8px;">Día</th>
+            <th style="padding: 8px;">Estado</th>
+            <th style="padding: 8px;">Tarea / Propósito</th>
+            <th style="padding: 8px;">Prioridad</th>
+            <th style="padding: 8px;">Hora</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    for (let d = 1; d <= daysInMonthNum; d++) {
+      const dateObj = new Date(monthModalYear, monthModalMonth, d);
+      const targetSunday = new Date(dateObj);
+      targetSunday.setDate(dateObj.getDate() - dateObj.getDay());
+      const weekStartStr = toISODate(targetSunday.getFullYear(), targetSunday.getMonth(), targetSunday.getDate());
+      const dayIndex = dateObj.getDay();
+
+      const row = monthData.find(r => r.week_start_date === weekStartStr && r.day_index === dayIndex);
+      const tasks = row?.tasks || [];
+
+      if (tasks.length === 0) {
+        html += `
+          <tr>
+            <td style="padding: 5px; text-align: center;">${d}</td>
+            <td colspan="4" style="padding: 5px; text-align: center; color: #999;">Sin tareas</td>
+          </tr>
+        `;
+      } else {
+        tasks.forEach((task: any, idx: number) => {
+          const pText = t(`planner_priority_${task.priority || 'important'}`);
+          const statusText = task.done ? 'COMPLETADA' : 'PENDIENTE';
+          html += `
+            <tr>
+              ${idx === 0 ? `<td rowspan="${tasks.length}" style="padding: 5px; text-align: center; vertical-align: middle;">${d}</td>` : ''}
+              <td style="padding: 5px; text-align: center;">${statusText}</td>
+              <td style="padding: 5px;">${task.text}</td>
+              <td style="padding: 5px; text-align: center;">${pText}</td>
+              <td style="padding: 5px; text-align: center;">${task.scheduled_time || '-'}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    html += `
+        </tbody>
+      </table>
+    `;
+
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Stack_Mensual_${monthName}_${monthModalYear}.xls`;
     a.click();
   };
 
@@ -593,6 +663,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
 
   return (
     <div className={`min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans transition-all duration-1000 ${asEmbedded ? 'pt-2' : ''} ${isDeepWork ? 'bg-black' : ''}`}>
+      <TourBienvenida />
       {/* TOPBAR */}
       {!asEmbedded && (
         <nav className={`bg-[#2d5a3d] h-[54px] flex items-center px-4 sm:px-7 sticky top-0 z-[200] shadow-lg transition-all duration-700 ${isDeepWork ? 'opacity-0 -translate-y-full pointer-events-none' : 'opacity-100'}`}>
@@ -678,7 +749,13 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
             <button onClick={() => changeWeek(-1)} className="w-8 h-8 rounded-full border border-[#d8eadb] text-[#7a9b82] hover:bg-[#f4faf6] transition-all">←</button>
             <span className="font-mono text-[10px] font-bold text-[#2d5a3d] uppercase tracking-tighter">{t('planner_week_label')} {weekStart.split('-').reverse().slice(0, 2).join('/')}</span>
             <button onClick={() => changeWeek(1)} className="w-8 h-8 rounded-full border border-[#d8eadb] text-[#7a9b82] hover:bg-[#f4faf6] transition-all">→</button>
-            <span className="hidden xs:inline">📅 {t('planner_full_month')}</span>
+            <button 
+              onClick={() => setShowMonthModal(true)} 
+              title={t('planner_full_month_title')}
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 bg-white border border-[#d8eadb] rounded-full text-[10px] font-black uppercase text-[#2d5a3d] hover:bg-[#f4faf6] transition-all shadow-sm hover:scale-105"
+            >
+              📅 {t('planner_full_month')}
+            </button>
           </div>
         </div>
 
@@ -846,22 +923,10 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                         type="time"
                         value={newTaskTime}
                         onChange={(e) => setNewTaskTime(e.target.value)}
+                        title={t('planner_time_hint')}
                         className="w-[72px] bg-[#f4faf6] border border-[#d8eadb] focus:border-[#2d5a3d] rounded-lg text-[11px] font-mono font-black text-center outline-none py-1 text-[#2d5a3d]"
                       />
-                      <button
-                        onClick={() => {
-                          if (confirm(t('delete_confirm') || '¿Eliminar definitivamente?')) {
-                            const newData = [...localData];
-                            newData[selectedDayIndex].tasks = [];
-                            setLocalData(newData);
-                            saveDay(selectedDayIndex, newData[selectedDayIndex]);
-                          }
-                        }}
-                        className="p-2 text-[#e74b6c] hover:bg-red-50 rounded-xl transition-all"
-                        title={t('planner_delete_title')}
-                      >
-                        <Trash2 size={18} />
-                      </button>
+
                       <button
                         onClick={() => addTask(selectedDayIndex, newTaskText)}
                         className="px-4 py-2 bg-[#2d5a3d] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md"
@@ -937,6 +1002,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                                           value={task.scheduled_time || ''}
                                           onChange={(e) => handleTaskTimeChange(selectedDayIndex, tIdx, e.target.value)}
                                           onBlur={() => saveDay(selectedDayIndex, day)}
+                                          title={t('planner_time_hint')}
                                           className={`w-[68px] bg-[#f4faf6] border border-[#d8eadb] hover:border-[#6aaf7a] focus:border-[#2d5a3d] rounded-lg text-[10px] font-mono font-black text-center outline-none transition-all py-0.5 cursor-pointer ${task.scheduled_time ? 'text-[#2d5a3d]' : 'text-[#c8e6c9]'}`}
                                         />
                                         {task.scheduled_time && (
@@ -1454,7 +1520,17 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl h-[90vh] sm:h-auto sm:max-h-full overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="bg-[#2d5a3d] px-6 py-5 flex items-center justify-between shrink-0">
               <h2 className="text-white font-fraunces text-2xl font-black">{t('planner_monthly_view') || 'Vista Mensual'}</h2>
-              <button onClick={() => setShowMonthModal(false)} className="text-white hover:text-rose-300 text-xl font-bold p-2">✖</button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleExportMonthXLS}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-[11px] font-black uppercase tracking-widest transition-all border border-white/20"
+                  title={t('planner_export_month_title')}
+                >
+                  <Download size={14} />
+                  <span>XLS</span>
+                </button>
+                <button onClick={() => setShowMonthModal(false)} className="text-white hover:text-rose-300 text-xl font-bold p-2">✖</button>
+              </div>
             </div>
 
             <div className="flex items-center justify-center gap-4 sm:gap-6 p-4 border-b border-[#d8eadb] bg-[#f4faf6] shrink-0">
@@ -1491,7 +1567,15 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                       const completed = tasks.filter((t: any) => t.done).length;
 
                       return (
-                        <div key={d} className="bg-white border border-[#d8eadb] rounded-2xl p-3 shadow-sm flex flex-col hover:border-[#6aaf7a] transition-all min-h-[120px]">
+                        <div 
+                          key={d} 
+                          onClick={() => {
+                            setWeekStart(weekStartStr);
+                            setSelectedDayIndex(dayIndex);
+                            setShowMonthModal(false);
+                          }}
+                          className="bg-white border border-[#d8eadb] rounded-2xl p-3 shadow-sm flex flex-col hover:border-[#6aaf7a] transition-all min-h-[120px] cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-95"
+                        >
                           <div className="flex justify-between items-center mb-2">
                             <span className="text-[10px] font-black uppercase text-[#7a9b82]">{ABBR[dayIndex]}</span>
                             <span className={`text-lg font-fraunces font-black ${dateObj.toDateString() === new Date().toDateString() ? 'text-emerald-500' : 'text-[#2d5a3d]'}`}>{d}</span>
@@ -1603,6 +1687,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
         </div>
       )}
 
+      {!asEmbedded && <SignatureFooter />}
       {!asEmbedded && <LegalFooter />}
     </div>
   );

@@ -9,6 +9,8 @@ import {
 import { useTranslation } from '@/hooks/useTranslation';
 import MindMap from '@/components/MindMap';
 import LegalFooter from '@/components/LegalFooter';
+import TourBienvenida from '@/components/TourBienvenida';
+import SignatureFooter from '@/components/SignatureFooter';
 
 // ==========================================
 // 1. SUB-COMPONENTE: AYUDA CONTEXTUAL (❓)
@@ -50,83 +52,7 @@ function AyudaContextual({ titulo, texto, lista }: { titulo: string, texto: stri
 // ==========================================
 // 2. SUB-COMPONENTE: TOUR DE BIENVENIDA
 // ==========================================
-function TourBienvenida({ showInstallBtn }: { showInstallBtn: boolean }) {
-  const [visible, setVisible] = useState(false);
-  const [step, setStep] = useState(0);
 
-  const steps = [
-    {
-      icono: '🎯',
-      titulo: '¡Bienvenida a tu Academia!',
-      texto: 'Emma, aquí centralizamos toda la ingeniería del Método STACK. Es tu biblioteca técnica para el rediseño de sistemas.'
-    },
-    {
-      icono: '📱',
-      titulo: 'Tu Academia siempre a mano',
-      texto: 'Emma, el último paso es el más importante: Ancla tu academia a la pantalla de inicio. Así entrarás en 1 segundo sin depender de links. ¡Hazlo obvio!',
-      selector: '#install-app-btn'
-    }
-  ];
-
-  useEffect(() => {
-    const completado = localStorage.getItem('tourStackV3_Full');
-    if (!completado) {
-      const timer = setTimeout(() => setVisible(true), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
-  if (!visible) return null;
-
-  const current = steps[step];
-
-  return (
-    <div className="fixed inset-0 z-[1000] bg-black/85 flex items-center justify-center p-6 backdrop-blur-md font-sans">
-      <div className="bg-white rounded-[56px] p-12 max-w-md w-full text-center shadow-2xl border-[6px] border-emerald-50 animate-in zoom-in duration-500 relative">
-        <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-white rounded-full flex items-center justify-center text-5xl shadow-xl border-4 border-emerald-50">
-          {current.icono}
-        </div>
-        <h2 className="text-3xl font-black text-[#2d5a3d] mb-4 uppercase italic leading-none mt-4 tracking-tighter">{current.titulo}</h2>
-        <p className="text-gray-500 mb-12 text-sm leading-relaxed font-medium">{current.texto}</p>
-
-        <div className="space-y-4">
-          {step < steps.length - 1 ? (
-            <button
-              onClick={() => setStep(step + 1)}
-              className="w-full py-6 bg-[#00C853] text-black font-black rounded-3xl shadow-xl shadow-green-500/20 active:scale-95 transition-all uppercase text-xs tracking-[0.2em]"
-            >
-              Siguiente Paso
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                localStorage.setItem('tourStackV3_Full', 'true');
-                setVisible(false);
-              }}
-              className="w-full py-6 bg-[#2d5a3d] text-white font-black rounded-3xl shadow-xl shadow-green-900/20 active:scale-95 transition-all uppercase text-xs tracking-[0.2em]"
-            >
-              ¡Entendido, vamos!
-            </button>
-          )}
-          <button 
-            onClick={() => {
-              localStorage.setItem('tourStackV3_Full', 'true');
-              setVisible(false);
-            }} 
-            className="text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-gray-500 transition-colors"
-          >
-            Saltar Tour
-          </button>
-        </div>
-      </div>
-      {current.selector && (
-        <div className="absolute top-10 right-10 animate-pulse pointer-events-none hidden lg:block">
-           <div className="bg-[#00C853] text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase">¡MIRA AQUÍ! ↙️</div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 // ==========================================
 // 3. COMPONENTE PRINCIPAL: RECURSOS CLIENT
@@ -539,7 +465,7 @@ export default function RecursosClient({
   // ==========================================
   return (
     <div className="min-h-screen bg-[#f7f9f7] pb-40 px-6 sm:px-16 pt-16 font-sans text-center relative selection:bg-emerald-100 selection:text-emerald-900">
-      <TourBienvenida showInstallBtn={showInstallBtn} />
+      <TourBienvenida />
       <div className="max-w-[1440px] mx-auto">
 
         {/* CABECERA DE SESIÓN */}
@@ -732,6 +658,9 @@ export default function RecursosClient({
         </div>
       )}
 
+
+            {!asEmbedded && <SignatureFooter />}
+            {!asEmbedded && <LegalFooter />}
     </div>
   );
 }

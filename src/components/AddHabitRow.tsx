@@ -17,6 +17,7 @@ export default function AddHabitRow({ onAdd, month, year }: Props) {
     <div className="flex gap-2">
       <input
         type="text"
+        list="common-habits"
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && submit()}
@@ -26,6 +27,18 @@ export default function AddHabitRow({ onAdd, month, year }: Props) {
                    text-app-text text-xs font-sans outline-none placeholder:text-app-text3
                    transition-colors focus:border-brand-green"
       />
+      <datalist id="common-habits">
+        <option value="Beber 2L de agua" />
+        <option value="Meditar 10 min" />
+        <option value="Hacer ejercicio" />
+        <option value="Leer 10 páginas" />
+        <option value="Dormir 8 horas" />
+        <option value="Agradecer (3 cosas)" />
+        <option value="Planificar el día" />
+        <option value="Estudiar 30 min" />
+        <option value="Caminar 10k pasos" />
+        <option value="Sin pantallas (noche)" />
+      </datalist>
       <button
         onClick={submit}
         className="px-4 py-2 bg-brand-green/90 text-white text-xs font-bold rounded-lg

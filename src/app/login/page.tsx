@@ -37,7 +37,7 @@ export default function LoginPage() {
           .single();
 
         if (!pError && profile) {
-          const isActive = profile.is_paid || profile.tier === 'trial' || profile.tier?.includes('habito') || profile.tier?.includes('tarea');
+          const isActive = profile.is_paid; // SOLO CLIENTES ACTIVOS (CON PAGO)
           
           if (isActive) {
             // Intentar Auto-Registro para clientes manuales

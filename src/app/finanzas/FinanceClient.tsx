@@ -9,6 +9,8 @@ import {
   FileText, ChevronDown, Zap, Heart, ShieldCheck
 } from 'lucide-react';
 import LegalFooter from '@/components/LegalFooter';
+import TourBienvenida from '@/components/TourBienvenida';
+import SignatureFooter from '@/components/SignatureFooter';
 import { createClient } from '@/lib/client';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -106,40 +108,30 @@ type Meta = {
 };
 
 // --- INITIAL DATA ---
-const INITIAL_TX: Transaccion[] = [
-  { id: 1, type: 'income', amount: 5000, cat: 'Sueldo', desc: 'Nómina Mensual STACK', date: '2026-04-01' },
-  { id: 2, type: 'income', amount: 1500, cat: 'Freelance', desc: 'Consultoría Estratégica', date: '2026-04-15' },
-  { id: 3, type: 'expense', amount: 1800, cat: 'Vivienda', desc: 'Alquiler Loft Central', date: '2026-04-02' },
-  { id: 4, type: 'expense', amount: 850, cat: 'Alimentación', desc: 'Compras Orgánicas Market', date: '2026-04-05' },
-  { id: 5, type: 'expense', amount: 320, cat: 'Transporte', desc: 'Suscripción Movilidad', date: '2026-04-10' },
-  { id: 6, type: 'expense', amount: 450, cat: 'Servicios', desc: 'Fibra Óptica y Electricidad', date: '2026-04-08' },
-  { id: 7, type: 'expense', amount: 200, cat: 'Salud', desc: 'Seguro Premium', date: '2026-04-12' },
-  { id: 8, type: 'expense', amount: 350, cat: 'Entretenimiento', desc: 'Cena Gourmet & Eventos', date: '2026-04-18' },
-  { id: 9, type: 'expense', amount: 600, cat: 'Educación', desc: 'Certificación IA', date: '2026-04-20' },
-  { id: 10, type: 'expense', amount: 150, cat: 'Otros', desc: 'Suscripciones Software', date: '2026-04-25' }
-];
+const INITIAL_TX: Transaccion[] = [];
 
 const INITIAL_BUDGET: Presupuesto = {
-  Alimentación: 1000,
-  Transporte: 500,
-  Vivienda: 1800,
-  Salud: 300,
-  Entretenimiento: 600,
-  Educación: 1000,
-  Servicios: 500,
-  Ropa: 300,
-  Otros: 500
+  Alimentación: 0,
+  Transporte: 0,
+  Vivienda: 0,
+  Salud: 0,
+  Entretenimiento: 0,
+  Educación: 0,
+  Servicios: 0,
+  Ropa: 0,
+  Otros: 0
 };
 
-const INITIAL_GOALS: Meta[] = [
-  { id: 1, name: 'Fondo de Libertad (6 Meses)', target: 15000, current: 4500, icon: '🏦' },
-  { id: 2, name: 'Retiro 2.0 (Inversiones)', target: 50000, current: 8200, icon: '📈' },
-  { id: 3, name: 'Nómada Digital (Viaje)', target: 5000, current: 1500, icon: '✈️' }
-];
+const INITIAL_GOALS: Meta[] = [];
 
 export default function FinanceClient({ userId, userEmail, onPageChange, isPaid: initialIsPaid = false, userTier: initialUserTier = 'trial', asEmbedded = false }: { userId: string, userEmail: string, onPageChange?: (page: any) => void, isPaid?: boolean, userTier?: string, asEmbedded?: boolean }) {
   const [activeModule, setActiveModule] = useState<'dashboard' | 'transactions' | 'budget' | 'goals' | 'reports'>('dashboard');
-  const [selectedMonth, setSelectedMonth] = useState('2026-04');
+  
+  // Usar el mes actual real como predeterminado
+  const now = new Date();
+  const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const [selectedMonth, setSelectedMonth] = useState(currentMonthStr);
+
   const [transacciones, setTransacciones] = useState<Transaccion[]>([]);
   const [presupuesto, setPresupuesto] = useState<Presupuesto>(INITIAL_BUDGET);
   const [metas, setMetas] = useState<Meta[]>(INITIAL_GOALS);
@@ -151,7 +143,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
   const [isExpired, setIsExpired] = useState(false);
   const [userTier, setUserTier] = useState(initialUserTier);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
-  const [selectedCurrency, setSelectedCurrency] = useState(CURRENCIES[0]);
+  const [selectedCurrency, setSelectedCurrency] = useState(CURRENCIES[1]);
   const [showDayPicker, setShowDayPicker] = useState(false);
 
   const router = useRouter();
@@ -319,21 +311,6 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
   };
 
   const handleExportCSV = () => {
-    const headers = ['Fecha', 'Tipo', 'Descripción', 'Categoría', 'Monto', 'Nota'];
-    const rows = transacciones.map(t => [
-      t.date,
-      t.type === 'income' ? 'Ingreso' : 'Gasto',
-      t.desc,
-      t.cat,
-      t.amount.toFixed(2),
-      t.note || ''
-    ]);
-    const [year, month] = selectedMonth.split('-');
-    const title = `Reporte de Transacciones - ${MONTHS[parseInt(month) - 1]} ${year}`;
-    downloadExcel(headers, rows, `transacciones_${selectedMonth}`, title);
-  };
-
-  const handleExportRealCSV = () => {
     const headers = ['Fecha', 'Tipo', 'Descripción', 'Categoría', 'Monto', 'Fuga', 'Nota'];
     const rows = transacciones.map(t => [
       t.date,
@@ -344,21 +321,9 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
       t.fuga ? 'SÍ' : 'NO',
       t.note || ''
     ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(r => r.map(c => `"${c}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `finanzas_stack_${selectedMonth}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast('Archivo CSV exportado correctamente');
+    const [year, month] = selectedMonth.split('-');
+    const title = `Reporte de Transacciones - ${MONTHS[parseInt(month) - 1]} ${year}`;
+    downloadExcel(headers, rows, `transacciones_${selectedMonth}`, title);
   };
 
   const handleExportBudget = () => {
@@ -504,7 +469,8 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sora selection:bg-[#2d5a3d]/10">
+    <div className={`min-h-screen bg-white text-[#1a2e1e] font-sans selection:bg-emerald-100 ${asEmbedded ? 'pt-2' : ''}`}>
+      <TourBienvenida />
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Serif+Display&display=swap');
         .font-dm-serif { font-family: 'DM Serif Display', serif; }
@@ -713,7 +679,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
               </div>
 
               {activeModule === 'transactions' && (
-                <button onClick={handleExportRealCSV} className="flex items-center gap-2 px-5 py-3 bg-white border border-[#d8eadb] rounded-2xl text-xs font-bold text-[#2d5a3d] hover:bg-[#f4faf6] transition-all shadow-sm">
+                <button onClick={handleExportCSV} className="flex items-center gap-2 px-5 py-3 bg-white border border-[#d8eadb] rounded-2xl text-xs font-bold text-[#2d5a3d] hover:bg-[#f4faf6] transition-all shadow-sm">
                   <Download size={16} /> Exportar Excel
                 </button>
               )}
@@ -819,6 +785,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
         </div>
       )}
 
+      {!asEmbedded && <SignatureFooter />}
       {!asEmbedded && <LegalFooter />}
     </div>
   );

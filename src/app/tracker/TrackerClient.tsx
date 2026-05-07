@@ -22,6 +22,8 @@ import { daysInMonth, toISODate } from '@/lib/dateUtils';
 import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
 import CalendarView from '@/components/CalendarView';
 import LegalFooter from '@/components/LegalFooter';
+import TourBienvenida from '@/components/TourBienvenida';
+import SignatureFooter from '@/components/SignatureFooter';
 
 interface Props { userId: string; userEmail: string; }
 
@@ -145,34 +147,6 @@ function TrackerContent({ userId, userEmail }: Props) {
   const { completions, toggle }          = useCompletions(year, month);
   const { logs, upsert }                 = useMoodLogs(year, month);
 
-  // SEED DATA FOR DEMO/VALIDATION (Request: LLENA DE DATOS EL MES)
-  useEffect(() => {
-    if (!loading && habits.length === 0 && month === 4 && year === 2026) {
-      console.log('Seeding habits for demo...');
-      async function seed() {
-        // 1. Add 3 essential habits
-        const h1 = await add("Leer 20 min");
-        const h2 = await add("Hacer Ejercicio");
-        const h3 = await add("Beber 2L Agua");
-
-        const ids = [h1?.id, h2?.id, h3?.id].filter(Boolean) as string[];
-        
-        // 2. Random completions for the first 5 days
-        for (let d = 1; d <= 5; d++) {
-          const date = toISODate(2026, 4, d);
-          for (const id of ids) {
-            if (Math.random() > 0.3) {
-              await toggle(id, date, userId);
-            }
-          }
-          // 3. Random Mood Logs
-          await upsert(date, 'mood', Math.floor(Math.random() * 3) + 3, userId);
-          await upsert(date, 'motivation', Math.floor(Math.random() * 3) + 3, userId);
-        }
-      }
-      seed();
-    }
-  }, [loading, habits.length, month, year, userId]);
   
   // LOGICA DE SEGURIDAD Y DISPOSITIVOS
   const [sessionCount, setSessionCount] = useState(1);
@@ -304,7 +278,8 @@ function TrackerContent({ userId, userEmail }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg">
+    <div className="min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans selection:bg-emerald-100 relative">
+      <TourBienvenida />
       <TopNav 
         page={page === 'dashboard' ? 'tracker' : page} 
         setPage={handlePageChange} 
@@ -699,6 +674,7 @@ function TrackerContent({ userId, userEmail }: Props) {
         </div>
       )}
       
+      <SignatureFooter />
       <LegalFooter />
     </div>
   );
