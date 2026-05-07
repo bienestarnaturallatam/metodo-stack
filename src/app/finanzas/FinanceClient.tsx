@@ -575,7 +575,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
                   <button
                     onClick={() => setShowModalFuga(true)}
                     className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all mx-1 bg-amber-50 text-amber-500 border border-amber-100 hover:bg-amber-100 shadow-inner group"
-                    title="Registrar Fuga de Energía"
+                    title="REGISTRAR GASTO HORMIGA"
                   >
                     <Zap size={28} className="group-hover:scale-110 transition-transform fill-amber-500" />
                   </button>
@@ -1146,7 +1146,9 @@ function TransactionsView({ filteredTx, onDelete, formatCurrency, selectedMonth,
                     </div>
                   </td>
                   <td className={`px-3 sm:px-8 py-3 sm:py-5 text-xs sm:text-lg font-dm-serif whitespace-nowrap ${tx.type === 'income' ? 'text-[#2d5a3d]' : 'text-[#e74b6c]'}`}>
-                    {tx.type === 'income' ? '+' : '-'} {formatCurrency(tx.amount)}
+                    <span className={tx.fuga ? 'animate-fuga-blink' : ''}>
+                      {tx.type === 'income' ? '+' : '-'} {formatCurrency(tx.amount)}
+                    </span>
                   </td>
                   <td className="px-3 sm:px-8 py-3 sm:py-5 text-right">
                     <button
@@ -1568,8 +1570,8 @@ function ModalFuga({ onClose, onSave }: { onClose: () => void, onSave: (tx: Omit
           <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-amber-100">
             <Zap className="text-amber-500 fill-amber-500" size={32} />
           </div>
-          <h2 className="text-2xl font-black mb-2 text-[#1a2e1e] uppercase tracking-tight">Registrar Fuga</h2>
-          <p className="text-[10px] font-bold text-[#7a9b82] uppercase tracking-widest mb-8">Gasto hormiga o pérdida de energía</p>
+          <h2 className="text-2xl font-black mb-2 text-[#1a2e1e] uppercase tracking-tight">Registrar Gasto Hormiga</h2>
+          <p className="text-[10px] font-bold text-[#7a9b82] uppercase tracking-widest mb-8">Pérdida de dinero o energía</p>
 
           <div className="space-y-4">
             <input
@@ -1577,6 +1579,9 @@ function ModalFuga({ onClose, onSave }: { onClose: () => void, onSave: (tx: Omit
               className="w-full bg-[#f4faf6] border border-[#d8eadb] p-4 rounded-2xl text-sm font-bold outline-none focus:border-amber-500 transition-all text-[#1a2e1e]"
               autoFocus
             />
+            <p className="text-[9px] text-[#7a9b82] font-medium mt-1 text-left px-2">
+              Ejemplos: Café, Snacks, Suscripciones, Transporte, Antojos...
+            </p>
             <input
               type="number" placeholder="Monto" value={amount} onChange={e => setAmount(e.target.value)}
               className="w-full bg-[#f4faf6] border border-[#d8eadb] p-4 rounded-2xl text-lg font-black outline-none focus:border-amber-500 transition-all text-[#1a2e1e] text-center"
@@ -1585,7 +1590,7 @@ function ModalFuga({ onClose, onSave }: { onClose: () => void, onSave: (tx: Omit
 
           <div className="flex flex-col gap-3 mt-8">
             <button onClick={handleSave} className="w-full py-4 bg-amber-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-amber-500/20 hover:scale-[1.02] active:scale-95 transition-all">
-              Marcar Fuga
+              Guardar Gasto Hormiga
             </button>
             <button onClick={onClose} className="w-full py-3 text-[#7a9b82] font-bold uppercase text-[9px] tracking-widest hover:text-[#1a2e1e]">
               Cancelar
