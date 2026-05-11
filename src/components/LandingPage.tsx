@@ -34,6 +34,8 @@ const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup'), {
   ssr: false
 });
 
+export const WSP_GLOBAL_LINK = "https://wa.me/51989078285?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20y%20quiero%20mi%20llave%20de%20acceso%20gratis%20por%203%20d%C3%ADas%20al%20M%C3%A9todo%20STACK.%20%F0%9F%8C%BF";
+
 export default function LandingPage() {
   const { lang, setLang, t, currency } = useTranslation();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -109,15 +111,17 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-700 delay-300 min-h-[80px]">
-              <Link 
-                href="/register" 
-                className="group relative px-10 py-5 bg-[#00C853] text-white rounded-2xl font-black italic text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30"
+              <a 
+                href={WSP_GLOBAL_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-10 py-4 md:py-5 bg-[#00C853] text-white rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto max-w-[90vw] mx-auto"
               >
-                <span className="relative z-10 flex items-center gap-3">
-                  {t('hero_cta')}
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </Link>
+                <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+                  <Zap className="w-4 h-4 text-[#00C853] fill-[#00C853]" />
+                </div>
+              </a>
             </div>
 
             {/* MOCKUP IMAGE */}
@@ -131,9 +135,6 @@ export default function LandingPage() {
                   height={800}
                   quality={80}
                   priority
-                  sizes="(max-width: 768px) 100vw, 
-                         (max-width: 1200px) 80vw, 
-                         1200px"
                   className="w-full h-auto object-contain"
                 />
               </div>
@@ -184,7 +185,6 @@ export default function LandingPage() {
                     width={400}
                     height={300}
                     quality={85}
-                    sizes="(max-width: 768px) 100vw, 400px"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -217,7 +217,6 @@ export default function LandingPage() {
                     width={400}
                     height={300}
                     quality={85}
-                    sizes="(max-width: 768px) 100vw, 400px"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -247,7 +246,6 @@ export default function LandingPage() {
                     width={400}
                     height={300}
                     quality={85}
-                    sizes="(max-width: 768px) 100vw, 400px"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -270,13 +268,17 @@ export default function LandingPage() {
 
             {/* CTA FINAL DE SECCIÓN */}
             <div className="text-center">
-              <Link 
-                href="/register" 
-                className="group relative inline-flex items-center gap-3 px-12 py-6 bg-[#00C853] text-white rounded-2xl font-black italic text-xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 mb-6"
+              <a 
+                href={WSP_GLOBAL_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-12 py-5 md:py-6 bg-[#00C853] text-white rounded-full font-black italic text-[14px] md:text-xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 mb-6 w-full md:w-auto max-w-[90vw] mx-auto"
               >
-                Unirme a ellos — Es gratis
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </Link>
+                <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+                  <Zap className="w-4 h-4 md:w-5 md:h-5 text-[#00C853] fill-[#00C853]" />
+                </div>
+              </a>
               <p className="text-sm font-bold text-[#111111]/40 uppercase tracking-widest mb-10">
                 Sin tarjeta de crédito · Cancela cuando quieras
               </p>
@@ -393,13 +395,17 @@ export default function LandingPage() {
             <p className="text-sm font-black text-[#00C853] uppercase tracking-widest mb-6 italic">
               "Si te identificaste con el lado izquierdo, STACK fue diseñado exactamente para ti."
             </p>
-            <Link 
-              href="/register" 
-              className="inline-flex items-center gap-3 px-12 py-5 bg-[#00C853] text-white rounded-2xl font-black italic text-lg tracking-widest hover:scale-105 transition-all shadow-xl shadow-[#00C853]/20"
+            <a 
+              href={WSP_GLOBAL_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex md:inline-flex items-center justify-center px-6 md:px-12 py-4 md:py-5 bg-[#00C853] text-white rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 transition-all shadow-xl shadow-[#00C853]/20 group w-full md:w-auto max-w-[90vw] mx-auto"
             >
-              Quiero empezar gratis
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+              <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+                <Zap className="w-4 h-4 text-[#00C853] fill-[#00C853]" />
+              </div>
+            </a>
           </div>
         </div>
       </section>
@@ -526,9 +532,14 @@ export default function LandingPage() {
                   </div>
                 )}
 
-                <Link href="/register" className={`w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-white hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}>
+                <a 
+                  href={plan.price === '0' ? WSP_GLOBAL_LINK : '/register'}
+                  target={plan.price === '0' ? '_blank' : undefined}
+                  rel={plan.price === '0' ? 'noopener noreferrer' : undefined}
+                  className={`block w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-white hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}
+                >
                   {plan.cta}
-                </Link>
+                </a>
               </div>
             ))}
           </div>
@@ -577,13 +588,17 @@ export default function LandingPage() {
             En 5 minutos configuras tus primeros hábitos y tu planeador de la semana. Gratis.
           </p>
 
-          <Link 
-            href="/register" 
-            className="inline-flex items-center gap-4 px-14 py-7 bg-[#00C853] text-[#0A0A0A] rounded-2xl font-black italic text-2xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/40 mb-8 uppercase"
+          <a 
+            href={WSP_GLOBAL_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex md:inline-flex items-center justify-center px-6 md:px-14 py-5 md:py-7 bg-[#00C853] text-white rounded-full font-black italic text-[15px] md:text-2xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/40 mb-8 group w-full md:w-auto max-w-[90vw] mx-auto"
           >
-            EMPEZAR MI TRANSFORMACIÓN
-            <ArrowRight className="w-6 h-6" />
-          </Link>
+            <span className="mr-2 md:mr-4 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+              <Zap className="w-5 h-5 md:w-6 md:h-6 text-[#00C853] fill-[#00C853]" />
+            </div>
+          </a>
 
           <p className="text-[#AAAAAA]/60 text-xs font-bold uppercase tracking-widest mb-16">
             Sin tarjeta de crédito · Cancela cuando quieras · Garantía 7 días
@@ -673,12 +688,23 @@ export default function LandingPage() {
                   <Globe className="w-6 h-6" />
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <a href="https://wa.me/51989078285" target="_blank" className="flex items-center gap-2 text-sm font-black text-[#00C853] hover:underline uppercase tracking-widest">
-                    <MessageSquare className="w-4 h-4" />
-                    {t('footer_contact')}
+                <div className="flex flex-col gap-4">
+                  <a 
+                    href="https://wa.me/51989078285?text=Hola,%20vi%20tu%20plataforma%20STACK%20y%20quiero%20informaci%C3%B3n%20sobre%20tus%20servicios%20de%20desarrollo%20de%20SaaS."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#FDFBF7] p-5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-black/20 block text-left border border-[#E5E5E5]/10"
+                    style={{ fontFamily: "'Sora', sans-serif" }}
+                  >
+                    <p className="uppercase tracking-[0.18em] text-[#111111] text-[9px] font-bold leading-[1.8] mb-4">
+                      ¿Te gustaría tener tu propio SaaS de Ingeniería de Vida o Bienestar? Diseñamos y desarrollamos plataformas de alta fidelidad como esta para tu marca.
+                    </p>
+                    <div className="flex items-center gap-2 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] transition-colors hover:text-black">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span>COTIZAR AHORA</span>
+                    </div>
                   </a>
-                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest">soporte@metodostack.com</span>
+                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em]">soporte@metodostack.com</span>
                 </div>
               </div>
             </div>
@@ -697,15 +723,17 @@ export default function LandingPage() {
 
       {/* FLOATING CTA */}
       <div className={`fixed bottom-4 left-4 right-4 md:bottom-6 md:right-6 md:left-auto md:w-auto z-[999] transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
-        <Link 
-          href="/register" 
-          className="flex items-center justify-center bg-[#00C853] text-white py-4 md:py-3 px-8 rounded-full font-black uppercase text-[11px] md:text-[10px] tracking-widest shadow-[0_20px_40px_rgba(0,200,83,0.4)] hover:scale-105 transition-all group border-2 border-white/20 w-full md:w-auto"
+        <a 
+          href={WSP_GLOBAL_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center bg-[#00C853] text-white py-4 md:py-3 px-6 md:px-8 rounded-full font-black uppercase text-[11px] md:text-[10px] tracking-widest shadow-[0_20px_40px_rgba(0,200,83,0.4)] hover:scale-105 transition-all group border-2 border-white/20 w-full md:w-auto whitespace-nowrap md:whitespace-normal"
         >
-          <span className="mr-3 italic">{t('hero_cta')}</span>
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
-            <Zap className="w-4 h-4 text-[#00C853] fill-[#00C853]" />
+          <span className="mr-2 md:mr-3 italic">EMPEZAR MI TRANSFORMACIÓN</span>
+          <div className="w-7 h-7 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+            <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#00C853] fill-[#00C853]" />
           </div>
-        </Link>
+        </a>
       </div>
       {/* EXIT INTENT POPUP (LOADED DYNAMICALLY) */}
       <ExitIntentPopup />

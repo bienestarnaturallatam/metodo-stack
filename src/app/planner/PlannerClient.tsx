@@ -38,10 +38,26 @@ const COLORS = {
   text3: '#7a9b82',
 };
 
+interface TaskRecurrence {
+  dayOfMonth: number;   // día del mes (1-31)
+  endMonth: number;     // mes fin (0-11)
+  endYear: number;      // año fin
+}
+
+interface PlannerTask {
+  text: string;
+  done: boolean;
+  priority?: 'critical' | 'important' | 'growth';
+  created_at?: string;
+  scheduled_time?: string;
+  recurrence?: TaskRecurrence;
+  note?: string;
+}
+
 interface PlannerData {
   day_index: number;
   mood: number | null;
-  tasks: { text: string; done: boolean; priority?: 'critical' | 'important' | 'growth'; created_at?: string; scheduled_time?: string }[];
+  tasks: PlannerTask[];
   reflections: {
     notes: string[];
     improve: string[];
@@ -147,6 +163,15 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
   const [movingTaskIdx, setMovingTaskIdx] = useState<number | null>(null);
   const [calendarMonth, setCalendarMonth] = useState(() => new Date().getMonth());
   const [calendarYear, setCalendarYear] = useState(() => new Date().getFullYear());
+
+  // Recurrence modal state
+  const [recurrenceTaskIdx, setRecurrenceTaskIdx] = useState<number | null>(null);
+  const [recurDayOfMonth, setRecurDayOfMonth] = useState(1);
+  const [recurEndMonth, setRecurEndMonth] = useState(() => new Date().getMonth());
+  const [recurEndYear, setRecurEndYear] = useState(() => new Date().getFullYear() + 1);
+
+  // Note panel state
+  const [openNoteIdx, setOpenNoteIdx] = useState<number | null>(null);
 
   // Month View state
   const [showMonthModal, setShowMonthModal] = useState(false);
@@ -544,6 +569,126 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
     saveDay(dayIndex, dayData);
   };
 
+  const duplicateTask = (dayIndex: number, taskIndex: number) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    const original = dayData.tasks[taskIndex];
+    const copy: PlannerTask = {
+      ...original,
+      done: false,
+      created_at: new Date().toISOString(),
+      recurrence: undefined,
+    };
+    dayData.tasks = [
+      ...dayData.tasks.slice(0, taskIndex + 1),
+      copy,
+      ...dayData.tasks.slice(taskIndex + 1),
+    ];
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    saveDay(dayIndex, dayData);
+  };
+
+  const handleNoteChange = (dayIndex: number, taskIndex: number, note: string) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = dayData.tasks.map((t, i) =>
+      i === taskIndex ? { ...t, note } : t
+    );
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+  };
+
+  // ── RECURRENCIA MENSUAL ──────────────────────────────────────────────────────
+  const handleSetRecurrence = async (dayIndex: number, taskIndex: number) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = dayData.tasks.map((t, i) =>
+      i === taskIndex
+        ? { ...t, recurrence: { dayOfMonth: recurDayOfMonth, endMonth: recurEndMonth, endYear: recurEndYear } }
+        : t
+    );
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    await saveDay(dayIndex, dayData);
+
+    // Auto-aplicar: insertar la tarea recurrente en todos los meses futuros hasta la fecha fin
+    const baseTask = dayData.tasks[taskIndex];
+    const recurrence = { dayOfMonth: recurDayOfMonth, endMonth: recurEndMonth, endYear: recurEndYear };
+    const today = new Date();
+
+    for (let y = today.getFullYear(); y <= recurrence.endYear; y++) {
+      const startM = y === today.getFullYear() ? today.getMonth() : 0;
+      const endM = y === recurrence.endYear ? recurrence.endMonth : 11;
+
+      for (let m = startM; m <= endM; m++) {
+        // Verificar que el día exista en ese mes
+        const maxDay = new Date(y, m + 1, 0).getDate();
+        const targetDay = Math.min(recurrence.dayOfMonth, maxDay);
+        const targetDate = new Date(y, m, targetDay);
+
+        // No repetir en la misma semana actual que ya guardamos
+        const targetSunday = new Date(targetDate);
+        targetSunday.setDate(targetDate.getDate() - targetDate.getDay());
+        const targetWeekStart = `${targetSunday.getFullYear()}-${String(targetSunday.getMonth() + 1).padStart(2, '0')}-${String(targetSunday.getDate()).padStart(2, '0')}`;
+
+        if (targetWeekStart === weekStart) continue; // ya guardado arriba
+
+        const targetDayIndex = targetDate.getDay();
+
+        // Traer datos existentes de esa semana/día
+        const { data: existing } = await supabase
+          .from('weekly_planner_data')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('week_start_date', targetWeekStart)
+          .eq('day_index', targetDayIndex)
+          .maybeSingle();
+
+        const existingTasks: PlannerTask[] = existing?.tasks ?? [];
+
+        // Evitar duplicados: si ya existe una tarea con mismo texto y recurrencia
+        const alreadyExists = existingTasks.some(
+          (et) => et.text === baseTask.text && et.recurrence?.dayOfMonth === recurrence.dayOfMonth
+        );
+        if (alreadyExists) continue;
+
+        const newTask: PlannerTask = {
+          text: baseTask.text,
+          done: false,
+          priority: baseTask.priority,
+          created_at: new Date().toISOString(),
+          scheduled_time: baseTask.scheduled_time,
+          recurrence,
+        };
+
+        await supabase.from('weekly_planner_data').upsert({
+          user_id: userId,
+          week_start_date: targetWeekStart,
+          day_index: targetDayIndex,
+          tasks: [...existingTasks, newTask],
+          reflections: existing?.reflections ?? { notes: ['', '', ''], improve: ['', '', ''], thanks: ['', '', ''] },
+          mood: existing?.mood ?? null,
+        }, { onConflict: 'user_id,week_start_date,day_index' });
+      }
+    }
+
+    setRecurrenceTaskIdx(null);
+  };
+
+  const removeRecurrence = async (dayIndex: number, taskIndex: number) => {
+    const newData = [...localData];
+    const dayData = { ...newData[dayIndex] };
+    dayData.tasks = dayData.tasks.map((t, i) => {
+      if (i !== taskIndex) return t;
+      const { recurrence: _r, ...rest } = t;
+      return rest;
+    });
+    newData[dayIndex] = dayData;
+    setLocalData(newData);
+    await saveDay(dayIndex, dayData);
+  };
+
   // Move task to any date (possibly a different week)
   const moveTaskToDate = async (fromDayIdx: number, taskIdx: number, targetDate: Date) => {
     const task = localData[fromDayIdx].tasks[taskIdx];
@@ -749,6 +894,30 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
             <button onClick={() => changeWeek(-1)} className="w-8 h-8 rounded-full border border-[#d8eadb] text-[#7a9b82] hover:bg-[#f4faf6] transition-all">←</button>
             <span className="font-mono text-[10px] font-bold text-[#2d5a3d] uppercase tracking-tighter">{t('planner_week_label')} {weekStart.split('-').reverse().slice(0, 2).join('/')}</span>
             <button onClick={() => changeWeek(1)} className="w-8 h-8 rounded-full border border-[#d8eadb] text-[#7a9b82] hover:bg-[#f4faf6] transition-all">→</button>
+            {/* ── BOTÓN HOY ── */}
+            {(() => {
+              const now = new Date();
+              const todaySunday = new Date(now);
+              todaySunday.setDate(now.getDate() - now.getDay());
+              const todayWeekStart = toISODate(todaySunday.getFullYear(), todaySunday.getMonth(), todaySunday.getDate());
+              const isCurrentWeek = weekStart === todayWeekStart;
+              return (
+                <button
+                  onClick={() => {
+                    setWeekStart(todayWeekStart);
+                    setSelectedDayIndex(now.getDay());
+                  }}
+                  title="Ir al día de hoy"
+                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all shadow-sm hover:scale-105 active:scale-95
+                    ${isCurrentWeek
+                      ? 'bg-emerald-500 text-white border border-emerald-400 shadow-emerald-200'
+                      : 'bg-[#2d5a3d] text-white border border-[#2d5a3d] animate-pulse hover:animate-none'
+                    }`}
+                >
+                  📍 HOY
+                </button>
+              );
+            })()}
             <button 
               onClick={() => setShowMonthModal(true)} 
               title={t('planner_full_month_title')}
@@ -1033,6 +1202,42 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
 
                                   {/* TASK ACTIONS */}
                                   <div className="flex items-center gap-0.5 ml-auto">
+                                    {/* RECURRENCE BADGE */}
+                                    {task.recurrence && (
+                                      <div className="flex items-center gap-1 mr-1">
+                                        <span
+                                          className="text-[7px] font-black bg-violet-100 text-violet-700 border border-violet-200 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 cursor-pointer hover:bg-violet-200 transition-all"
+                                          onClick={() => removeRecurrence(selectedDayIndex, tIdx)}
+                                          title="Quitar recurrencia"
+                                        >
+                                          🔁 hasta {months[task.recurrence.endMonth]?.slice(0,3)} {task.recurrence.endYear}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {/* NOTE BUTTON */}
+                                    <button
+                                      onClick={() => setOpenNoteIdx(openNoteIdx === tIdx ? null : tIdx)}
+                                      title="Agregar nota a esta tarea"
+                                      className={`flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-lg transition-all
+                                        ${task.note ? 'bg-amber-100 text-amber-600' : openNoteIdx === tIdx ? 'bg-amber-500 text-white' : 'text-[#7a9b82] hover:bg-amber-50 hover:text-amber-500'}`}
+                                    >
+                                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                      </svg>
+                                      <span className="text-[7px] font-black uppercase">Nota</span>
+                                    </button>
+                                    {/* COPY / DUPLICATE BUTTON */}
+                                    <button
+                                      onClick={() => duplicateTask(selectedDayIndex, tIdx)}
+                                      title="Duplicar tarea"
+                                      className="flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-lg transition-all text-[#7a9b82] hover:bg-sky-50 hover:text-sky-600 active:scale-90"
+                                    >
+                                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                                      </svg>
+                                      <span className="text-[7px] font-black uppercase">Copiar</span>
+                                    </button>
                                     <button
                                       onClick={() => {
                                         setMovingTaskIdx(movingTaskIdx === tIdx ? null : tIdx);
@@ -1045,6 +1250,26 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                                       <span className="text-sm">📅</span>
                                       <span className="text-[7px] font-black uppercase">{t('planner_move_date')}</span>
                                     </button>
+                                    {/* RECURRENCE BUTTON */}
+                                    <button
+                                      onClick={() => {
+                                        setRecurrenceTaskIdx(recurrenceTaskIdx === tIdx ? null : tIdx);
+                                        if (task.recurrence) {
+                                          setRecurDayOfMonth(task.recurrence.dayOfMonth);
+                                          setRecurEndMonth(task.recurrence.endMonth);
+                                          setRecurEndYear(task.recurrence.endYear);
+                                        } else {
+                                          setRecurDayOfMonth(weekDates[selectedDayIndex].getDate());
+                                          setRecurEndMonth(new Date().getMonth());
+                                          setRecurEndYear(new Date().getFullYear() + 1);
+                                        }
+                                      }}
+                                      title="Configurar recurrencia mensual"
+                                      className={`flex flex-col items-center gap-0.5 p-1 sm:p-2 rounded-lg transition-all ${task.recurrence ? 'bg-violet-100 text-violet-700' : 'text-[#7a9b82] hover:bg-violet-50 hover:text-violet-600'}`}
+                                    >
+                                      <span className="text-sm">🔁</span>
+                                      <span className="text-[7px] font-black uppercase">Recur.</span>
+                                    </button>
                                     <button
                                       onClick={() => deleteTask(selectedDayIndex, tIdx)}
                                       title={t('planner_delete_title')}
@@ -1054,6 +1279,38 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                                     </button>
                                   </div>
                                 </div>
+
+                                {/* ── NOTA EXPANDIBLE ── */}
+                                {openNoteIdx === tIdx && (
+                                  <div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3">
+                                      <span className="text-amber-500 text-base mt-0.5 flex-shrink-0">📝</span>
+                                      <div className="flex-1">
+                                        <p className="text-[8px] font-black uppercase tracking-widest text-amber-600 mb-1">Nota / Descripción</p>
+                                        <textarea
+                                          autoFocus
+                                          rows={3}
+                                          value={task.note || ''}
+                                          onChange={e => handleNoteChange(selectedDayIndex, tIdx, e.target.value)}
+                                          onBlur={() => saveDay(selectedDayIndex, day)}
+                                          placeholder="¿En qué consiste esta tarea? Agrega detalles, links, instrucciones..."
+                                          className="w-full bg-white border border-amber-200 focus:border-amber-400 rounded-lg text-[11px] text-[#1a2e1e] font-medium outline-none resize-none p-2 transition-all placeholder:text-amber-300"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                                {/* NOTE PREVIEW (when closed but has content) */}
+                                {openNoteIdx !== tIdx && task.note && (
+                                  <div
+                                    className="mt-1.5 flex items-start gap-1.5 bg-amber-50/70 border border-amber-100 rounded-lg px-2.5 py-1.5 cursor-pointer hover:bg-amber-50 transition-all"
+                                    onClick={() => setOpenNoteIdx(tIdx)}
+                                  >
+                                    <span className="text-amber-400 text-xs flex-shrink-0">📝</span>
+                                    <p className="text-[10px] text-amber-700 font-medium line-clamp-1 flex-1">{task.note}</p>
+                                    <span className="text-[8px] text-amber-400 font-black uppercase flex-shrink-0">Editar</span>
+                                  </div>
+                                )}
                               </div>
 
                               {/* FULL CALENDAR MODAL */}
@@ -1155,6 +1412,106 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                                   </div>
                                 );
                               })()}
+                            {/* RECURRENCE MODAL */}
+                            {recurrenceTaskIdx === tIdx && (
+                              <div
+                                className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+                                onClick={() => setRecurrenceTaskIdx(null)}
+                              >
+                                <div
+                                  className="bg-white rounded-3xl shadow-2xl w-full max-w-[380px] overflow-hidden animate-in zoom-in-95 duration-300"
+                                  onClick={e => e.stopPropagation()}
+                                >
+                                  {/* Header */}
+                                  <div className="bg-gradient-to-r from-violet-600 to-purple-600 px-6 py-5">
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-violet-200 mb-1">🔁 Recurrencia Mensual</p>
+                                    <p className="text-white font-fraunces text-sm font-bold italic truncate opacity-90">&ldquo;{task.text}&rdquo;</p>
+                                  </div>
+
+                                  <div className="p-6 space-y-5">
+                                    {/* Día del mes */}
+                                    <div>
+                                      <label className="text-[9px] font-black uppercase tracking-widest text-[#7a9b82] mb-2 block">Día del mes a repetir</label>
+                                      <div className="flex items-center gap-3">
+                                        <input
+                                          type="number"
+                                          min={1}
+                                          max={31}
+                                          value={recurDayOfMonth}
+                                          onChange={e => setRecurDayOfMonth(Math.min(31, Math.max(1, parseInt(e.target.value) || 1)))}
+                                          className="w-20 bg-[#f4faf6] border-2 border-violet-200 focus:border-violet-500 rounded-xl text-2xl font-black text-center text-violet-700 outline-none py-2 transition-all"
+                                        />
+                                        <div className="text-[10px] text-[#7a9b82] font-medium leading-tight">
+                                          <p>Cada mes, en el</p>
+                                          <p className="font-black text-violet-700">día {recurDayOfMonth}</p>
+                                          <p>se marcará automáticamente</p>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Fecha fin */}
+                                    <div>
+                                      <label className="text-[9px] font-black uppercase tracking-widest text-[#7a9b82] mb-2 block">Repetir hasta</label>
+                                      <div className="flex items-center gap-2">
+                                        <select
+                                          value={recurEndMonth}
+                                          onChange={e => setRecurEndMonth(parseInt(e.target.value))}
+                                          className="flex-1 bg-[#f4faf6] border-2 border-violet-200 focus:border-violet-500 rounded-xl text-[11px] font-black text-violet-700 outline-none py-2 px-3 cursor-pointer transition-all"
+                                        >
+                                          {months.map((m: string, i: number) => (
+                                            <option key={i} value={i}>{m}</option>
+                                          ))}
+                                        </select>
+                                        <select
+                                          value={recurEndYear}
+                                          onChange={e => setRecurEndYear(parseInt(e.target.value))}
+                                          className="w-24 bg-[#f4faf6] border-2 border-violet-200 focus:border-violet-500 rounded-xl text-[11px] font-black text-violet-700 outline-none py-2 px-3 cursor-pointer transition-all"
+                                        >
+                                          {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() + i).map(y => (
+                                            <option key={y} value={y}>{y}</option>
+                                          ))}
+                                        </select>
+                                      </div>
+                                    </div>
+
+                                    {/* Preview */}
+                                    <div className="bg-violet-50 border border-violet-100 rounded-2xl p-3">
+                                      <p className="text-[9px] font-black uppercase tracking-widest text-violet-500 mb-1">Vista previa</p>
+                                      <p className="text-[11px] font-bold text-violet-800">
+                                        🔁 Se repetirá el día <strong>{recurDayOfMonth}</strong> de cada mes
+                                      </p>
+                                      <p className="text-[10px] text-violet-600 font-medium mt-0.5">
+                                        Hasta: <strong>{months[recurEndMonth]} {recurEndYear}</strong>
+                                      </p>
+                                    </div>
+
+                                    {/* Buttons */}
+                                    <div className="flex gap-2 pt-1">
+                                      <button
+                                        onClick={() => setRecurrenceTaskIdx(null)}
+                                        className="flex-1 py-3 bg-[#f4faf6] border border-[#d8eadb] text-[#7a9b82] text-[10px] font-black uppercase rounded-xl hover:bg-gray-50 transition-all"
+                                      >
+                                        Cancelar
+                                      </button>
+                                      {task.recurrence && (
+                                        <button
+                                          onClick={() => removeRecurrence(selectedDayIndex, tIdx).then(() => setRecurrenceTaskIdx(null))}
+                                          className="flex-1 py-3 bg-rose-50 border border-rose-200 text-rose-600 text-[10px] font-black uppercase rounded-xl hover:bg-rose-100 transition-all"
+                                        >
+                                          Quitar 🗑️
+                                        </button>
+                                      )}
+                                      <button
+                                        onClick={() => handleSetRecurrence(selectedDayIndex, tIdx)}
+                                        className="flex-1 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white text-[10px] font-black uppercase rounded-xl hover:opacity-90 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-violet-200"
+                                      >
+                                        ✓ Activar
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                             </div>
                           );
                         })}
@@ -1533,18 +1890,64 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-4 sm:gap-6 p-4 border-b border-[#d8eadb] bg-[#f4faf6] shrink-0">
-              <button onClick={() => {
-                if (monthModalMonth === 0) { setMonthModalMonth(11); setMonthModalYear(y => y - 1); }
-                else setMonthModalMonth(m => m - 1);
-              }} className="text-2xl font-bold text-[#2d5a3d] hover:scale-110 px-2">‹</button>
-              <span className="font-fraunces text-xl sm:text-2xl font-black text-[#2d5a3d] w-48 text-center capitalize">
-                {months[monthModalMonth]} {monthModalYear}
-              </span>
-              <button onClick={() => {
-                if (monthModalMonth === 11) { setMonthModalMonth(0); setMonthModalYear(y => y + 1); }
-                else setMonthModalMonth(m => m + 1);
-              }} className="text-2xl font-bold text-[#2d5a3d] hover:scale-110 px-2">›</button>
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-[#d8eadb] bg-[#f4faf6] shrink-0">
+              {/* Flecha anterior */}
+              <button
+                onClick={() => {
+                  if (monthModalMonth === 0) { setMonthModalMonth(11); setMonthModalYear(y => y - 1); }
+                  else setMonthModalMonth(m => m - 1);
+                }}
+                className="w-9 h-9 rounded-full bg-white border border-[#d8eadb] text-[#2d5a3d] flex items-center justify-center font-black text-lg hover:bg-[#2d5a3d] hover:text-white transition-all shadow-sm"
+              >‹</button>
+
+              {/* Selector de MES */}
+              <select
+                value={monthModalMonth}
+                onChange={e => setMonthModalMonth(parseInt(e.target.value))}
+                className="bg-white border-2 border-[#d8eadb] focus:border-[#2d5a3d] rounded-xl px-3 py-2 text-[13px] font-black text-[#2d5a3d] outline-none cursor-pointer hover:border-[#6aaf7a] transition-all shadow-sm capitalize"
+              >
+                {months.map((m: string, i: number) => (
+                  <option key={i} value={i}>{m}</option>
+                ))}
+              </select>
+
+              {/* Selector de AÑO */}
+              <select
+                value={monthModalYear}
+                onChange={e => setMonthModalYear(parseInt(e.target.value))}
+                className="bg-white border-2 border-[#d8eadb] focus:border-[#2d5a3d] rounded-xl px-3 py-2 text-[13px] font-black text-[#2d5a3d] outline-none cursor-pointer hover:border-[#6aaf7a] transition-all shadow-sm"
+              >
+                {Array.from({ length: 8 }, (_, i) => new Date().getFullYear() - 1 + i).map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+
+              {/* Botón HOY */}
+              {(() => {
+                const now = new Date();
+                const isCurrent = monthModalMonth === now.getMonth() && monthModalYear === now.getFullYear();
+                return (
+                  <button
+                    onClick={() => { setMonthModalMonth(now.getMonth()); setMonthModalYear(now.getFullYear()); }}
+                    className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all shadow-sm
+                      ${isCurrent
+                        ? 'bg-emerald-100 text-emerald-600 border border-emerald-200 cursor-default'
+                        : 'bg-[#2d5a3d] text-white hover:scale-105 active:scale-95 animate-pulse hover:animate-none'
+                      }`}
+                  >
+                    📍 HOY
+                  </button>
+                );
+              })()}
+
+              {/* Flecha siguiente */}
+              <button
+                onClick={() => {
+                  if (monthModalMonth === 11) { setMonthModalMonth(0); setMonthModalYear(y => y + 1); }
+                  else setMonthModalMonth(m => m + 1);
+                }}
+                className="w-9 h-9 rounded-full bg-white border border-[#d8eadb] text-[#2d5a3d] flex items-center justify-center font-black text-lg hover:bg-[#2d5a3d] hover:text-white transition-all shadow-sm"
+              >›</button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#f9fbf9]">

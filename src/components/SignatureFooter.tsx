@@ -2,34 +2,22 @@
 import React from 'react';
 
 export default function SignatureFooter() {
-  const whatsappUrl = "https://wa.me/51989078285?text=Hola%20vi%20tu%20SaaS%20y%20me%20interesa%20tu%20servicio%20de%20desarrollo.";
+  const whatsappUrl = "https://wa.me/51989078285?text=Hola,%20vi%20tu%20plataforma%20STACK%20y%20quiero%20informaci%C3%B3n%20sobre%20tus%20servicios%20de%20desarrollo%20de%20SaaS.";
   
   return (
-    <div className="pt-20 pb-10 text-center px-6">
-      <style jsx>{`
-        @keyframes subtlePulse {
-          0% { opacity: 1; }
-          50% { opacity: 0.5; }
-          100% { opacity: 1; }
-        }
-        .animate-pulse-slow {
-          animation: subtlePulse 3s infinite ease-in-out;
-        }
-      `}</style>
-      <p className="text-[10px] font-sans font-black uppercase tracking-[0.2em] text-[#7a9b82] leading-loose animate-pulse-slow">
-        « Arquitectura de software por BDS · Método STACK. 
-        <span className="block sm:inline sm:ml-2">
-          Disponibilidad para proyectos exclusivos: 
-          <a 
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 text-[#2d5a3d] hover:text-[#00C853] transition-colors border-b border-[#2d5a3d]/20 hover:border-[#00C853]"
-          >
-            +51 989 078 285
-          </a>
-        </span> »
-      </p>
+    <div className="pt-16 pb-8 px-6 max-w-4xl mx-auto">
+      <a 
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block bg-[#FDFBF7] border border-[#E5E5E5]/40 rounded-2xl p-6 md:p-8 text-center transition-all duration-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 group"
+        style={{ fontFamily: "'Sora', sans-serif" }}
+      >
+        <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em] text-[#111111]/50 leading-[2] group-hover:text-[#111111]/80 transition-colors duration-300">
+          ¿Te gustaría tener tu propio SaaS de Ingeniería de Vida o Bienestar? <br className="hidden md:block" />
+          Diseñamos y desarrollamos plataformas de alta fidelidad como esta para tu marca.
+        </p>
+      </a>
     </div>
   );
 }

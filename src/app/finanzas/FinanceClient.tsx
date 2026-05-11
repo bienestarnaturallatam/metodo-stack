@@ -586,8 +586,8 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
                 {showDayPicker && (
                   <>
                     <div className="fixed inset-0 z-40 bg-black/5 backdrop-blur-sm" onClick={() => setShowDayPicker(false)} />
-                    <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-white border border-[#e8f1e9] rounded-[32px] sm:rounded-[40px] p-5 sm:p-8 shadow-2xl shadow-green-900/10 animate-in fade-in zoom-in duration-200 w-[92vw] sm:w-[380px]">
-                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-[#e8f1e9] rotate-45" />
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:absolute sm:top-20 sm:translate-y-0 z-50 bg-white border border-[#e8f1e9] rounded-[32px] sm:rounded-[40px] p-5 sm:p-8 shadow-2xl shadow-green-900/10 animate-in fade-in zoom-in duration-200 w-[92vw] max-w-[380px]">
+                      <div className="hidden sm:block absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-[#e8f1e9] rotate-45" />
 
                       <div className="flex items-center justify-between gap-2 sm:gap-4 mb-6">
                         <h4 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[#1a2e1e] whitespace-nowrap">Seleccionar Día</h4>
@@ -1607,9 +1607,14 @@ function ModalTx({ onClose, onSave }: { onClose: () => void, onSave: (tx: Omit<T
   const [desc, setDesc] = useState('');
   const [amount, setAmount] = useState('');
   const [cat, setCat] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [note, setNote] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const _today = new Date();
+  const [dateDay, setDateDay]     = useState(_today.getDate());
+  const [dateMonth, setDateMonth] = useState(_today.getMonth() + 1);
+  const [dateYear, setDateYear]   = useState(_today.getFullYear());
+  const dateString = `${dateYear}-${String(dateMonth).padStart(2,'0')}-${String(dateDay).padStart(2,'0')}`;
 
   useEffect(() => {
     setCat(type === 'income' ? CATEGORIES_INCOME[0] : CATEGORIES_EXPENSE[0]);
@@ -1617,90 +1622,168 @@ function ModalTx({ onClose, onSave }: { onClose: () => void, onSave: (tx: Omit<T
 
   const handleSave = () => {
     const err: any = {};
-    if (!desc.trim()) err.desc = "La descripción es requerida";
-    if (!amount || parseFloat(amount) <= 0) err.amount = "El monto debe ser mayor a 0";
-    if (!date) err.date = "Fecha inválida";
-    if (!cat) err.cat = "Selecciona una categoría";
-
-    if (Object.keys(err).length > 0) {
-      setErrors(err);
-      return;
-    }
-
-    onSave({ type, desc, amount: parseFloat(amount), cat, date, note });
+    if (!desc.trim()) err.desc = 'La descripción es requerida';
+    if (!amount || parseFloat(amount) <= 0) err.amount = 'El monto debe ser mayor a 0';
+    if (!cat) err.cat = 'Selecciona una categoría';
+    if (Object.keys(err).length > 0) { setErrors(err); return; }
+    onSave({ type, desc, amount: parseFloat(amount), cat, date: dateString, note });
   };
 
+  const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DAY_HEADERS = ['D','L','M','M','J','V','S'];
+  const firstDay   = new Date(dateYear, dateMonth - 1, 1).getDay();
+  const daysInMonth = new Date(dateYear, dateMonth, 0).getDate();
+  const todayObj   = new Date();
+
+  const calCells: (number | null)[] = [
+    ...Array(firstDay).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  while (calCells.length % 7 !== 0) calCells.push(null);
+
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-md animate-in fade-in duration-300" onClick={onClose}>
-      <div className="bg-white border border-[#d8eadb] rounded-[40px] w-full max-w-lg shadow-[0_20px_60px_rgba(45,159,108,0.1)] overflow-hidden animate-in zoom-in-95 duration-300" onClick={e => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-t-[28px] sm:rounded-[28px] w-full max-w-sm flex flex-col max-h-[95vh] shadow-2xl animate-in slide-in-from-bottom-6 sm:zoom-in-95 duration-300"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* ── STICKY HEADER ── */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100 shrink-0">
+          <h2 className="font-black text-[15px] text-[#1a2e1e] uppercase tracking-tight">Nueva Transacción</h2>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center hover:bg-rose-100 hover:text-rose-500 transition-all text-lg font-bold">×</button>
+        </div>
 
-        <div className="p-10">
-          <h2 className="font-dm-serif text-3xl mb-8 text-[#2d5a3d]">Nueva Transacción</h2>
+        {/* ── SCROLLABLE BODY ── */}
+        <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
 
-          <div className="space-y-6">
-            {/* Toggle */}
-            <div className="flex p-1.5 bg-[#f4faf6] rounded-xl border border-[#d8eadb]">
-              <button onClick={() => setType('income')} className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase rounded-lg transition-all ${type === 'income' ? 'bg-[#2d5a3d] text-white shadow-md' : 'text-[#7a9b82] hover:text-[#2d5a3d]'}`}>▲ Ingreso</button>
-              <button onClick={() => setType('expense')} className={`flex-1 flex items-center justify-center gap-2 py-3 text-[10px] font-black uppercase rounded-lg transition-all ${type === 'expense' ? 'bg-[#e74b6c] text-white shadow-md' : 'text-[#7a9b82] hover:text-[#e74b6c]'}`}>▼ Gasto</button>
+          {/* Toggle */}
+          <div className="flex p-1 bg-gray-100 rounded-xl">
+            <button onClick={() => setType('income')}
+              className={`flex-1 py-2.5 text-[11px] font-black uppercase rounded-lg transition-all ${type === 'income' ? 'bg-[#2d5a3d] text-white shadow' : 'text-gray-400 hover:text-[#2d5a3d]'}`}>
+              ▲ Ingreso
+            </button>
+            <button onClick={() => setType('expense')}
+              className={`flex-1 py-2.5 text-[11px] font-black uppercase rounded-lg transition-all ${type === 'expense' ? 'bg-[#e74b6c] text-white shadow' : 'text-gray-400 hover:text-[#e74b6c]'}`}>
+              ▼ Gasto
+            </button>
+          </div>
+
+          {/* Description */}
+          <input
+            placeholder="ej. Sueldo, Supermercado..."
+            value={desc} onChange={e => setDesc(e.target.value)}
+            className={`w-full bg-gray-50 border ${errors.desc ? 'border-rose-400' : 'border-gray-200'} px-4 py-3 rounded-2xl text-sm font-medium outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e] placeholder:text-gray-300`}
+          />
+
+          {/* Amount */}
+          <input
+            type="number" placeholder="Monto (S/)"
+            value={amount} onChange={e => setAmount(e.target.value)}
+            className={`w-full bg-gray-50 border ${errors.amount ? 'border-rose-400' : 'border-gray-200'} px-4 py-3 rounded-2xl text-sm font-black outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e] placeholder:text-gray-300`}
+          />
+
+          {/* ── CALENDAR ── */}
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+            {/* Calendar header: SELECCIONAR DÍA + month/year selects */}
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
+              <span className="text-[9px] font-black uppercase tracking-[0.15em] text-gray-400 flex-1 whitespace-nowrap">Seleccionar Día</span>
+              {/* Month select */}
+              <select
+                value={dateMonth}
+                onChange={e => { setDateMonth(parseInt(e.target.value)); setDateDay(1); }}
+                className="bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-[11px] font-black text-[#1a2e1e] uppercase outline-none cursor-pointer hover:border-[#2d5a3d] transition-all appearance-none pr-6 relative"
+                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%23999\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
+              >
+                {MONTH_NAMES.map((m, i) => <option key={i} value={i + 1}>{m.substring(0,4).toUpperCase()}</option>)}
+              </select>
+              {/* Year select */}
+              <select
+                value={dateYear}
+                onChange={e => { setDateYear(parseInt(e.target.value)); setDateDay(1); }}
+                className="bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-[11px] font-black text-[#1a2e1e] outline-none cursor-pointer hover:border-[#2d5a3d] transition-all appearance-none pr-6"
+                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%23999\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
+              >
+                {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - 1 + i).map(y => <option key={y} value={y}>{y}</option>)}
+              </select>
             </div>
 
-            {/* Desc */}
-            <div className="space-y-1.5">
-              <input
-                placeholder="ej. Sueldo, Supermercado..." value={desc} onChange={e => setDesc(e.target.value)}
-                className={`w-full bg-[#f4faf6] border ${errors.desc ? 'border-[#e74b6c]' : 'border-[#d8eadb]'} p-4 rounded-2xl text-sm font-bold outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e]`}
-              />
-              {errors.desc && <p className="text-[10px] text-[#e74b6c] font-black uppercase ml-2">{errors.desc}</p>}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <input
-                  type="number" placeholder="Monto (S/)" value={amount} onChange={e => setAmount(e.target.value)}
-                  className={`w-full bg-[#f4faf6] border ${errors.amount ? 'border-[#e74b6c]' : 'border-[#d8eadb]'} p-4 rounded-2xl text-sm font-black outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e]`}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <input
-                  type="date" value={date} onChange={e => setDate(e.target.value)}
-                  className={`w-full bg-[#f4faf6] border ${errors.date ? 'border-[#e74b6c]' : 'border-[#d8eadb]'} p-4 rounded-2xl text-xs font-black outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e]`}
-                />
-              </div>
-            </div>
-
-            {/* Cat */}
-            <select
-              value={cat} onChange={e => setCat(e.target.value)}
-              className="w-full bg-[#f4faf6] border border-[#d8eadb] p-4 rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-[#2d5a3d] transition-all cursor-pointer text-[#1a2e1e]"
-            >
-              {(type === 'income' ? CATEGORIES_INCOME : CATEGORIES_EXPENSE).map((c, i) => (
-                <option key={`${c}-${i}`} value={c}>{c}</option>
+            {/* Day name headers */}
+            <div className="grid grid-cols-7 px-3 pt-3 pb-1">
+              {DAY_HEADERS.map((d, i) => (
+                <div key={i} className="text-center text-[10px] font-black uppercase text-gray-300">{d}</div>
               ))}
-            </select>
+            </div>
 
-            {/* Note */}
-            <input
-              placeholder="Descripción adicional..." value={note} onChange={e => setNote(e.target.value)}
-              className="w-full bg-[#f4faf6] border border-[#d8eadb] p-4 rounded-2xl text-xs font-medium outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e]"
-            />
-
-            {type === 'expense' && amount && parseFloat(amount) > 0 && parseFloat(amount) < 50 && (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl animate-in fade-in slide-in-from-top-2">
-                <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1 italic">✨ STACK TIP</p>
-                <p className="text-xs text-amber-800 font-medium italic">"¿Este gasto alimenta tu sistema o lo debilita?"</p>
-              </div>
-            )}
+            {/* Day cells */}
+            <div className="grid grid-cols-7 px-3 pb-3 gap-y-1">
+              {calCells.map((d, i) => {
+                if (!d) return <div key={i} />;
+                const isSel   = d === dateDay;
+                const isToday = d === todayObj.getDate() && dateMonth === todayObj.getMonth() + 1 && dateYear === todayObj.getFullYear();
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setDateDay(d)}
+                    className={`h-9 w-full rounded-xl text-[13px] font-bold transition-all
+                      ${isSel   ? 'bg-[#2d5a3d] text-white font-black shadow-md scale-105'
+                      : isToday ? 'text-[#2d5a3d] font-black underline underline-offset-2'
+                                : 'text-[#1a2e1e] hover:bg-gray-100 hover:font-black'}`}
+                  >
+                    {d}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="flex gap-4 mt-12">
-            <button onClick={onClose} className="flex-1 py-4 bg-[#f4faf6] text-[#7a9b82] rounded-2xl font-black uppercase text-[10px] tracking-widest hover:text-[#2d5a3d] transition-all border border-[#d8eadb]">Cancelar</button>
-            <button onClick={handleSave} className="flex-1 py-4 bg-[#2d5a3d] text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#2d5a3d]/20 hover:scale-[1.02] transition-all">Guardar</button>
-          </div>
+          {/* Category */}
+          <select
+            value={cat} onChange={e => setCat(e.target.value)}
+            className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest outline-none focus:border-[#2d5a3d] transition-all cursor-pointer text-[#1a2e1e]"
+          >
+            {(type === 'income' ? CATEGORIES_INCOME : CATEGORIES_EXPENSE).map((c, i) => (
+              <option key={`${c}-${i}`} value={c}>{c}</option>
+            ))}
+          </select>
+
+          {/* Note */}
+          <input
+            placeholder="Descripción adicional (opcional)..."
+            value={note} onChange={e => setNote(e.target.value)}
+            className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-2xl text-xs font-medium outline-none focus:border-[#2d5a3d] transition-all text-[#1a2e1e] placeholder:text-gray-300"
+          />
+
+          {/* Stack tip */}
+          {type === 'expense' && amount && parseFloat(amount) > 0 && parseFloat(amount) < 50 && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
+              <p className="text-[9px] font-black text-amber-600 uppercase tracking-widest mb-0.5">✨ Stack Tip</p>
+              <p className="text-[11px] text-amber-700 font-medium italic">&ldquo;¿Este gasto alimenta tu sistema o lo debilita?&rdquo;</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── STICKY BUTTONS ── */}
+        <div className="flex gap-3 px-5 py-4 border-t border-gray-100 bg-white shrink-0">
+          <button onClick={onClose}
+            className="flex-1 py-3.5 bg-gray-100 text-gray-500 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:text-[#2d5a3d] transition-all">
+            Cancelar
+          </button>
+          <button onClick={handleSave}
+            className="flex-1 py-3.5 bg-[#2d5a3d] text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#2d5a3d]/20 hover:scale-[1.02] transition-all">
+            Guardar
+          </button>
         </div>
       </div>
     </div>
   );
 }
+
+
 
 function ModalBudget({ current, onClose, onSave }: { current: Record<string, number>, onClose: () => void, onSave: (b: Record<string, number>) => void }) {
   const [vals, setVals] = useState<Record<string, number>>(current);
