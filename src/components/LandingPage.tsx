@@ -73,6 +73,7 @@ export default function LandingPage() {
               <select 
                 value={lang} 
                 onChange={(e) => setLang(e.target.value as any)}
+                aria-label="Seleccionar idioma"
                 className="bg-transparent text-[10px] font-black uppercase outline-none cursor-pointer"
               >
                 <option value="es">Español</option>
@@ -135,6 +136,7 @@ export default function LandingPage() {
                   height={800}
                   quality={80}
                   priority
+                  fetchPriority="high"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   className="w-full h-auto object-contain"
                 />
@@ -563,13 +565,15 @@ export default function LandingPage() {
               <div key={i} className="bg-white rounded-2xl border border-black/5 overflow-hidden">
                 <button 
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
+                  aria-controls={`faq-answer-${i}`}
                   className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-black/5 transition-colors"
                 >
                   <span className="font-black uppercase italic text-sm tracking-tight">{faq.q}</span>
-                  <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </button>
                 {openFaq === i && (
-                  <div className="px-8 pb-6 text-[#111111]/60 font-medium leading-relaxed text-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div id={`faq-answer-${i}`} className="px-8 pb-6 text-[#111111]/60 font-medium leading-relaxed text-sm animate-in fade-in slide-in-from-top-2 duration-300">
                     {faq.a}
                   </div>
                 )}
