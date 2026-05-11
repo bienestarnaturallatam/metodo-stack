@@ -135,6 +135,7 @@ export default function LandingPage() {
                   height={800}
                   quality={80}
                   priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   className="w-full h-auto object-contain"
                 />
               </div>
@@ -184,7 +185,8 @@ export default function LandingPage() {
                     alt="Mensaje real de Carlos R. sobre Método STACK"
                     width={400}
                     height={300}
-                    quality={85}
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -216,7 +218,8 @@ export default function LandingPage() {
                     alt="Mensaje real de María A. sobre Método STACK"
                     width={400}
                     height={300}
-                    quality={85}
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -245,7 +248,8 @@ export default function LandingPage() {
                     alt="Mensaje real de Jorge P. sobre Método STACK"
                     width={400}
                     height={300}
-                    quality={85}
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
