@@ -128,7 +128,7 @@ export default function LandingPage() {
             {/* MOCKUP IMAGE */}
             <div className="mt-10 relative group max-w-4xl mx-auto overflow-hidden">
               <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative aspect-[3/2] w-full drop-shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
+              <div className="relative aspect-[3/2] w-full shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden transition-all duration-700 group-hover:scale-[1.01]">
                 <Image
                   src="/metodo_stack_mockup_espanol.png"
                   alt="Plataforma Método Stack — App de hábitos y finanzas"
@@ -137,6 +137,7 @@ export default function LandingPage() {
                   quality={80}
                   priority
                   fetchPriority="high"
+                  decoding="sync"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                   className="w-full h-auto object-contain"
                 />

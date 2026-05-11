@@ -266,11 +266,12 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
       <table border="1">
         <thead>
           <tr style="background-color: #2d5a3d; color: white;">
-            <th colspan="4" style="font-size: 16px; padding: 10px;">METODO STACK - ENFOQUE SEMANAL (${dateStr})</th>
+            <th colspan="5" style="font-size: 16px; padding: 10px;">METODO STACK - ENFOQUE SEMANAL (${dateStr})</th>
           </tr>
           <tr style="background-color: #f4faf6;">
             <th style="padding: 8px;">Estado</th>
             <th style="padding: 8px;">Tarea / Propósito</th>
+            <th style="padding: 8px;">Nota</th>
             <th style="padding: 8px;">Prioridad</th>
             <th style="padding: 8px;">Hora</th>
           </tr>
@@ -285,6 +286,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
         <tr>
           <td style="padding: 5px; text-align: center;">${statusText}</td>
           <td style="padding: 5px;">${task.text}</td>
+          <td style="padding: 5px;">${task.note || '-'}</td>
           <td style="padding: 5px; text-align: center;">${pText}</td>
           <td style="padding: 5px; text-align: center;">${task.scheduled_time || '-'}</td>
         </tr>
@@ -312,12 +314,13 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
       <table border="1">
         <thead>
           <tr style="background-color: #2d5a3d; color: white;">
-            <th colspan="5" style="font-size: 16px; padding: 10px;">METODO STACK - VISTA MENSUAL (${monthName} ${monthModalYear})</th>
+            <th colspan="6" style="font-size: 16px; padding: 10px;">METODO STACK - VISTA MENSUAL (${monthName} ${monthModalYear})</th>
           </tr>
           <tr style="background-color: #f4faf6;">
             <th style="padding: 8px;">Día</th>
             <th style="padding: 8px;">Estado</th>
             <th style="padding: 8px;">Tarea / Propósito</th>
+            <th style="padding: 8px;">Nota</th>
             <th style="padding: 8px;">Prioridad</th>
             <th style="padding: 8px;">Hora</th>
           </tr>
@@ -339,7 +342,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
         html += `
           <tr>
             <td style="padding: 5px; text-align: center;">${d}</td>
-            <td colspan="4" style="padding: 5px; text-align: center; color: #999;">Sin tareas</td>
+            <td colspan="5" style="padding: 5px; text-align: center; color: #999;">Sin tareas</td>
           </tr>
         `;
       } else {
@@ -348,9 +351,10 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
           const statusText = task.done ? 'COMPLETADA' : 'PENDIENTE';
           html += `
             <tr>
-              ${idx === 0 ? `<td rowspan="${tasks.length}" style="padding: 5px; text-align: center; vertical-align: middle;">${d}</td>` : ''}
+              <td style="padding: 5px; text-align: center;">${idx === 0 ? d : ''}</td>
               <td style="padding: 5px; text-align: center;">${statusText}</td>
               <td style="padding: 5px;">${task.text}</td>
+              <td style="padding: 5px;">${task.note || '-'}</td>
               <td style="padding: 5px; text-align: center;">${pText}</td>
               <td style="padding: 5px; text-align: center;">${task.scheduled_time || '-'}</td>
             </tr>
@@ -1024,7 +1028,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
                           const dateObj = weekDates[selectedDayIndex];
                           const dateStr = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : lang === 'pt' ? 'pt-BR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
                           const tasksText = day.tasks.length > 0
-                            ? day.tasks.map((t, i) => `\n${i + 1}. ${t.text}`).join('')
+                            ? day.tasks.map((t, i) => `\n${i + 1}. ${t.text}${t.note ? `\n   📝 Nota: ${t.note}` : ''}`).join('')
                             : `\n${t('planner_no_tasks')}`;
 
                           const message = t('planner_whatsapp_msg', { tasks: tasksText });
