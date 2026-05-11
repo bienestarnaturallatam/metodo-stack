@@ -98,20 +98,20 @@ export default function LandingPage() {
       {/* HERO SECTION */}
       <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center">
         <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4 animate-in slide-in-from-top duration-700">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4">
               <Zap className="w-3 h-3 fill-[#00C853]" />
               {t('auth_tagline')}
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-4 animate-in slide-in-from-bottom duration-700 delay-100 uppercase leading-tight min-h-[1.2em]">
+            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-4 uppercase leading-tight min-h-[1.2em]">
               {t('hero_title')}
             </h1>
             
-            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-8 animate-in slide-in-from-bottom duration-700 delay-200 min-h-[3em]">
+            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-8 min-h-[3em]">
               {t('hero_subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in slide-in-from-bottom duration-700 delay-300 min-h-[80px]">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 min-h-[80px]">
               <a 
                 href={WSP_GLOBAL_LINK}
                 target="_blank"
