@@ -55,7 +55,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>
         <I18nProvider>
-          {children}
+          <main>
+            {children}
+          </main>
         </I18nProvider>
 
         {/* 2. REGISTRO DEL MOTOR DE INSTALACIÓN (Service Worker) */}

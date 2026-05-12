@@ -89,6 +89,7 @@ export default function ExitIntentPopup() {
             {/* Botón cerrar */}
             <button
               onClick={cerrarPopup}
+              aria-label="Cerrar"
               style={{
                 position: 'absolute',
                 top: '16px',
@@ -178,7 +179,7 @@ export default function ExitIntentPopup() {
               href={WSP_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-[#00C853] text-white font-bold text-[15px] text-center p-4 rounded-xl no-underline mt-5 shadow-[0_4px_14px_rgba(0,200,83,0.3)] transition-transform duration-200 hover:scale-105"
+              className="flex items-center justify-center gap-2 bg-[#00C853] text-black font-black text-[15px] text-center p-4 rounded-xl no-underline mt-5 shadow-[0_4px_14px_rgba(0,200,83,0.3)] transition-transform duration-200 hover:scale-105"
             >
               <WhatsAppIcon className="w-5 h-5" />
               ACTIVAR ACCESO POR WHATSAPP 🔑

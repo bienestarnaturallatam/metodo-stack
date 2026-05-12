@@ -243,14 +243,15 @@ export default function CarruselModulos() {
         }}>
           <button
             onClick={anterior}
+            aria-label="Módulo anterior"
             style={{
               background: 'none',
               border: '1px solid #ddd',
               borderRadius: '50%',
-              width: '28px',
-              height: '28px',
+              width: '44px',
+              height: '44px',
               cursor: 'pointer',
-              fontSize: '12px',
+              fontSize: '18px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -265,10 +266,11 @@ export default function CarruselModulos() {
               <button
                 key={i}
                 onClick={() => cambiarSlide(i)}
+                aria-label={`Ver módulo ${i + 1}`}
                 style={{
-                  width: i === actual ? '20px' : '8px',
-                  height: '8px',
-                  borderRadius: '4px',
+                  width: i === actual ? '24px' : '12px',
+                  height: '12px',
+                  borderRadius: '6px',
                   background: i === actual ? '#00C853' : '#ddd',
                   border: 'none',
                   cursor: 'pointer',
@@ -281,14 +283,15 @@ export default function CarruselModulos() {
 
           <button
             onClick={siguiente}
+            aria-label="Módulo siguiente"
             style={{
               background: 'none',
               border: '1px solid #ddd',
               borderRadius: '50%',
-              width: '28px',
-              height: '28px',
+              width: '44px',
+              height: '44px',
               cursor: 'pointer',
-              fontSize: '12px',
+              fontSize: '18px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'

@@ -116,7 +116,7 @@ export default function LandingPage() {
                 href={WSP_GLOBAL_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-10 py-4 md:py-5 bg-[#00C853] text-white rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto max-w-[90vw] mx-auto"
+                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-10 py-4 md:py-5 bg-[#00C853] text-black rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto max-w-[90vw] mx-auto"
               >
                 <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
@@ -134,7 +134,7 @@ export default function LandingPage() {
                   alt="Plataforma Método Stack — App de hábitos y finanzas"
                   fill
                   priority
-                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 80vw, 1000px"
+                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1000px"
                   className="object-contain"
                 />
               </div>
@@ -206,7 +206,7 @@ export default function LandingPage() {
 
               {/* Tarjeta 2 — María A. (Destacada) */}
               <div className="bg-white border-2 border-[#00C853] rounded-[16px] overflow-hidden shadow-2xl scale-[1.05] relative z-10 flex flex-col h-full">
-                <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#00C853] text-white px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest z-20">
+                <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#00C853] text-black px-3 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest z-20">
                   MÁS POPULAR
                 </div>
                 {/* Captura real */}
@@ -272,7 +272,7 @@ export default function LandingPage() {
                 href={WSP_GLOBAL_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-12 py-5 md:py-6 bg-[#00C853] text-white rounded-full font-black italic text-[14px] md:text-xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 mb-6 w-full md:w-auto max-w-[90vw] mx-auto"
+                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-12 py-5 md:py-6 bg-[#00C853] text-black rounded-full font-black italic text-[14px] md:text-xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 mb-6 w-full md:w-auto max-w-[90vw] mx-auto"
               >
                 <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
@@ -399,7 +399,7 @@ export default function LandingPage() {
               href={WSP_GLOBAL_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex md:inline-flex items-center justify-center px-6 md:px-12 py-4 md:py-5 bg-[#00C853] text-white rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 transition-all shadow-xl shadow-[#00C853]/20 group w-full md:w-auto max-w-[90vw] mx-auto"
+              className="flex md:inline-flex items-center justify-center px-6 md:px-12 py-4 md:py-5 bg-[#00C853] text-black rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 transition-all shadow-xl shadow-[#00C853]/20 group w-full md:w-auto max-w-[90vw] mx-auto"
             >
               <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
@@ -536,7 +536,7 @@ export default function LandingPage() {
                   href={plan.price === '0' ? WSP_GLOBAL_LINK : '/register'}
                   target={plan.price === '0' ? '_blank' : undefined}
                   rel={plan.price === '0' ? 'noopener noreferrer' : undefined}
-                  className={`block w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-white hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}
+                  className={`block w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-black hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}
                 >
                   {plan.cta}
                 </a>
@@ -561,6 +561,7 @@ export default function LandingPage() {
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
                   aria-controls={`faq-answer-${i}`}
+                  aria-label={faq.q}
                   className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-black/5 transition-colors"
                 >
                   <span className="font-black uppercase italic text-sm tracking-tight">{faq.q}</span>
@@ -594,7 +595,7 @@ export default function LandingPage() {
             href={WSP_GLOBAL_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex md:inline-flex items-center justify-center px-6 md:px-14 py-5 md:py-7 bg-[#00C853] text-white rounded-full font-black italic text-[15px] md:text-2xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/40 mb-8 group w-full md:w-auto max-w-[90vw] mx-auto"
+            className="flex md:inline-flex items-center justify-center px-6 md:px-14 py-5 md:py-7 bg-[#00C853] text-black rounded-full font-black italic text-[15px] md:text-2xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/40 mb-8 group w-full md:w-auto max-w-[90vw] mx-auto"
           >
             <span className="mr-2 md:mr-4 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
@@ -729,7 +730,7 @@ export default function LandingPage() {
           href={WSP_GLOBAL_LINK}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center bg-[#00C853] text-white py-4 md:py-3 px-6 md:px-8 rounded-full font-black uppercase text-[11px] md:text-[10px] tracking-widest shadow-[0_20px_40px_rgba(0,200,83,0.4)] hover:scale-105 transition-all group border-2 border-white/20 w-full md:w-auto whitespace-nowrap md:whitespace-normal"
+          className="flex items-center justify-center bg-[#00C853] text-black py-4 md:py-3 px-6 md:px-8 rounded-full font-black uppercase text-[11px] md:text-[10px] tracking-widest shadow-[0_20px_40px_rgba(0,200,83,0.4)] hover:scale-105 transition-all group border-2 border-white/20 w-full md:w-auto whitespace-nowrap md:whitespace-normal"
         >
           <span className="mr-2 md:mr-3 italic">EMPEZAR MI TRANSFORMACIÓN</span>
           <div className="w-7 h-7 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
