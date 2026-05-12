@@ -134,7 +134,7 @@ export default function LandingPage() {
                   <img
                     src="/hero.webp"
                     alt="Plataforma Método Stack — App de hábitos y finanzas"
-                    fetchpriority="high"
+                    fetchPriority="high"
                     style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
                   />
                 </picture>

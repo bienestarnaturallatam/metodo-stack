@@ -71,8 +71,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://metodo-stack.supabase.co" />
         
         {/* LCP PRELOAD */}
-        <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 600px)" fetchpriority="high" />
-        <link rel="preload" as="image" href="/hero.webp" media="(min-width: 601px)" fetchpriority="high" />
+        <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 600px)" fetchPriority="high" />
+        <link rel="preload" as="image" href="/hero.webp" media="(min-width: 601px)" fetchPriority="high" />
       </head>
       <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>
         <I18nProvider>
