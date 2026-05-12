@@ -22,13 +22,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('es');
   const [currency, setCurrency] = useState('$');
   const [country, setCountry] = useState('PE');
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    // Read cached values immediately — no network call on critical path
     const savedLang = localStorage.getItem('app-lang') as Lang;
     const savedCountry = localStorage.getItem('app-country');
-    
+
     if (savedLang && ['es', 'en', 'pt'].includes(savedLang)) {
       setLangState(savedLang);
       if (savedCountry) {
@@ -36,34 +35,35 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         setCurrency(savedCountry === 'PE' ? 'S/' : '$');
       }
     } else {
-      // Auto-detect language and country based on IP
-      fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => {
-          const code = data.country_code;
-          setCountry(code);
-          localStorage.setItem('app-country', code);
-          
-          // Currency logic: S/ for Peru, $ for everything else
-          const cur = code === 'PE' ? 'S/' : '$';
-          setCurrency(cur);
-
-          // Language logic
-          if (['US', 'GB', 'CA', 'AU', 'NZ'].includes(code)) {
-            setLangState('en');
-            localStorage.setItem('app-lang', 'en');
-          } else if (['BR', 'PT'].includes(code)) {
-            setLangState('pt');
-            localStorage.setItem('app-lang', 'pt');
-          } else {
-            setLangState('es');
-            localStorage.setItem('app-lang', 'es');
-          }
-        })
-        .catch(() => {
-           setLangState('es');
-           setCurrency('$');
-        });
+      // Geo-detect LAZILY — after first paint, never blocks LCP
+      const run = () => {
+        fetch('https://ipapi.co/json/')
+          .then(res => res.json())
+          .then(data => {
+            const code = data.country_code;
+            setCountry(code);
+            localStorage.setItem('app-country', code);
+            const cur = code === 'PE' ? 'S/' : '$';
+            setCurrency(cur);
+            if (['US', 'GB', 'CA', 'AU', 'NZ'].includes(code)) {
+              setLangState('en');
+              localStorage.setItem('app-lang', 'en');
+            } else if (['BR', 'PT'].includes(code)) {
+              setLangState('pt');
+              localStorage.setItem('app-lang', 'pt');
+            } else {
+              setLangState('es');
+              localStorage.setItem('app-lang', 'es');
+            }
+          })
+          .catch(() => { /* keep defaults: es / $ */ });
+      };
+      // Use idle callback so it never competes with rendering
+      if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(run, { timeout: 3000 });
+      } else {
+        setTimeout(run, 1500);
+      }
     }
   }, []);
 

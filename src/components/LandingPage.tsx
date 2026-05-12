@@ -103,15 +103,15 @@ export default function LandingPage() {
               {t('auth_tagline')}
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-4 uppercase leading-tight min-h-[1.2em]">
+            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-4 uppercase leading-tight">
               {t('hero_title')}
             </h1>
             
-            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-8 min-h-[3em]">
+            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-8">
               {t('hero_subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 min-h-[80px]">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <a 
                 href={WSP_GLOBAL_LINK}
                 target="_blank"
