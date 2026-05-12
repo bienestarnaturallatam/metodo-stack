@@ -70,7 +70,7 @@ export default function UpdatePasswordPage() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/background_login.png"
+          src="/background_login.webp"
           alt="Background"
           className="w-full h-full object-cover opacity-100"
           loading="eager"
