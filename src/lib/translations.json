@@ -34,7 +34,20 @@
     "streak_sub": "Consistencia pura",
     "monthly_progress": "Progreso mensual",
     "mood_avg": "Bienestar anual",
-    "months": ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+    "months": [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre"
+    ],
     "analysis_title": "ANÁLISIS DEL MES",
     "no_habits": "Sin hábitos aún",
     "loading": "Cargando hábitos...",
@@ -99,9 +112,33 @@
     "planner_progress_75": "✨ ¡Vas por buen camino! Sigue así.",
     "planner_unstoppable": "🔥 ¡ERES IMPARABLE! Meta cumplida.",
     "planner_quote": "\"No juzgues cada día por la cosecha que recoges, sino por las semillas que plantas.\"",
-    "planner_days": ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],
-    "planner_days_abbr": ["Dom","Lun","Mar","Mie","Jue","Vie","Sab"],
-    "planner_cal_headers": ["D","L","M","M","J","V","S"],
+    "planner_days": [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado"
+    ],
+    "planner_days_abbr": [
+      "Dom",
+      "Lun",
+      "Mar",
+      "Mie",
+      "Jue",
+      "Vie",
+      "Sab"
+    ],
+    "planner_cal_headers": [
+      "D",
+      "L",
+      "M",
+      "M",
+      "J",
+      "V",
+      "S"
+    ],
     "planner_deep_work_active": "TRABAJO PROFUNDO ACTIVO",
     "planner_atomic_quotes": [
       "Los hábitos son el interés compuesto de la superación personal. 📈",
@@ -166,7 +203,20 @@
     "finances_total_pct": "DEL TOTAL",
     "finances_footer_quote": "\"El éxito financiero no es un evento, es un sistema operativo. MÉTODO STACK ⚖️\"",
     "finances_delete_confirm": "¿Eliminar registro?",
-    "months_short": ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+    "months_short": [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic"
+    ],
     "common_authorized_device": "Dispositivo Autorizado",
     "common_security_access": "Seguridad de Acceso",
     "common_active_sessions": "Sesiones activas: {count} de {total} permitidas.",
@@ -231,26 +281,63 @@
     "recursos_item_6_layer_3": "El Ciclo",
     "recursos_item_6_layer_4": "Leyes",
     "quiz_q1": "Según la lógica de los hábitos atómicos, ¿qué resultado obtienes matemáticamente al final de un año si logras ser un 1% mejor cada día?",
-    "quiz_q1_o": ["Serás exactamente un 365% mejor.", "Terminarás siendo unas 37 veces mejor.", "Mejorarás unas 10 veces tu capacidad inicial.", "Llegarás a ser un 3.7 veces mejor."],
+    "quiz_q1_o": [
+      "Serás exactamente un 365% mejor.",
+      "Terminarás siendo unas 37 veces mejor.",
+      "Mejorarás unas 10 veces tu capacidad inicial.",
+      "Llegarás a ser un 3.7 veces mejor."
+    ],
     "quiz_q2": "¿Cuál es el problema fundamental de enfocarse únicamente en las metas en lugar de los sistemas?",
-    "quiz_q2_o": ["Las metas son imposibles de medir con precisión.", "Los ganadores y perdedores tienen metas totalmente distintas.", "Las metas restringen la felicidad a un solo escenario futuro.", "Las metas impiden que las personas se esfueren al máximo."],
+    "quiz_q2_o": [
+      "Las metas son imposibles de medir con precisión.",
+      "Los ganadores y perdedores tienen metas totalmente distintas.",
+      "Las metas restringen la felicidad a un solo escenario futuro.",
+      "Las metas impiden que las personas se esfueren al máximo."
+    ],
     "quiz_q3": "En las tres capas del cambio de conducta, ¿cuál es el nivel más profundo que garantiza hábitos duraderos?",
-    "quiz_q3_o": ["Cambio de identidad.", "Cambio de procesos.", "Cambio de motivación extrínseca.", "Cambio de resultados."],
+    "quiz_q3_o": [
+      "Cambio de identidad.",
+      "Cambio de procesos.",
+      "Cambio de motivación extrínseca.",
+      "Cambio de resultados."
+    ],
     "quiz_q4": "¿Qué concepto explica por qué a menudo no vemos resultados inmediatos tras semanas de esfuerzo al intentar formar un nuevo hábito?",
-    "quiz_q4_o": ["La ley del menor esfuerzo.", "La meseta de potencial latente.", "El bucle de retroalimentación negativa.", "El valle de la desmotivación."],
+    "quiz_q4_o": [
+      "La ley del menor esfuerzo.",
+      "La meseta de potencial latente.",
+      "El bucle de retroalimentación negativa.",
+      "El valle de la desmotivación."
+    ],
     "quiz_q5": "¿Cuáles son los cuatro pasos que componen el ciclo neurológico de un hábito en el orden correcto?",
-    "quiz_q5_o": ["Señal, anhelo, respuesta y recompensa.", "Deseo, señal, acción y satisfacción.", "Señal, rutina, recompensa y repetition.", "Estímulo, pensamiento, acción y premio."],
+    "quiz_q5_o": [
+      "Señal, anhelo, respuesta y recompensa.",
+      "Deseo, señal, acción y satisfacción.",
+      "Señal, rutina, recompensa y repetition.",
+      "Estímulo, pensamiento, acción y premio."
+    ],
     "quiz_completed": "¡Completado!",
     "quiz_correct_label": "CORRECTAS",
     "recursos_pilar_1_title": "Pilar 1: Tracker (Control Diario)",
     "recursos_pilar_1_desc": "Evalúa la correlación entre la ejecución cuantificable y el estado mental interno (Mood & Motivation).",
-    "recursos_pilar_1_points": ["Rastreo de hábitos", "Termostato emocional", "Micro-gamificación"],
+    "recursos_pilar_1_points": [
+      "Rastreo de hábitos",
+      "Termostato emocional",
+      "Micro-gamificación"
+    ],
     "recursos_pilar_2_title": "Pilar 2: Planner (Enfoque Táctico)",
     "recursos_pilar_2_desc": "Jerarquización impecable para evitar el abrumo cerebral.",
-    "recursos_pilar_2_points": ["Matriz de prioridades", "Modo Deep Work", "Ciclo de reflexión"],
+    "recursos_pilar_2_points": [
+      "Matriz de prioridades",
+      "Modo Deep Work",
+      "Ciclo de reflexión"
+    ],
     "recursos_pilar_3_title": "Pilar 3: Dashboard (Centro Estratégico)",
     "recursos_pilar_3_desc": "Visualización anual para identificar patrones de largo plazo.",
-    "recursos_pilar_3_points": ["Cruce de variables", "Identificación de SuperHábitos", "Tendencias anuales"],
+    "recursos_pilar_3_points": [
+      "Cruce de variables",
+      "Identificación de SuperHábitos",
+      "Tendencias anuales"
+    ],
     "recursos_executive_summary": "Resumen Ejecutivo",
     "recursos_executive_desc": "El Método STACK combina la matemática de los hábitos atómicos con un sistema de ingeniería conductual diseñado para optimizar el rendimiento personal sin sacrificar el bienestar emocional.",
     "recursos_systems_over_goals": "Sistemas sobre Metas",
@@ -270,108 +357,397 @@
     "recursos_table_strategy": "Estrategia",
     "recursos_table_law": "Ley",
     "recursos_table_result": "Resultado",
-    "recursos_table_row1": ["Accidente de béisbol y recuperación.", "Pequeños hábitos diarios.", "Sencillo", "Mejor atleta masculino."],
-    "recursos_table_row2": ["Ciclismo británico mediocre.", "Ganancias marginales del 1%.", "Obvio", "Dominio olímpico total."],
+    "recursos_table_row1": [
+      "Accidente de béisbol y recuperación.",
+      "Pequeños hábitos diarios.",
+      "Sencillo",
+      "Mejor atleta masculino."
+    ],
+    "recursos_table_row2": [
+      "Ciclismo británico mediocre.",
+      "Ganancias marginales del 1%.",
+      "Obvio",
+      "Dominio olímpico total."
+    ],
     "quiz_q6": "¿En qué consiste la técnica de \"acumulación de hábitos\"?",
-    "quiz_q6_o": ["En realizar múltiples tareas productivas de forma simultánea.", "En repetir un hábito muchas veces seguidas para automatizarlo.", "En eliminar todos los hábitos viejos antes de empezar los nuevos.", "En vincular un nuevo hábito a uno que ya realizas diariamente."],
+    "quiz_q6_o": [
+      "En realizar múltiples tareas productivas de forma simultánea.",
+      "En repetir un hábito muchas veces seguidas para automatizarlo.",
+      "En eliminar todos los hábitos viejos antes de empezar los nuevos.",
+      "En vincular un nuevo hábito a uno que ya realizas diariamente."
+    ],
     "quiz_q7": "De acuerdo con el diseño del ambiente, ¿por qué es tan efectiva la estrategia de \"hacerlo obvio\" para los buenos hábitos?",
-    "quiz_q7_o": ["Porque reduce la necesidad de tener disciplina interna o fuerza de voluntad.", "Porque permite que el hábito sea recordado por la mente consciente todo el tiempo.", "Porque la vista es el sentido humano con mayor cantidad de receptores sensoriales.", "Porque el cerebro prefiere los colores llamativos para iniciar una tarea."],
+    "quiz_q7_o": [
+      "Porque reduce la necesidad de tener disciplina interna o fuerza de voluntad.",
+      "Porque permite que el hábito sea recordado por la mente consciente todo el tiempo.",
+      "Porque la vista es el sentido humano con mayor cantidad de receptores sensoriales.",
+      "Porque el cerebro prefiere los colores llamativos para iniciar una tarea."
+    ],
     "quiz_q8": "¿Qué descubrió el estudio de Lee Robins sobre los soldados adictos a la heroína que regresaban de Vietnam?",
-    "quiz_q8_o": ["La adicción era una condición permanente grabada en el cerebro.", "La adicción desaparecía casi totalmente al cambiar el ambiente y sus señales.", "La mayoría reincidía debido a la falta de fuerza de voluntad.", "El tratamiento médico era el único factor para su recuperación."],
+    "quiz_q8_o": [
+      "La adicción era una condición permanente grabada en el cerebro.",
+      "La adicción desaparecía casi totalmente al cambiar el ambiente y sus señales.",
+      "La mayoría reincidía debido a la falta de fuerza de voluntad.",
+      "El tratamiento médico era el único factor para su recuperación."
+    ],
     "quiz_q9": "¿Cuál es la función principal de la \"Regla de los 2 minutos\" al empezar un nuevo hábito?",
-    "quiz_q9_o": ["Cronometrar el tiempo exacto que tarda un hábito en volverse automático.", "Asegurar que el hábito sea siempre productivo y de alta calidad.", "Evitar que el cerebro se aburra con tareas demasiado largas.", "Dominar el arte de hacerse presente antes de optimizar el desempeño."],
+    "quiz_q9_o": [
+      "Cronometrar el tiempo exacto que tarda un hábito en volverse automático.",
+      "Asegurar que el hábito sea siempre productivo y de alta calidad.",
+      "Evitar que el cerebro se aburra con tareas demasiado largas.",
+      "Dominar el arte de hacerse presente antes de optimizar el desempeño."
+    ],
     "quiz_q10": "Según la \"Regla Cardinal del Cambio de Conducta\", ¿qué tipo de consecuencias prioriza el cerebro humano?",
-    "quiz_q10_o": ["Consecuencias de gran magnitud a largo plazo.", "Consecuencias lógicas basadas en datos estadísticos.", "Consecuencias sociales de aprobación o rechazo.", "Consecuencias inmediatas."],
+    "quiz_q10_o": [
+      "Consecuencias de gran magnitud a largo plazo.",
+      "Consecuencias lógicas basadas en datos estadísticos.",
+      "Consecuencias sociales de aprobación o rechazo.",
+      "Consecuencias inmediatas."
+    ],
     "quiz_q11": "¿Cuál es el consejo del autor para recuperar un hábito tras un fallo accidental o una interrupción?",
-    "quiz_q11_o": ["Esperar al próximo lunes o inicio de mes para reiniciar la racha.", "Castigarte económicamente para asegurar que no vuelva a ocurrir.", "Duplicar el esfuerzo al día siguiente para compensar lo perdido.", "Nunca dejes que pase dos veces."],
+    "quiz_q11_o": [
+      "Esperar al próximo lunes o inicio de mes para reiniciar la racha.",
+      "Castigarte económicamente para asegurar que no vuelva a ocurrir.",
+      "Duplicar el esfuerzo al día siguiente para compensar lo perdido.",
+      "Nunca dejes que pase dos veces."
+    ],
     "quiz_q12": "¿Cuál de las siguientes afirmaciones describe mejor cómo los hábitos moldean nuestra identidad?",
-    "quiz_q12_o": ["Solo los grandes logros cambian la forma en que nos vemos a nosotros mismos.", "Debes cambiar tu identidad mediante la meditación antes de intentar cambiar cualquier hábito.", "Cada acción que realizas es un punto a favor del tipo de persona en la que quieres convertirte.", "La identidad es algo innato que determina qué hábitos podemos o no tener."],
+    "quiz_q12_o": [
+      "Solo los grandes logros cambian la forma en que nos vemos a nosotros mismos.",
+      "Debes cambiar tu identidad mediante la meditación antes de intentar cambiar cualquier hábito.",
+      "Cada acción que realizas es un punto a favor del tipo de persona en la que quieres convertirte.",
+      "La identidad es algo innato que determina qué hábitos podemos o no tener."
+    ],
     "quiz_q13": "¿Qué es el 'interés compuesto' aplicado a los hábitos?",
-    "quiz_q13_o": ["Pequeños cambios diarios que se acumulan y generan resultados masivos.", "Ahorrar dinero cada vez que cumples un hábito saludable.", "La presión social que te obliga a mejorar cada día.", "El agotamiento mental tras intentar demasiados cambios a la vez."],
+    "quiz_q13_o": [
+      "Pequeños cambios diarios que se acumulan y generan resultados masivos.",
+      "Ahorrar dinero cada vez que cumples un hábito saludable.",
+      "La presión social que te obliga a mejorar cada día.",
+      "El agotamiento mental tras intentar demasiados cambios a la vez."
+    ],
     "quiz_q14": "¿Cuál es la primera ley del cambio de conducta?",
-    "quiz_q14_o": ["Hacerlo obvio.", "Hacerlo atractivo.", "Hacerlo sencillo.", "Hacerlo satisfactorio."],
+    "quiz_q14_o": [
+      "Hacerlo obvio.",
+      "Hacerlo atractivo.",
+      "Hacerlo sencillo.",
+      "Hacerlo satisfactorio."
+    ],
     "quiz_q15": "¿Cuál es la segunda ley del cambio de conducta?",
-    "quiz_q15_o": ["Hacerlo obvio.", "Hacerlo atractivo.", "Hacerlo sencillo.", "Hacerlo satisfactorio."],
+    "quiz_q15_o": [
+      "Hacerlo obvio.",
+      "Hacerlo atractivo.",
+      "Hacerlo sencillo.",
+      "Hacerlo satisfactorio."
+    ],
     "quiz_q16": "¿Cuál es la tercera ley del cambio de conducta?",
-    "quiz_q16_o": ["Hacerlo obvio.", "Hacerlo atractivo.", "Hacerlo sencillo.", "Hacerlo satisfactorio."],
+    "quiz_q16_o": [
+      "Hacerlo obvio.",
+      "Hacerlo atractivo.",
+      "Hacerlo sencillo.",
+      "Hacerlo satisfactorio."
+    ],
     "quiz_q17": "¿Cuál es la cuarta ley del cambio de conducta?",
-    "quiz_q17_o": ["Hacerlo obvio.", "Hacerlo atractivo.", "Hacerlo sencillo.", "Hacerlo satisfactorio."],
+    "quiz_q17_o": [
+      "Hacerlo obvio.",
+      "Hacerlo atractivo.",
+      "Hacerlo sencillo.",
+      "Hacerlo satisfactorio."
+    ],
     "quiz_q18": "¿Qué es el 'anclaje de hábitos'?",
-    "quiz_q18_o": ["Escribir tus metas en un papel para no olvidarlas.", "Integrar un nuevo hábito inmediatamente después de uno ya establecido.", "Dejar de realizar un hábito cuando te sientes cansado.", "Hacer el hábito más difícil para demostrar tu fuerza de voluntad."],
+    "quiz_q18_o": [
+      "Escribir tus metas en un papel para no olvidarlas.",
+      "Integrar un nuevo hábito inmediatamente después de uno ya establecido.",
+      "Dejar de realizar un hábito cuando te sientes cansado.",
+      "Hacer el hábito más difícil para demostrar tu fuerza de voluntad."
+    ],
     "quiz_q19": "¿Cómo romper un mal hábito según la inversión de las leyes?",
-    "quiz_q19_o": ["Hacerlo invisible, poco atractivo, difícil e insatisfactorio.", "Ocultarlo de tus amigos para no sentir vergueanza.", "Intentar dejarlo de golpe sin ninguna estrategia.", "Sustituirlo por otro mal hábito que sea menos dañino."],
+    "quiz_q19_o": [
+      "Hacerlo invisible, poco atractivo, difícil e insatisfactorio.",
+      "Ocultarlo de tus amigos para no sentir vergueanza.",
+      "Intentar dejarlo de golpe sin ninguna estrategia.",
+      "Sustituirlo por otro mal hábito que sea menos dañino."
+    ],
     "quiz_q20": "¿Qué papel juega el entorno en la formación de hábitos?",
-    "quiz_q20_o": ["No tiene ninguna importancia si tienes suficiente voluntad.", "Es solo un factor secundario frente a la genética.", "El entorno es la señal invisible que moldea nuestro comportamiento.", "Solo influye en los hábitos que realizas fuera de casa."],
+    "quiz_q20_o": [
+      "No tiene ninguna importancia si tienes suficiente voluntad.",
+      "Es solo un factor secundario frente a la genética.",
+      "El entorno es la señal invisible que moldea nuestro comportamiento.",
+      "Solo influye en los hábitos que realizas fuera de casa."
+    ],
     "quiz_question_counter": "Pregunta {current} de {total}",
     "recursos_flashcards": [
-      { "q": "¿Qué es la Regla de los 2 Minutos?", "a": "Cuando empiezas un nuevo hábito, debe tomarte menos de dos minutos hacerlo." },
-      { "q": "¿Cómo hacer un hábito OBVIO?", "a": "Diseña tu entorno. Pon señales visuales de tus buenos hábitos." },
-      { "q": "Identidad vs. Resultados", "a": "Enfócate en quién te quieres convertir, no en lo que quieres lograr." },
-      { "q": "¿Resultado de ser 1% mejor cada día?", "a": "Terminas siendo 37 veces mejor al final de un año." },
-      { "q": "Concepto: Meseta de potencial latente", "a": "Periodo donde los cambios de hábito no parecen generar resultados hasta alcanzar un punto crítico." },
-      { "q": "¿Cuál es la diferencia fundamental entre una meta y un sistema?", "a": "Las metas son los resultados que quieres obtener, mientras que los sistemas son los procesos que sigues." },
-      { "q": "¿Por qué el enfocarse solo en metas es un problema para distinguir el éxito del fracaso?", "a": "Porque tanto los ganadores como los perdedores comparten las mismas metas." },
-      { "q": "Mencione las tres capas del cambio de conducta según el texto.", "a": "Cambio de resultados, cambio de procesos y cambio de identidad." },
-      { "q": "¿Cuál es la capa más profunda y efectiva para desarrollar hábitos perdurables?", "a": "Cambiar la identidad (lo que crees sobre ti mismo)." },
-      { "q": "Un hábito es una conducta que se ha repetido lo suficiente como para volverse _____.", "a": "automática" },
-      { "q": "Identifique los cuatro pasos del ciclo de los hábitos en el orden correcto.", "a": "Señal, anhelo, respuesta y recompensa." },
-      { "q": "¿Qué función cumple la 'señal' en el ciclo del hábito?", "a": "Desencadenar el proceso cerebral que inicia una conducta al anticipar una recompensa." },
-      { "q": "\"En el ciclo del hábito, el _____ es la fuerza motivacional detrás de cada conducta.\"", "a": "anhelo" },
-      { "q": "¿De qué depende que ocurra una 'respuesta' (la ejecución del hábito)?", "a": "De cuán motivado estés y de cuánta tensión o resistencia esté asociada con la conducta." },
-      { "q": "\"Según la Primera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "obvio" },
-      { "q": "¿Cuál es la inversión de la Primera Ley para eliminar un mal hábito?", "a": "Hacerlo invisible." },
-      { "q": "Técnica: Registro de hábitos (Habit Scorecard)", "a": "Listar las conductas diarias y asignarles un signo (+) para buenos, (-) para malos o (=) para neutrales." },
-      { "q": "Complete la fórmula de la intención de implementación: Yo haré [conducta] a las [_____] en [lugar].", "a": "tiempo" },
-      { "q": "¿En qué consiste la estrategia de 'acumulación de hábitos' (habit stacking)?", "a": "En vincular un nuevo hábito con uno que ya realizas diariamente." },
-      { "q": "\"Fórmula: Después de [Hábito Actual], yo haré [_____].\"", "a": "Nuevo Hábito" },
-      { "q": "¿Por qué el diseño del ambiente es la herramienta más poderosa para cambiar hábitos?", "a": "Porque la vista es el sentido humano más poderoso y las señales visuales catalizan el comportamiento." },
-      { "q": "\"Para facilitar un hábito positivo, debes _____ la exposición a sus señales en tu entorno.\"", "a": "incrementar" },
-      { "q": "¿Qué establece la 'Ley del Menor Esfuerzo' en la conducta humana?", "a": "Que al elegir entre dos opciones similares, las personas tenderán naturalmente a elegir la que requiere menos trabajo." },
-      { "q": "Técnica: Acumulación de tentaciones", "a": "Vincular una acción que 'necesitas' hacer con una acción que 'quieres' hacer." },
-      { "q": "¿Cuándo se libera la mayor cantidad de dopamina en el cerebro respecto a un hábito?", "a": "Durante la anticipación de la recompensa, no solo al recibirla." },
-      { "q": "\"Según la Segunda Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "atractivo" },
-      { "q": "\"Los humanos imitamos los hábitos de tres grupos sociales: los cercanos, la mayoría y _____.\"", "a": "los poderosos" },
-      { "q": "¿Cuál es la estrategia más efectiva para que un hábito difícil se vuelva socialmente atractivo?", "a": "Unirse a un ambiente donde la conducta deseada sea la norma común del grupo." },
-      { "q": "\"Según la Tercera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "sencillo" },
-      { "q": "¿Cuál es la diferencia entre 'ponerse en marcha' y 'actuar'?", "a": "Ponerse en marcha es planear o aprender; actuar es la conducta que produce un resultado directo." },
-      { "q": "¿Por qué la frecuencia es más importante que el tiempo total para desarrollar la automaticidad?", "a": "Porque cada repetición activa y fortalece los circuitos neuronales específicos del hábito." },
-      { "q": "Regla de los 2 minutos: ¿Cuál es el requisito para empezar un nuevo hábito?", "a": "Que la acción inicial deba tomar menos de dos minutos realizarla." },
-      { "q": "El objetivo fundamental de la Regla de los 2 minutos es dominar el hábito de _____.", "a": "hacerse presente (o empezar)" },
-      { "q": "¿Qué es un 'mecanismo de compromiso'?", "a": "Una elección en el presente que controla tus acciones en el futuro al dificultar los malos hábitos." },
-      { "q": "Mencione un ejemplo de automatización para evitar un mal hábito.", "a": "Desconectar la televisión después de usarla para que verla requiera más esfuerzo." },
-      { "q": "\"Según la Cuarta Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "satisfactorio" },
-      { "q": "Regla Cardinal del Cambio de Conducta: Lo que se recompensa se repite; lo que se _____ se evita.", "a": "castiga" },
-      { "q": "¿Por qué los malos hábitos se repiten fácilmente a pesar de sus daños a largo plazo?", "a": "Porque sus recompensas suelen ser inmediatas, mientras que sus costos son retardados." },
-      { "q": "¿Cuál es la función del 'reforzamiento inmediato' en el desarrollo de buenos hábitos?", "a": "Vincular el hábito con una pequeña recompensa instantánea para mantener la motivación a corto plazo." },
-      { "q": "Concepto: Historial de hábitos (Habit Tracker)", "a": "Una forma visual de medir el progreso marcando cada día que se cumple con la rutina." },
-      { "q": "Regla para recuperarse de una interrupción: Nunca dejes que pase _____.", "a": "dos veces" },
-      { "q": "¿Qué ocurre cuando una medida se convierte en el único objetivo (Ley de Goodhart)?", "a": "Deja de ser una buena medida y puede generar conductas equivocadas." },
-      { "q": "¿En qué consiste un 'contrato de hábitos'?", "a": "Es un acuerdo escrito donde estableces un compromiso y un castigo específico por incumplimiento." },
-      { "q": "¿Cómo ayuda un 'socio corresponsable' a mantener un hábito positivo?", "a": "Añade un costo social e inmediato a la falla, ya que nos importa lo que otros piensen de nosotros." },
-      { "q": "\"En el ciclo de los hábitos, la 'fase del problema' incluye la señal y el _____.\"", "a": "anhelo" },
-      { "q": "\"En el ciclo de los hábitos, la 'fase de la solución' incluye la respuesta y la _____.\"", "a": "recompensa" },
-      { "q": "¿A qué se refiere el término 'resetear la habitación'?", "a": "A preparar un espacio después de usarlo para facilitar la acción la próxima vez que se requiera." },
-      { "q": "La inversión de la Segunda Ley para eliminar un mal hábito es hacerlo _____.", "a": "poco atractivo" },
-      { "q": "La inversión de la Tercera Ley para eliminar un mal hábito es hacerlo _____.", "a": "difícil" },
-      { "q": "La inversión de la Cuarta Ley para eliminar un mal hábito es hacerlo _____.", "a": "insatisfactorio" },
-      { "q": "¿Cómo ayuda la técnica 'señalar y nombrar' (pointing-and-calling) a cambiar conductas?", "a": "Eleva el nivel de conciencia de hábitos inconscientes al verbalizar la acción y su consecuencia." },
-      { "q": "Los hábitos son el interés compuesto de la _____.", "a": "superación personal" },
-      { "q": "¿Por qué los resultados se consideran 'indicadores reactivos' de los hábitos?", "a": "Porque tu estado actual es un reflexo acumulado de tus hábitos financieros, alimenticios o de estudio." },
-      { "q": "\"Para cambiar tu identidad, primero decide quién quieres ser y luego demuéstratelo con _____.\"", "a": "pequeñas victorias continuas" },
-      { "q": "¿Qué es un 'hábito atómico'?", "a": "Un cambio pequeño, una mejora del 1% que forma parte de un sistema mayor." },
-      { "q": "¿Cuál es la función pedagógica de la recompensa en el cerebro?", "a": "Enseñar qué acciones vale la pena recordar y repetir en el futuro." },
-      { "q": "¿Qué es un 'estímulo supernormal'?", "a": "Una versión exagerada de la realidad que desencadena una respuesta biológica más fuerte de lo normal." },
-      { "q": "\"¿Por qué el mantra 'un solo lugar, un solo uso' ayuda a la concentración?\"", "a": "Porque evita mezclar contextos y asocia un espacio específico con una sola mentalidad o hábito." },
-      { "q": "¿Qué reveló el experimento de los gatos de Thorndike sobre el aprendizaje animal?", "a": "Que las conductas seguidas de consecuencias satisfactorias tienden a repetirse automáticamente." },
-      { "q": "Los hábitos reducen la carga cognitiva para liberar la capacidad de la _____.", "a": "mente consciente" },
-      { "q": "Concepto: Inconsistencia temporal", "a": "La tendencia del cerebro humano a valorar más el presente que el futuro." },
-      { "q": "El propósito de construir sistemas es seguir _____ en el juego de la mejora continua.", "a": "participando" },
-      { "q": "¿Qué significa 'estandarizar antes de optimizar' un hábito?", "a": "Que debes lograr que la acción básica sea constante antes de intentar mejorar su rendimiento." },
-      { "q": "¿Cuál es la relación entre los genes y los hábitos según el texto?", "a": "Los genes determinan tus fortalezas; el éxito llega al elegir los hábitos que mejor se adaptan a ellas." },
-      { "q": "Concepto: Automaticidad", "a": "La habilidad de realizar una conducta sin tener que pensar conscientemente en cada paso." },
-      { "q": "\"Los hábitos no restringen la libertad, en realidad la _____.\"", "a": "promueven" },
-      { "q": "El entorno es la _____ que moldea el comportamiento humano.", "a": "mano invisible" },
-      { "q": "¿Qué demostró el caso de los soldados en Vietnam sobre la adicción y el entorno?", "a": "Que una adicción puede desaparecer si se eliminan radicalmente las señales ambientales que la disparan." }
+      {
+        "q": "¿Qué es la Regla de los 2 Minutos?",
+        "a": "Cuando empiezas un nuevo hábito, debe tomarte menos de dos minutos hacerlo."
+      },
+      {
+        "q": "¿Cómo hacer un hábito OBVIO?",
+        "a": "Diseña tu entorno. Pon señales visuales de tus buenos hábitos."
+      },
+      {
+        "q": "Identidad vs. Resultados",
+        "a": "Enfócate en quién te quieres convertir, no en lo que quieres lograr."
+      },
+      {
+        "q": "¿Resultado de ser 1% mejor cada día?",
+        "a": "Terminas siendo 37 veces mejor al final de un año."
+      },
+      {
+        "q": "Concepto: Meseta de potencial latente",
+        "a": "Periodo donde los cambios de hábito no parecen generar resultados hasta alcanzar un punto crítico."
+      },
+      {
+        "q": "¿Cuál es la diferencia fundamental entre una meta y un sistema?",
+        "a": "Las metas son los resultados que quieres obtener, mientras que los sistemas son los procesos que sigues."
+      },
+      {
+        "q": "¿Por qué el enfocarse solo en metas es un problema para distinguir el éxito del fracaso?",
+        "a": "Porque tanto los ganadores como los perdedores comparten las mismas metas."
+      },
+      {
+        "q": "Mencione las tres capas del cambio de conducta según el texto.",
+        "a": "Cambio de resultados, cambio de procesos y cambio de identidad."
+      },
+      {
+        "q": "¿Cuál es la capa más profunda y efectiva para desarrollar hábitos perdurables?",
+        "a": "Cambiar la identidad (lo que crees sobre ti mismo)."
+      },
+      {
+        "q": "Un hábito es una conducta que se ha repetido lo suficiente como para volverse _____.",
+        "a": "automática"
+      },
+      {
+        "q": "Identifique los cuatro pasos del ciclo de los hábitos en el orden correcto.",
+        "a": "Señal, anhelo, respuesta y recompensa."
+      },
+      {
+        "q": "¿Qué función cumple la 'señal' en el ciclo del hábito?",
+        "a": "Desencadenar el proceso cerebral que inicia una conducta al anticipar una recompensa."
+      },
+      {
+        "q": "\"En el ciclo del hábito, el _____ es la fuerza motivacional detrás de cada conducta.\"",
+        "a": "anhelo"
+      },
+      {
+        "q": "¿De qué depende que ocurra una 'respuesta' (la ejecución del hábito)?",
+        "a": "De cuán motivado estés y de cuánta tensión o resistencia esté asociada con la conducta."
+      },
+      {
+        "q": "\"Según la Primera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "obvio"
+      },
+      {
+        "q": "¿Cuál es la inversión de la Primera Ley para eliminar un mal hábito?",
+        "a": "Hacerlo invisible."
+      },
+      {
+        "q": "Técnica: Registro de hábitos (Habit Scorecard)",
+        "a": "Listar las conductas diarias y asignarles un signo (+) para buenos, (-) para malos o (=) para neutrales."
+      },
+      {
+        "q": "Complete la fórmula de la intención de implementación: Yo haré [conducta] a las [_____] en [lugar].",
+        "a": "tiempo"
+      },
+      {
+        "q": "¿En qué consiste la estrategia de 'acumulación de hábitos' (habit stacking)?",
+        "a": "En vincular un nuevo hábito con uno que ya realizas diariamente."
+      },
+      {
+        "q": "\"Fórmula: Después de [Hábito Actual], yo haré [_____].\"",
+        "a": "Nuevo Hábito"
+      },
+      {
+        "q": "¿Por qué el diseño del ambiente es la herramienta más poderosa para cambiar hábitos?",
+        "a": "Porque la vista es el sentido humano más poderoso y las señales visuales catalizan el comportamiento."
+      },
+      {
+        "q": "\"Para facilitar un hábito positivo, debes _____ la exposición a sus señales en tu entorno.\"",
+        "a": "incrementar"
+      },
+      {
+        "q": "¿Qué establece la 'Ley del Menor Esfuerzo' en la conducta humana?",
+        "a": "Que al elegir entre dos opciones similares, las personas tenderán naturalmente a elegir la que requiere menos trabajo."
+      },
+      {
+        "q": "Técnica: Acumulación de tentaciones",
+        "a": "Vincular una acción que 'necesitas' hacer con una acción que 'quieres' hacer."
+      },
+      {
+        "q": "¿Cuándo se libera la mayor cantidad de dopamina en el cerebro respecto a un hábito?",
+        "a": "Durante la anticipación de la recompensa, no solo al recibirla."
+      },
+      {
+        "q": "\"Según la Segunda Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "atractivo"
+      },
+      {
+        "q": "\"Los humanos imitamos los hábitos de tres grupos sociales: los cercanos, la mayoría y _____.\"",
+        "a": "los poderosos"
+      },
+      {
+        "q": "¿Cuál es la estrategia más efectiva para que un hábito difícil se vuelva socialmente atractivo?",
+        "a": "Unirse a un ambiente donde la conducta deseada sea la norma común del grupo."
+      },
+      {
+        "q": "\"Según la Tercera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "sencillo"
+      },
+      {
+        "q": "¿Cuál es la diferencia entre 'ponerse en marcha' y 'actuar'?",
+        "a": "Ponerse en marcha es planear o aprender; actuar es la conducta que produce un resultado directo."
+      },
+      {
+        "q": "¿Por qué la frecuencia es más importante que el tiempo total para desarrollar la automaticidad?",
+        "a": "Porque cada repetición activa y fortalece los circuitos neuronales específicos del hábito."
+      },
+      {
+        "q": "Regla de los 2 minutos: ¿Cuál es el requisito para empezar un nuevo hábito?",
+        "a": "Que la acción inicial deba tomar menos de dos minutos realizarla."
+      },
+      {
+        "q": "El objetivo fundamental de la Regla de los 2 minutos es dominar el hábito de _____.",
+        "a": "hacerse presente (o empezar)"
+      },
+      {
+        "q": "¿Qué es un 'mecanismo de compromiso'?",
+        "a": "Una elección en el presente que controla tus acciones en el futuro al dificultar los malos hábitos."
+      },
+      {
+        "q": "Mencione un ejemplo de automatización para evitar un mal hábito.",
+        "a": "Desconectar la televisión después de usarla para que verla requiera más esfuerzo."
+      },
+      {
+        "q": "\"Según la Cuarta Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "satisfactorio"
+      },
+      {
+        "q": "Regla Cardinal del Cambio de Conducta: Lo que se recompensa se repite; lo que se _____ se evita.",
+        "a": "castiga"
+      },
+      {
+        "q": "¿Por qué los malos hábitos se repiten fácilmente a pesar de sus daños a largo plazo?",
+        "a": "Porque sus recompensas suelen ser inmediatas, mientras que sus costos son retardados."
+      },
+      {
+        "q": "¿Cuál es la función del 'reforzamiento inmediato' en el desarrollo de buenos hábitos?",
+        "a": "Vincular el hábito con una pequeña recompensa instantánea para mantener la motivación a corto plazo."
+      },
+      {
+        "q": "Concepto: Historial de hábitos (Habit Tracker)",
+        "a": "Una forma visual de medir el progreso marcando cada día que se cumple con la rutina."
+      },
+      {
+        "q": "Regla para recuperarse de una interrupción: Nunca dejes que pase _____.",
+        "a": "dos veces"
+      },
+      {
+        "q": "¿Qué ocurre cuando una medida se convierte en el único objetivo (Ley de Goodhart)?",
+        "a": "Deja de ser una buena medida y puede generar conductas equivocadas."
+      },
+      {
+        "q": "¿En qué consiste un 'contrato de hábitos'?",
+        "a": "Es un acuerdo escrito donde estableces un compromiso y un castigo específico por incumplimiento."
+      },
+      {
+        "q": "¿Cómo ayuda un 'socio corresponsable' a mantener un hábito positivo?",
+        "a": "Añade un costo social e inmediato a la falla, ya que nos importa lo que otros piensen de nosotros."
+      },
+      {
+        "q": "\"En el ciclo de los hábitos, la 'fase del problema' incluye la señal y el _____.\"",
+        "a": "anhelo"
+      },
+      {
+        "q": "\"En el ciclo de los hábitos, la 'fase de la solución' incluye la respuesta y la _____.\"",
+        "a": "recompensa"
+      },
+      {
+        "q": "¿A qué se refiere el término 'resetear la habitación'?",
+        "a": "A preparar un espacio después de usarlo para facilitar la acción la próxima vez que se requiera."
+      },
+      {
+        "q": "La inversión de la Segunda Ley para eliminar un mal hábito es hacerlo _____.",
+        "a": "poco atractivo"
+      },
+      {
+        "q": "La inversión de la Tercera Ley para eliminar un mal hábito es hacerlo _____.",
+        "a": "difícil"
+      },
+      {
+        "q": "La inversión de la Cuarta Ley para eliminar un mal hábito es hacerlo _____.",
+        "a": "insatisfactorio"
+      },
+      {
+        "q": "¿Cómo ayuda la técnica 'señalar y nombrar' (pointing-and-calling) a cambiar conductas?",
+        "a": "Eleva el nivel de conciencia de hábitos inconscientes al verbalizar la acción y su consecuencia."
+      },
+      {
+        "q": "Los hábitos son el interés compuesto de la _____.",
+        "a": "superación personal"
+      },
+      {
+        "q": "¿Por qué los resultados se consideran 'indicadores reactivos' de los hábitos?",
+        "a": "Porque tu estado actual es un reflexo acumulado de tus hábitos financieros, alimenticios o de estudio."
+      },
+      {
+        "q": "\"Para cambiar tu identidad, primero decide quién quieres ser y luego demuéstratelo con _____.\"",
+        "a": "pequeñas victorias continuas"
+      },
+      {
+        "q": "¿Qué es un 'hábito atómico'?",
+        "a": "Un cambio pequeño, una mejora del 1% que forma parte de un sistema mayor."
+      },
+      {
+        "q": "¿Cuál es la función pedagógica de la recompensa en el cerebro?",
+        "a": "Enseñar qué acciones vale la pena recordar y repetir en el futuro."
+      },
+      {
+        "q": "¿Qué es un 'estímulo supernormal'?",
+        "a": "Una versión exagerada de la realidad que desencadena una respuesta biológica más fuerte de lo normal."
+      },
+      {
+        "q": "\"¿Por qué el mantra 'un solo lugar, un solo uso' ayuda a la concentración?\"",
+        "a": "Porque evita mezclar contextos y asocia un espacio específico con una sola mentalidad o hábito."
+      },
+      {
+        "q": "¿Qué reveló el experimento de los gatos de Thorndike sobre el aprendizaje animal?",
+        "a": "Que las conductas seguidas de consecuencias satisfactorias tienden a repetirse automáticamente."
+      },
+      {
+        "q": "Los hábitos reducen la carga cognitiva para liberar la capacidad de la _____.",
+        "a": "mente consciente"
+      },
+      {
+        "q": "Concepto: Inconsistencia temporal",
+        "a": "La tendencia del cerebro humano a valorar más el presente que el futuro."
+      },
+      {
+        "q": "El propósito de construir sistemas es seguir _____ en el juego de la mejora continua.",
+        "a": "participando"
+      },
+      {
+        "q": "¿Qué significa 'estandarizar antes de optimizar' un hábito?",
+        "a": "Que debes lograr que la acción básica sea constante antes de intentar mejorar su rendimiento."
+      },
+      {
+        "q": "¿Cuál es la relación entre los genes y los hábitos según el texto?",
+        "a": "Los genes determinan tus fortalezas; el éxito llega al elegir los hábitos que mejor se adaptan a ellas."
+      },
+      {
+        "q": "Concepto: Automaticidad",
+        "a": "La habilidad de realizar una conducta sin tener que pensar conscientemente en cada paso."
+      },
+      {
+        "q": "\"Los hábitos no restringen la libertad, en realidad la _____.\"",
+        "a": "promueven"
+      },
+      {
+        "q": "El entorno es la _____ que moldea el comportamiento humano.",
+        "a": "mano invisible"
+      },
+      {
+        "q": "¿Qué demostró el caso de los soldados en Vietnam sobre la adicción y el entorno?",
+        "a": "Que una adicción puede desaparecer si se eliminan radicalmente las señales ambientales que la disparan."
+      }
     ],
     "recursos_guide": {
       "title": "Guía de Estudio: Hábitos Atómicos de James Clear",
@@ -413,100 +789,396 @@
       ],
       "glossary_title": "Glosario de Términos Clave",
       "glossary": [
-        { "t": "Hábito Atómico", "d": "Una rutina o práctica regular que no solo es pequeña y fácil de realizar, sino que es la fuente de un poder increíble; un componente de un sistema de crecimiento compuesto." },
-        { "t": "Automaticidad", "d": "La habilidad de realizar una conducta sin tener que pensar en cada paso; ocurre cuando la mente inconsciente se hace cargo de la ejecución del hábito." },
-        { "t": "Señal", "d": "La pieza de información que anticipa una recompensa y que desencadena el proceso en el cerebro para iniciar una conducta." },
-        { "t": "Anhelo", "d": "La fuerza motivacional o deseo de cambiar el estado interno que impulsa a actuar; no es el hábito en sí, sino el cambio de estado que este produce." },
-        { "t": "Dopamina", "d": "Neurotransmisor central en la motivación, el aprendizaje y la memoria; se libera tanto al experimentar placer como al anticipar una recompensa." },
-        { "t": "Intención de Implementación", "d": "Un plan establecido de antemano que define cuándo y dónde se va a realizar una conducta específica (Fórmula: \"Yo haré [CONDUCTA] a las [TIEMPO] en [LUGAR]\")." },
-        { "t": "Efecto Diderot", "d": "Tendencia en la que la obtención de una nueva posesión crea una espiral de consumo que conduce a realizar compras o acciones adicionales." },
-        { "t": "Mecanismo de Compromiso", "d": "Una elección realizada en el presente para controlar las acciones en el futuro, asegurando que se mantengan los buenos hábitos y se eviten los malos." },
-        { "t": "Inconsistencia Temporal", "d": "Propensión del cerebro humano a valorar más el presente que el futuro, priorizando la gratificación instantánea sobre los beneficios retardados." },
-        { "t": "Reforzamiento", "d": "El proceso de usar una recompensa inmediata para aumentar las probabilidades de repetir una conducta, cerrando el ciclo del hábito de forma satisfactoria." },
-        { "t": "Ley del Menor Esfuerzo", "d": "Principio que establece que, ante dos opciones similares, las personas tenderán naturalmente a elegir la opción que requiere la menor cantidad de trabajo o energía." },
-        { "t": "Registro de Hábitos", "d": "Método visual (como marcar un calendario) para medir si se cumplió con una rutina, proporcionando evidencia clara del progreso y satisfacción inmediata." }
+        {
+          "t": "Hábito Atómico",
+          "d": "Una rutina o práctica regular que no solo es pequeña y fácil de realizar, sino que es la fuente de un poder increíble; un componente de un sistema de crecimiento compuesto."
+        },
+        {
+          "t": "Automaticidad",
+          "d": "La habilidad de realizar una conducta sin tener que pensar en cada paso; ocurre cuando la mente inconsciente se hace cargo de la ejecución del hábito."
+        },
+        {
+          "t": "Señal",
+          "d": "La pieza de información que anticipa una recompensa y que desencadena el proceso en el cerebro para iniciar una conducta."
+        },
+        {
+          "t": "Anhelo",
+          "d": "La fuerza motivacional o deseo de cambiar el estado interno que impulsa a actuar; no es el hábito en sí, sino el cambio de estado que este produce."
+        },
+        {
+          "t": "Dopamina",
+          "d": "Neurotransmisor central en la motivación, el aprendizaje y la memoria; se libera tanto al experimentar placer como al anticipar una recompensa."
+        },
+        {
+          "t": "Intención de Implementación",
+          "d": "Un plan establecido de antemano que define cuándo y dónde se va a realizar una conducta específica (Fórmula: \"Yo haré [CONDUCTA] a las [TIEMPO] en [LUGAR]\")."
+        },
+        {
+          "t": "Efecto Diderot",
+          "d": "Tendencia en la que la obtención de una nueva posesión crea una espiral de consumo que conduce a realizar compras o acciones adicionales."
+        },
+        {
+          "t": "Mecanismo de Compromiso",
+          "d": "Una elección realizada en el presente para controlar las acciones en el futuro, asegurando que se mantengan los buenos hábitos y se eviten los malos."
+        },
+        {
+          "t": "Inconsistencia Temporal",
+          "d": "Propensión del cerebro humano a valorar más el presente que el futuro, priorizando la gratificación instantánea sobre los beneficios retardados."
+        },
+        {
+          "t": "Reforzamiento",
+          "d": "El proceso de usar una recompensa inmediata para aumentar las probabilidades de repetir una conducta, cerrando el ciclo del hábito de forma satisfactoria."
+        },
+        {
+          "t": "Ley del Menor Esfuerzo",
+          "d": "Principio que establece que, ante dos opciones similares, las personas tenderán naturalmente a elegir la opción que requiere la menor cantidad de trabajo o energía."
+        },
+        {
+          "t": "Registro de Hábitos",
+          "d": "Método visual (como marcar un calendario) para medir si se cumplió con una rutina, proporcionando evidencia clara del progreso y satisfacción inmediata."
+        }
       ]
     },
     "recursos_challenges_table": {
-      "headers": ["Desafío", "Motivo", "Estrategia", "Ley", "Resultado", "Impacto", "Fuente"],
+      "headers": [
+        "Desafío",
+        "Motivo",
+        "Estrategia",
+        "Ley",
+        "Resultado",
+        "Impacto",
+        "Fuente"
+      ],
       "rows": [
-        ["Recuperación de lesión cerebral grave.", "Deseo de recuperar el control y identidad.", "Pequeños hábitos diarios (dormir, limpiar, pesas).", "Hacerlo sencillo", "Mejor atleta Universidad Denison.", "Transformación radical por mejoras del 1%.", "[1]"],
-        ["Mediocridade ciclismo británico.", "Optimización competitiva.", "Ganancias marginales del 1%.", "Hacerlo obvio", "66 oros olímpicos, 5 Tour de France.", "Dominio global por sistema organizacional.", "[1]"],
-        ["Falta consistencia ejercicio.", "Reducir incertidumbre y procrastinación.", "Intención de implementación (tiempo y lugar).", "Hacerlo obvio", "91% cumplimiento vs 35% control.", "Automatización por reducción de carga cognitiva.", "[1]"],
-        ["Hábito morderse uñas.", "Cambio de identidad profunda.", "Pequeña victoria (manicura profesional).", "Hacerlo satisfactorio", "Cese inmediato del hábito.", "Conducta duradera alineada con identidad.", "[1]"],
-        ["Dificultad dieta saludable.", "Influencia señales visuales negativas.", "Diseño del ambiente (fruta visible).", "Hacerlo obvio", "Aumento significativo consumo saludable.", "Buenos hábitos por defecto sin voluntad.", "[1]"],
-        ["Inconsistencia meditación.", "Entorno caótico.", "Acumulación de hábitos (vincular a café).", "Hacerlo obvio", "Secuencia predecible de acciones.", "Estilo de vida estructurado por inercia.", "[1]"]
+        [
+          "Recuperación de lesión cerebral grave.",
+          "Deseo de recuperar el control y identidad.",
+          "Pequeños hábitos diarios (dormir, limpiar, pesas).",
+          "Hacerlo sencillo",
+          "Mejor atleta Universidad Denison.",
+          "Transformación radical por mejoras del 1%.",
+          "[1]"
+        ],
+        [
+          "Mediocridade ciclismo británico.",
+          "Optimización competitiva.",
+          "Ganancias marginales del 1%.",
+          "Hacerlo obvio",
+          "66 oros olímpicos, 5 Tour de France.",
+          "Dominio global por sistema organizacional.",
+          "[1]"
+        ],
+        [
+          "Falta consistencia ejercicio.",
+          "Reducir incertidumbre y procrastinación.",
+          "Intención de implementación (tiempo y lugar).",
+          "Hacerlo obvio",
+          "91% cumplimiento vs 35% control.",
+          "Automatización por reducción de carga cognitiva.",
+          "[1]"
+        ],
+        [
+          "Hábito morderse uñas.",
+          "Cambio de identidad profunda.",
+          "Pequeña victoria (manicura profesional).",
+          "Hacerlo satisfactorio",
+          "Cese inmediato del hábito.",
+          "Conducta duradera alineada con identidad.",
+          "[1]"
+        ],
+        [
+          "Dificultad dieta saludable.",
+          "Influencia señales visuales negativas.",
+          "Diseño del ambiente (fruta visible).",
+          "Hacerlo obvio",
+          "Aumento significativo consumo saludable.",
+          "Buenos hábitos por defecto sin voluntad.",
+          "[1]"
+        ],
+        [
+          "Inconsistencia meditación.",
+          "Entorno caótico.",
+          "Acumulación de hábitos (vincular a café).",
+          "Hacerlo obvio",
+          "Secuencia predecible de acciones.",
+          "Estilo de vida estructurado por inercia.",
+          "[1]"
+        ]
       ]
     },
     "recursos_flashcards": [
-      { "q": "¿Qué es la Regla de los 2 Minutos?", "a": "Cuando empiezas un nuevo hábito, debe tomarte menos de dos minutos hacerlo." },
-      { "q": "¿Cómo hacer un hábito OBVIO?", "a": "Diseña tu entorno. Pon señales visuales de tus buenos hábitos." },
-      { "q": "Identidad vs. Resultados", "a": "Enfócate en quién te quieres convertir, no en lo que quieres lograr." },
-      { "q": "¿Resultado de ser 1% mejor cada día?", "a": "Terminas siendo 37 veces mejor al final de un año." },
-      { "q": "Concepto: Meseta de potencial latente", "a": "Periodo donde los cambios de hábito no parecen generar resultados hasta alcanzar un punto crítico." },
-      { "q": "¿Cuál es la diferencia fundamental entre una meta y un sistema?", "a": "Las metas son los resultados que quieres obtener, mientras que los sistemas son los procesos que sigues." },
-      { "q": "¿Por qué el enfocarse solo en metas es un problema para distinguir el éxito del fracaso?", "a": "Porque tanto los ganadores como los perdedores comparten las mismas metas." },
-      { "q": "Mencione las tres capas del cambio de conducta según el texto.", "a": "Cambio de resultados, cambio de procesos y cambio de identidad." },
-      { "q": "¿Cuál es la capa más profunda y efectiva para desarrollar hábitos perdurables?", "a": "Cambiar la identidad (lo que crees sobre ti mismo)." },
-      { "q": "Un hábito es una conducta que se ha repetido lo suficiente como para volverse _____.", "a": "automático" },
-      { "q": "Identifique los cuatro pasos del ciclo de los hábitos en el orden correcto.", "a": "Señal, anhelo, respuesta y recompensa." },
-      { "q": "¿Qué función cumple la 'señal' en el ciclo del hábito?", "a": "Activar el proceso cerebral que inicia una conducta al anticipar una recompensa." },
-      { "q": "\"En el ciclo del hábito, el _____ es la fuerza motivacional detrás de cada conducta.\"", "a": "anhelo" },
-      { "q": "¿De qué depende que ocurra una 'respuesta' (ejecución del hábito)?", "a": "De cuán motivado estés y de cuánta tensión o resistencia esté asociada a la conducta." },
-      { "q": "\"Según la Primera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "obvio" },
-      { "q": "¿Cuál es la inversión de la Primera Ley para eliminar un mal hábito?", "a": "Hacerlo invisible." },
-      { "q": "Técnica: Registro de Hábitos (Scorecard)", "a": "Listar conductas diarias y asignar signo (+) para buenas, (-) para malas o (=) para neutras." },
-      { "q": "Complete la fórmula de la intención de implementación: Yo haré [conducta] a las [_____] en [local].", "a": "tiempo" },
-      { "q": "¿En qué consiste la estrategia de 'acumulación de hábitos'?", "a": "Vincular un nuevo hábito con uno que ya realizas diariamente." },
-      { "q": "\"Fórmula: Después de [Hábito Actual], yo haré [_____].\"", "a": "Nuevo Hábito" },
-      { "q": "¿Por qué el diseño del ambiente es la herramienta más poderosa para cambiar hábitos?", "a": "Porque la vista es el sentido humano más potente y las pistas visuales catalizan la conducta." },
-      { "q": "\"Para facilitar un hábito positivo, debes _____ la exposición a sus señales en tu entorno.\"", "a": "aumentar" },
-      { "q": "¿Qué establece la 'Ley del Menor Esfuerzo' en la conducta humana?", "a": "Que al elegir entre dos opciones similares, las personas tenderán a elegir la que exige menos trabajo." },
-      { "q": "Técnica: Acumulación de Tentaciones", "a": "Vincular una acción que 'necesitas' hacer con una acción que 'quieres' hacer." },
-      { "q": "¿Cuándo se libera la mayor cantidad de dopamina en el cerebro respecto a un hábito?", "a": "Durante la anticipación de la recompensa, no solo al recibirla." },
-      { "q": "\"Según la Segunda Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "atractivo" },
-      { "q": "\"Los humanos imitamos los hábitos de tres grupos sociales: los cercanos, la mayoría y _____.\"", "a": "los poderosos" },
-      { "q": "¿Cuál es la estrategia más efectiva para que un hábito difícil se vuelva socialmente atractivo?", "a": "Unirse a un ambiente donde la conducta deseada sea la norma común del grupo." },
-      { "q": "\"Según la Tercera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "fácil" },
-      { "q": "¿Cuál es la diferencia entre 'movimiento' y 'acción'?", "a": "Movimiento es planear o aprender; acción es la conducta que produce un resultado directo." },
-      { "q": "¿Por qué la frecuencia es más importante que el tiempo total para desarrollar automaticidad?", "a": "Porque cada repetição ativa e fortalece circuitos neurais específicos para o hábito." },
-      { "q": "Regla de los 2 Minutos: ¿Cuál es el requisito para iniciar un nuevo hábito?", "a": "Que la acción inicial tome menos de dos minutos realizarla." },
-      { "q": "El objetivo fundamental de la Regra de los 2 Minutos es dominar el hábito de _____.", "a": "hacerse presente (o empezar)" },
-      { "q": "¿Qué es un 'dispositivo de compromiso'?", "a": "Una elección en el presente que controla tus acciones en el futuro dificultando los malos hábitos." },
-      { "q": "Mencione un ejemplo de automatización para evitar un mal hábito.", "a": "Desconectar la TV tras usarla para que verla exija más esfuerzo." },
-      { "q": "\"Según la Cuarta Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"", "a": "satisfactorio" },
-      { "q": "Regla Cardinal del Cambio de Conducta: Lo que es recompensado se repite; lo que es _____ se evita.", "a": "castigado" },
-      { "q": "¿Por qué los malos hábitos se repiten fácilmente pese al daño a largo plazo?", "a": "Porque sus recompensas suelen ser inmediatas, mientras sus costos son retardados." },
-      { "q": "¿Cuál es la función del 'reforzamiento inmediato' en el desarrollo de buenos hábitos?", "a": "Vincular el hábito con una pequeña recompensa instantánea para mantener la motivación a corto plazo." },
-      { "q": "Concepto: Habit Tracker", "a": "Una forma visual de medir el progreso marcando cada día que se cumple con la rutina." },
-      { "q": "Regla para recuperarse de un fallo: Nunca dejes que pase _____.", "a": "dos veces" },
-      { "q": "¿Qué sucede cuando una medida se convierte en el único objetivo (Ley de Goodhart)?", "a": "Deja de ser una buena medida y puede generar conductas erróneas." },
-      { "q": "¿Qué es un 'contrato de hábitos'?", "a": "Un acuerdo escrito donde estableces un compromiso y un castigo específico por incumplir." },
-      { "q": "¿Cómo ayuda un 'socio de responsabilidad' a mantener un hábito positivo?", "a": "Añade un costo social e inmediato al fallo, pues nos importa lo que otros piensen de nosotros." },
-      { "q": "\"En el ciclo de los hábitos, la 'fase del problema' incluye la señal y el _____.\"", "a": "anhelo" },
-      { "q": "\"En el ciclo de los hábitos, la 'fase de la solución' incluye la respuesta y la _____.\"", "a": "recompensa" },
-      { "q": "¿A qué se refiere el término 'resetear la habitación'?", "a": "Preparar un espacio tras su uso para facilitar la acción la próxima vez que se requiera." },
-      { "q": "La inversión de la Segunda Ley para eliminar un mal hábito es hacerlo _____.", "a": "poco atractivo" },
-      { "q": "La inversión de la Tercera Ley para eliminar un mal hábito es hacerlo _____.", "a": "difícil" },
-      { "q": "La inversión de la Cuarta Ley para eliminar un mal hábito es hacerlo _____.", "a": "insatisfactorio" },
-      { "q": "¿Cómo ayuda la técnica 'señalar y nombrar' (pointing-and-calling) a cambiar conductas?", "a": "Eleva el nivel de conciencia de hábitos inconscientes al verbalizar la acción y su consecuencia." },
-      { "q": "Los hábitos son el interés compuesto de la _____.", "a": "superación personal" },
-      { "q": "¿Por qué los resultados se consideran 'indicadores reactivos' de los hábitos?", "a": "Porque tu estado actual es un reflexo acumulado de tus hábitos financieros, alimenticios o de estudio." },
-      { "q": "\"Para cambiar tu identidad, primero decide quién quieres ser y luego demuéstratelo con _____.\"", "a": "pequeñas victorias continuas" },
-      { "q": "¿Qué es un 'hábito atómico'?", "a": "Un cambio pequeño, una mejora del 1% que forma parte de un sistema mayor." },
-      { "q": "¿Cuál es la función pedagógica de la recompensa en el cerebro?", "a": "Enseñar qué acciones vale la pena recordar y repetir en el futuro." },
-      { "q": "¿Qué es un 'estímulo supernormal'?", "a": "Una versión exagerada de la realidad que desencadena una respuesta biológica más fuerte de lo normal." },
-      { "q": "\"¿Por qué el mantra 'un solo lugar, un solo uso' ayuda a la concentración?\"", "a": "Porque evita mezclar contextos y asocia un espacio específico con una sola mentalidad o hábito." },
-      { "q": "¿Qué reveló el experimento de los gatos de Thorndike sobre el aprendizaje animal?", "a": "Que las conductas seguidas de consecuencias satisfactorias tienden a repetirse automáticamente." },
-      { "q": "Los hábitos reducen la carga cognitiva para liberar la capacidad de la _____.", "a": "mente consciente" },
-      { "q": "Concepto: Inconsistencia temporal", "a": "La tendencia del cerebro humano a valorar más el presente que el futuro." },
-      { "q": "El propósito de construir sistemas es seguir _____ en el juego de la mejora continua.", "a": "participando" },
-      { "q": "¿Qué significa 'estandarizar antes de optimizar' un hábito?", "a": "Que debes lograr que la acción básica sea constante antes de intentar mejorar su rendimiento." },
-      { "q": "¿Cuál es la relación entre los genes y los hábitos según el texto?", "a": "Los genes determinan tus fortalezas; el éxito llega al elegir los hábitos que mejor se adaptan a ellas." },
-      { "q": "Concepto: Automaticidad", "a": "La habilidad de realizar una conducta sin tener que pensar conscientemente en cada paso." },
-      { "q": "\"Los hábitos no restringen la libertad, en realidad la _____.\"", "a": "promueven" },
-      { "q": "El entorno es la _____ que moldea el comportamiento humano.", "a": "mano invisible" },
-      { "q": "¿Qué demostró el caso de los soldados en Vietnam sobre la adicción y el entorno?", "a": "Que una adicción puede desaparecer si se eliminan radicalmente las señales ambientales que la disparan." }
+      {
+        "q": "¿Qué es la Regla de los 2 Minutos?",
+        "a": "Cuando empiezas un nuevo hábito, debe tomarte menos de dos minutos hacerlo."
+      },
+      {
+        "q": "¿Cómo hacer un hábito OBVIO?",
+        "a": "Diseña tu entorno. Pon señales visuales de tus buenos hábitos."
+      },
+      {
+        "q": "Identidad vs. Resultados",
+        "a": "Enfócate en quién te quieres convertir, no en lo que quieres lograr."
+      },
+      {
+        "q": "¿Resultado de ser 1% mejor cada día?",
+        "a": "Terminas siendo 37 veces mejor al final de un año."
+      },
+      {
+        "q": "Concepto: Meseta de potencial latente",
+        "a": "Periodo donde los cambios de hábito no parecen generar resultados hasta alcanzar un punto crítico."
+      },
+      {
+        "q": "¿Cuál es la diferencia fundamental entre una meta y un sistema?",
+        "a": "Las metas son los resultados que quieres obtener, mientras que los sistemas son los procesos que sigues."
+      },
+      {
+        "q": "¿Por qué el enfocarse solo en metas es un problema para distinguir el éxito del fracaso?",
+        "a": "Porque tanto los ganadores como los perdedores comparten las mismas metas."
+      },
+      {
+        "q": "Mencione las tres capas del cambio de conducta según el texto.",
+        "a": "Cambio de resultados, cambio de procesos y cambio de identidad."
+      },
+      {
+        "q": "¿Cuál es la capa más profunda y efectiva para desarrollar hábitos perdurables?",
+        "a": "Cambiar la identidad (lo que crees sobre ti mismo)."
+      },
+      {
+        "q": "Un hábito es una conducta que se ha repetido lo suficiente como para volverse _____.",
+        "a": "automático"
+      },
+      {
+        "q": "Identifique los cuatro pasos del ciclo de los hábitos en el orden correcto.",
+        "a": "Señal, anhelo, respuesta y recompensa."
+      },
+      {
+        "q": "¿Qué función cumple la 'señal' en el ciclo del hábito?",
+        "a": "Activar el proceso cerebral que inicia una conducta al anticipar una recompensa."
+      },
+      {
+        "q": "\"En el ciclo del hábito, el _____ es la fuerza motivacional detrás de cada conducta.\"",
+        "a": "anhelo"
+      },
+      {
+        "q": "¿De qué depende que ocurra una 'respuesta' (ejecución del hábito)?",
+        "a": "De cuán motivado estés y de cuánta tensión o resistencia esté asociada a la conducta."
+      },
+      {
+        "q": "\"Según la Primera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "obvio"
+      },
+      {
+        "q": "¿Cuál es la inversión de la Primera Ley para eliminar un mal hábito?",
+        "a": "Hacerlo invisible."
+      },
+      {
+        "q": "Técnica: Registro de Hábitos (Scorecard)",
+        "a": "Listar conductas diarias y asignar signo (+) para buenas, (-) para malas o (=) para neutras."
+      },
+      {
+        "q": "Complete la fórmula de la intención de implementación: Yo haré [conducta] a las [_____] en [local].",
+        "a": "tiempo"
+      },
+      {
+        "q": "¿En qué consiste la estrategia de 'acumulación de hábitos'?",
+        "a": "Vincular un nuevo hábito con uno que ya realizas diariamente."
+      },
+      {
+        "q": "\"Fórmula: Después de [Hábito Actual], yo haré [_____].\"",
+        "a": "Nuevo Hábito"
+      },
+      {
+        "q": "¿Por qué el diseño del ambiente es la herramienta más poderosa para cambiar hábitos?",
+        "a": "Porque la vista es el sentido humano más potente y las pistas visuales catalizan la conducta."
+      },
+      {
+        "q": "\"Para facilitar un hábito positivo, debes _____ la exposición a sus señales en tu entorno.\"",
+        "a": "aumentar"
+      },
+      {
+        "q": "¿Qué establece la 'Ley del Menor Esfuerzo' en la conducta humana?",
+        "a": "Que al elegir entre dos opciones similares, las personas tenderán a elegir la que exige menos trabajo."
+      },
+      {
+        "q": "Técnica: Acumulación de Tentaciones",
+        "a": "Vincular una acción que 'necesitas' hacer con una acción que 'quieres' hacer."
+      },
+      {
+        "q": "¿Cuándo se libera la mayor cantidad de dopamina en el cerebro respecto a un hábito?",
+        "a": "Durante la anticipación de la recompensa, no solo al recibirla."
+      },
+      {
+        "q": "\"Según la Segunda Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "atractivo"
+      },
+      {
+        "q": "\"Los humanos imitamos los hábitos de tres grupos sociales: los cercanos, la mayoría y _____.\"",
+        "a": "los poderosos"
+      },
+      {
+        "q": "¿Cuál es la estrategia más efectiva para que un hábito difícil se vuelva socialmente atractivo?",
+        "a": "Unirse a un ambiente donde la conducta deseada sea la norma común del grupo."
+      },
+      {
+        "q": "\"Según la Tercera Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "fácil"
+      },
+      {
+        "q": "¿Cuál es la diferencia entre 'movimiento' y 'acción'?",
+        "a": "Movimiento es planear o aprender; acción es la conducta que produce un resultado directo."
+      },
+      {
+        "q": "¿Por qué la frecuencia es más importante que el tiempo total para desarrollar automaticidad?",
+        "a": "Porque cada repetição ativa e fortalece circuitos neurais específicos para o hábito."
+      },
+      {
+        "q": "Regla de los 2 Minutos: ¿Cuál es el requisito para iniciar un nuevo hábito?",
+        "a": "Que la acción inicial tome menos de dos minutos realizarla."
+      },
+      {
+        "q": "El objetivo fundamental de la Regra de los 2 Minutos es dominar el hábito de _____.",
+        "a": "hacerse presente (o empezar)"
+      },
+      {
+        "q": "¿Qué es un 'dispositivo de compromiso'?",
+        "a": "Una elección en el presente que controla tus acciones en el futuro dificultando los malos hábitos."
+      },
+      {
+        "q": "Mencione un ejemplo de automatización para evitar un mal hábito.",
+        "a": "Desconectar la TV tras usarla para que verla exija más esfuerzo."
+      },
+      {
+        "q": "\"Según la Cuarta Ley del Cambio de Conducta, para crear un buen hábito debes hacerlo _____.\"",
+        "a": "satisfactorio"
+      },
+      {
+        "q": "Regla Cardinal del Cambio de Conducta: Lo que es recompensado se repite; lo que es _____ se evita.",
+        "a": "castigado"
+      },
+      {
+        "q": "¿Por qué los malos hábitos se repiten fácilmente pese al daño a largo plazo?",
+        "a": "Porque sus recompensas suelen ser inmediatas, mientras sus costos son retardados."
+      },
+      {
+        "q": "¿Cuál es la función del 'reforzamiento inmediato' en el desarrollo de buenos hábitos?",
+        "a": "Vincular el hábito con una pequeña recompensa instantánea para mantener la motivación a corto plazo."
+      },
+      {
+        "q": "Concepto: Habit Tracker",
+        "a": "Una forma visual de medir el progreso marcando cada día que se cumple con la rutina."
+      },
+      {
+        "q": "Regla para recuperarse de un fallo: Nunca dejes que pase _____.",
+        "a": "dos veces"
+      },
+      {
+        "q": "¿Qué sucede cuando una medida se convierte en el único objetivo (Ley de Goodhart)?",
+        "a": "Deja de ser una buena medida y puede generar conductas erróneas."
+      },
+      {
+        "q": "¿Qué es un 'contrato de hábitos'?",
+        "a": "Un acuerdo escrito donde estableces un compromiso y un castigo específico por incumplir."
+      },
+      {
+        "q": "¿Cómo ayuda un 'socio de responsabilidad' a mantener un hábito positivo?",
+        "a": "Añade un costo social e inmediato al fallo, pues nos importa lo que otros piensen de nosotros."
+      },
+      {
+        "q": "\"En el ciclo de los hábitos, la 'fase del problema' incluye la señal y el _____.\"",
+        "a": "anhelo"
+      },
+      {
+        "q": "\"En el ciclo de los hábitos, la 'fase de la solución' incluye la respuesta y la _____.\"",
+        "a": "recompensa"
+      },
+      {
+        "q": "¿A qué se refiere el término 'resetear la habitación'?",
+        "a": "Preparar un espacio tras su uso para facilitar la acción la próxima vez que se requiera."
+      },
+      {
+        "q": "La inversión de la Segunda Ley para eliminar un mal hábito es hacerlo _____.",
+        "a": "poco atractivo"
+      },
+      {
+        "q": "La inversión de la Tercera Ley para eliminar un mal hábito es hacerlo _____.",
+        "a": "difícil"
+      },
+      {
+        "q": "La inversión de la Cuarta Ley para eliminar un mal hábito es hacerlo _____.",
+        "a": "insatisfactorio"
+      },
+      {
+        "q": "¿Cómo ayuda la técnica 'señalar y nombrar' (pointing-and-calling) a cambiar conductas?",
+        "a": "Eleva el nivel de conciencia de hábitos inconscientes al verbalizar la acción y su consecuencia."
+      },
+      {
+        "q": "Los hábitos son el interés compuesto de la _____.",
+        "a": "superación personal"
+      },
+      {
+        "q": "¿Por qué los resultados se consideran 'indicadores reactivos' de los hábitos?",
+        "a": "Porque tu estado actual es un reflexo acumulado de tus hábitos financieros, alimenticios o de estudio."
+      },
+      {
+        "q": "\"Para cambiar tu identidad, primero decide quién quieres ser y luego demuéstratelo con _____.\"",
+        "a": "pequeñas victorias continuas"
+      },
+      {
+        "q": "¿Qué es un 'hábito atómico'?",
+        "a": "Un cambio pequeño, una mejora del 1% que forma parte de un sistema mayor."
+      },
+      {
+        "q": "¿Cuál es la función pedagógica de la recompensa en el cerebro?",
+        "a": "Enseñar qué acciones vale la pena recordar y repetir en el futuro."
+      },
+      {
+        "q": "¿Qué es un 'estímulo supernormal'?",
+        "a": "Una versión exagerada de la realidad que desencadena una respuesta biológica más fuerte de lo normal."
+      },
+      {
+        "q": "\"¿Por qué el mantra 'un solo lugar, un solo uso' ayuda a la concentración?\"",
+        "a": "Porque evita mezclar contextos y asocia un espacio específico con una sola mentalidad o hábito."
+      },
+      {
+        "q": "¿Qué reveló el experimento de los gatos de Thorndike sobre el aprendizaje animal?",
+        "a": "Que las conductas seguidas de consecuencias satisfactorias tienden a repetirse automáticamente."
+      },
+      {
+        "q": "Los hábitos reducen la carga cognitiva para liberar la capacidad de la _____.",
+        "a": "mente consciente"
+      },
+      {
+        "q": "Concepto: Inconsistencia temporal",
+        "a": "La tendencia del cerebro humano a valorar más el presente que el futuro."
+      },
+      {
+        "q": "El propósito de construir sistemas es seguir _____ en el juego de la mejora continua.",
+        "a": "participando"
+      },
+      {
+        "q": "¿Qué significa 'estandarizar antes de optimizar' un hábito?",
+        "a": "Que debes lograr que la acción básica sea constante antes de intentar mejorar su rendimiento."
+      },
+      {
+        "q": "¿Cuál es la relación entre los genes y los hábitos según el texto?",
+        "a": "Los genes determinan tus fortalezas; el éxito llega al elegir los hábitos que mejor se adaptan a ellas."
+      },
+      {
+        "q": "Concepto: Automaticidad",
+        "a": "La habilidad de realizar una conducta sin tener que pensar conscientemente en cada paso."
+      },
+      {
+        "q": "\"Los hábitos no restringen la libertad, en realidad la _____.\"",
+        "a": "promueven"
+      },
+      {
+        "q": "El entorno es la _____ que moldea el comportamiento humano.",
+        "a": "mano invisible"
+      },
+      {
+        "q": "¿Qué demostró el caso de los soldados en Vietnam sobre la adicción y el entorno?",
+        "a": "Que una adicción puede desaparecer si se eliminan radicalmente las señales ambientales que la disparan."
+      }
     ],
     "pricing_basic": "Plan Básico",
     "pricing_habitos": "Plan Hábitos",
@@ -516,11 +1188,35 @@
     "pricing_per_year": "año",
     "pricing_activate": "Activar ahora",
     "pricing_start_free": "Empezar Gratis",
-    "features_basic": ["Control de Hábitos (Básico)", "Registro de Ánimo", "Análisis Mensual"],
-    "features_habitos": ["Todo en Básico", "Hábitos Ilimitados", "Gráficos Avanzados", "Soporte Prioritario"],
-    "features_enfoque": ["Todo en Básico", "Planeador Semanal", "Gestión de Tareas", "Modo Trabajo Profundo"],
-    "features_max": ["Hábitos y Enfoque", "Finanzas Personales", "+ Recursos Academia", "Soporte 24/7"],
-    "features_finanzas": ["Gestión de Ingresos/Egresos", "Dashboard Financiero", "Semáforo de Presupuesto", "Liquidación de Deudas"],
+    "features_basic": [
+      "Control de Hábitos (Básico)",
+      "Registro de Ánimo",
+      "Análisis Mensual"
+    ],
+    "features_habitos": [
+      "Todo en Básico",
+      "Hábitos Ilimitados",
+      "Gráficos Avanzados",
+      "Soporte Prioritario"
+    ],
+    "features_enfoque": [
+      "Todo en Básico",
+      "Planeador Semanal",
+      "Gestión de Tareas",
+      "Modo Trabajo Profundo"
+    ],
+    "features_max": [
+      "Hábitos y Enfoque",
+      "Finanzas Personales",
+      "+ Recursos Academia",
+      "Soporte 24/7"
+    ],
+    "features_finanzas": [
+      "Gestión de Ingresos/Egresos",
+      "Dashboard Financiero",
+      "Semáforo de Presupuesto",
+      "Liquidación de Deudas"
+    ],
     "auth_login": "Iniciar Sesión",
     "nav_home": "Inicio",
     "nav_benefits": "Beneficios",
@@ -659,7 +1355,20 @@
     "streak_sub": "Pure consistency",
     "monthly_progress": "Monthly Progress",
     "mood_avg": "Annual Wellbeing",
-    "months": ["January","February","March","April","May","June","July","August","September","October","November","December"],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
     "analysis_title": "MONTHLY ANALYSIS",
     "no_habits": "No habits yet",
     "loading": "Loading habits...",
@@ -724,9 +1433,33 @@
     "planner_progress_75": "✨ You're on the right track! Keep going.",
     "planner_unstoppable": "🔥 YOU ARE UNSTOPPABLE! Goal achieved.",
     "planner_quote": "\"Don't judge each day by the harvest you reap, but by the seeds that you plant.\"",
-    "planner_days": ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-    "planner_days_abbr": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
-    "planner_cal_headers": ["S","M","T","W","T","F","S"],
+    "planner_days": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "planner_days_abbr": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "planner_cal_headers": [
+      "S",
+      "M",
+      "T",
+      "W",
+      "T",
+      "F",
+      "S"
+    ],
     "planner_deep_work_active": "DEEP WORK ACTIVE",
     "planner_atomic_quotes": [
       "Habits are the compound interest of self-improvement. 📈",
@@ -791,7 +1524,20 @@
     "finances_total_pct": "OF TOTAL",
     "finances_footer_quote": "\"Financial success is not an event, it's an operating system. STACK METHOD ⚖️\"",
     "finances_delete_confirm": "Delete record?",
-    "months_short": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+    "months_short": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic"
+    ],
     "common_authorized_device": "Authorized Device",
     "common_security_access": "Access Security",
     "common_active_sessions": "Active sessions: {count} of {total} allowed.",
@@ -856,26 +1602,63 @@
     "recursos_item_6_layer_3": "The Cycle",
     "recursos_item_6_layer_4": "Laws",
     "quiz_q1": "According to the logic of atomic habits, what mathematical result do you get at the end of a year if you manage to get 1% better every day?",
-    "quiz_q1_o": ["You will be exactly 365% better.", "You will end up being about 37 times better.", "You will improve your initial capacity by about 10 times.", "You will become 3.7 times better."],
+    "quiz_q1_o": [
+      "You will be exactly 365% better.",
+      "You will end up being about 37 times better.",
+      "You will improve your initial capacity by about 10 times.",
+      "You will become 3.7 times better."
+    ],
     "quiz_q2": "What is the fundamental problem with focusing solely on goals instead of systems?",
-    "quiz_q2_o": ["Goals are impossible to measure accurately.", "Winners and losers have totally different goals.", "Goals restrict happiness to a single future scenario.", "Goals prevent people from trying their best."],
+    "quiz_q2_o": [
+      "Goals are impossible to measure accurately.",
+      "Winners and losers have totally different goals.",
+      "Goals restrict happiness to a single future scenario.",
+      "Goals prevent people from trying their best."
+    ],
     "quiz_q3": "In the three layers of behavior change, what is the deepest level that guarantees lasting habits?",
-    "quiz_q3_o": ["Identity change.", "Process change.", "Extrinsic motivation change.", "Results change."],
+    "quiz_q3_o": [
+      "Identity change.",
+      "Process change.",
+      "Extrinsic motivation change.",
+      "Results change."
+    ],
     "quiz_q4": "What concept explains why we often don't see immediate results after weeks of effort when trying to form a new habit?",
-    "quiz_q4_o": ["The law of least effort.", "The plateau of latent potential.", "The negative feedback loop.", "The valley of demotivation."],
+    "quiz_q4_o": [
+      "The law of least effort.",
+      "The plateau of latent potential.",
+      "The negative feedback loop.",
+      "The valley of demotivation."
+    ],
     "quiz_q5": "What are the four steps that make up the neurological cycle of a habit in the correct order?",
-    "quiz_q5_o": ["Cue, craving, response, and reward.", "Desire, cue, action, and satisfaction.", "Cue, routine, reward, and repetition.", "Stimulus, thought, action, and prize."],
+    "quiz_q5_o": [
+      "Cue, craving, response, and reward.",
+      "Desire, cue, action, and satisfaction.",
+      "Cue, routine, reward, and repetition.",
+      "Stimulus, thought, action, and prize."
+    ],
     "quiz_completed": "Completed!",
     "quiz_correct_label": "CORRECT",
     "recursos_pilar_1_title": "Pillar 1: Tracker (Daily Control)",
     "recursos_pilar_1_desc": "Evaluates the correlation between quantifiable execution and internal mental state (Mood & Motivation).",
-    "recursos_pilar_1_points": ["Habit tracking", "Emotional thermostat", "Micro-gamification"],
+    "recursos_pilar_1_points": [
+      "Habit tracking",
+      "Emotional thermostat",
+      "Micro-gamification"
+    ],
     "recursos_pilar_2_title": "Pillar 2: Planner (Tactical Focus)",
     "recursos_pilar_2_desc": "Flawless prioritization to avoid brain overwhelm.",
-    "recursos_pilar_2_points": ["Priority matrix", "Deep Work mode", "Reflection cycle"],
+    "recursos_pilar_2_points": [
+      "Priority matrix",
+      "Deep Work mode",
+      "Reflection cycle"
+    ],
     "recursos_pilar_3_title": "Pillar 3: Dashboard (Strategic Center)",
     "recursos_pilar_3_desc": "Annual visualization to identify long-term patterns.",
-    "recursos_pilar_3_points": ["Variable crossing", "SuperHabit identification", "Annual trends"],
+    "recursos_pilar_3_points": [
+      "Variable crossing",
+      "SuperHabit identification",
+      "Annual trends"
+    ],
     "recursos_executive_summary": "Executive Summary",
     "recursos_executive_desc": "The STACK Method combines the mathematics of atomic habits with a behavioral engineering system designed to optimize personal performance without sacrificing emotional well-being.",
     "recursos_systems_over_goals": "Systems over Goals",
@@ -895,108 +1678,397 @@
     "recursos_table_strategy": "Strategy",
     "recursos_table_law": "Law",
     "recursos_table_result": "Result",
-    "recursos_table_row1": ["Baseball accident and recovery.", "Small daily habits.", "Easy", "Best male athlete."],
-    "recursos_table_row2": ["Mediocre British cycling.", "1% marginal gains.", "Obvious", "Total Olympic dominance."],
+    "recursos_table_row1": [
+      "Baseball accident and recovery.",
+      "Small daily habits.",
+      "Easy",
+      "Best male athlete."
+    ],
+    "recursos_table_row2": [
+      "Mediocre British cycling.",
+      "1% marginal gains.",
+      "Obvious",
+      "Total Olympic dominance."
+    ],
     "quiz_q6": "What is the \"habit stacking\" technique?",
-    "quiz_q6_o": ["Performing multiple productive tasks simultaneously.", "Repeating a habit many times in a row to automate it.", "Eliminating all old habits before starting new ones.", "Linking a new habit to one you already do daily."],
+    "quiz_q6_o": [
+      "Performing multiple productive tasks simultaneously.",
+      "Repeating a habit many times in a row to automate it.",
+      "Eliminating all old habits before starting new ones.",
+      "Linking a new habit to one you already do daily."
+    ],
     "quiz_q7": "According to environment design, why is the \"make it obvious\" strategy so effective for good habits?",
-    "quiz_q7_o": ["Because it reduces the need for internal discipline or willpower.", "Because it allows the habit to be remembered by the conscious mind all the time.", "Because sight is the human sense with the largest number of sensory receptors.", "Because the brain prefers bright colors to start a task."],
+    "quiz_q7_o": [
+      "Because it reduces the need for internal discipline or willpower.",
+      "Because it allows the habit to be remembered by the conscious mind all the time.",
+      "Because sight is the human sense with the largest number of sensory receptors.",
+      "Because the brain prefers bright colors to start a task."
+    ],
     "quiz_q8": "What did Lee Robins' study of heroin-addicted soldiers returning from Vietnam discover?",
-    "quiz_q8_o": ["Addiction was a permanent condition engraved in the brain.", "Addiction disappeared almost completely by changing the environment and its cues.", "Most relapsed due to lack of willpower.", "Medical treatment was the only factor for their recovery."],
+    "quiz_q8_o": [
+      "Addiction was a permanent condition engraved in the brain.",
+      "Addiction disappeared almost completely by changing the environment and its cues.",
+      "Most relapsed due to lack of willpower.",
+      "Medical treatment was the only factor for their recovery."
+    ],
     "quiz_q9": "What is the primary function of the \"2-minute Rule\" when starting a new habit?",
-    "quiz_q9_o": ["Timing exactly how long it takes for a habit to become automatic.", "Ensuring the habit is always productive and of high quality.", "Preventing the brain from getting bored with tasks that are too long.", "Mastering the art of showing up before optimizing performance."],
+    "quiz_q9_o": [
+      "Timing exactly how long it takes for a habit to become automatic.",
+      "Ensuring the habit is always productive and of high quality.",
+      "Preventing the brain from getting bored with tasks that are too long.",
+      "Mastering the art of showing up before optimizing performance."
+    ],
     "quiz_q10": "According to the \"Cardinal Rule of Behavior Change\", what type of consequences does the human brain prioritize?",
-    "quiz_q10_o": ["Large-magnitude, long-term consequences.", "Logical consequences based on statistical data.", "Social consequences of approval or rejection.", "Immediate consequences."],
+    "quiz_q10_o": [
+      "Large-magnitude, long-term consequences.",
+      "Logical consequences based on statistical data.",
+      "Social consequences of approval or rejection.",
+      "Immediate consequences."
+    ],
     "quiz_q11": "What is the author's advice for recovering a habit after an accidental failure or interruption?",
-    "quiz_q11_o": ["Wait until next Monday or the start of the month to restart the streak.", "Punish yourself financially to ensure it doesn't happen again.", "Double the effort the next day to make up for what was lost.", "Never let it happen twice."],
+    "quiz_q11_o": [
+      "Wait until next Monday or the start of the month to restart the streak.",
+      "Punish yourself financially to ensure it doesn't happen again.",
+      "Double the effort the next day to make up for what was lost.",
+      "Never let it happen twice."
+    ],
     "quiz_q12": "Which of the following statements best describes how habits shape our identity?",
-    "quiz_q12_o": ["Only big achievements change the way we see ourselves.", "You must change your identity through meditation before trying to change any habit.", "Every action you perform is a vote for the type of person you want to become.", "Identity is something innate that determines which habits we can or cannot have."],
+    "quiz_q12_o": [
+      "Only big achievements change the way we see ourselves.",
+      "You must change your identity through meditation before trying to change any habit.",
+      "Every action you perform is a vote for the type of person you want to become.",
+      "Identity is something innate that determines which habits we can or cannot have."
+    ],
     "quiz_q13": "What is 'compound interest' applied to habits?",
-    "quiz_q13_o": ["Small daily changes that accumulate and generate massive results.", "Saving money every time you fulfill a healthy habit.", "Social pressure that forces you to improve every day.", "Mental exhaustion after trying too many changes at once."],
+    "quiz_q13_o": [
+      "Small daily changes that accumulate and generate massive results.",
+      "Saving money every time you fulfill a healthy habit.",
+      "Social pressure that forces you to improve every day.",
+      "Mental exhaustion after trying too many changes at once."
+    ],
     "quiz_q14": "What is the first law of behavior change?",
-    "quiz_q14_o": ["Make it obvious.", "Make it attractive.", "Make it easy.", "Make it satisfying."],
+    "quiz_q14_o": [
+      "Make it obvious.",
+      "Make it attractive.",
+      "Make it easy.",
+      "Make it satisfying."
+    ],
     "quiz_q15": "What is the second law of behavior change?",
-    "quiz_q15_o": ["Make it obvious.", "Make it attractive.", "Make it easy.", "Make it satisfying."],
+    "quiz_q15_o": [
+      "Make it obvious.",
+      "Make it attractive.",
+      "Make it easy.",
+      "Make it satisfying."
+    ],
     "quiz_q16": "What is the third law of behavior change?",
-    "quiz_q16_o": ["Make it obvious.", "Make it attractive.", "Make it easy.", "Make it satisfying."],
+    "quiz_q16_o": [
+      "Make it obvious.",
+      "Make it attractive.",
+      "Make it easy.",
+      "Make it satisfying."
+    ],
     "quiz_q17": "What is the fourth law of behavior change?",
-    "quiz_q17_o": ["Make it obvious.", "Make it attractive.", "Make it easy.", "Make it satisfying."],
+    "quiz_q17_o": [
+      "Make it obvious.",
+      "Make it attractive.",
+      "Make it easy.",
+      "Make it satisfying."
+    ],
     "quiz_q18": "What is 'habit stacking'?",
-    "quiz_q18_o": ["Writing your goals on paper so you don't forget them.", "Integrating a new habit immediately after an established one.", "Stopping a habit when you feel tired.", "Making the habit harder to prove your willpower."],
+    "quiz_q18_o": [
+      "Writing your goals on paper so you don't forget them.",
+      "Integrating a new habit immediately after an established one.",
+      "Stopping a habit when you feel tired.",
+      "Making the habit harder to prove your willpower."
+    ],
     "quiz_q19": "How to break a bad habit according to the inversion of the laws?",
-    "quiz_q19_o": ["Make it invisible, unattractive, difficult, and unsatisfying.", "Hide it from your friends so you don't feel ashamed.", "Try to quit cold turkey without any strategy.", "Replace it with another bad habit that is less harmful."],
+    "quiz_q19_o": [
+      "Make it invisible, unattractive, difficult, and unsatisfying.",
+      "Hide it from your friends so you don't feel ashamed.",
+      "Try to quit cold turkey without any strategy.",
+      "Replace it with another bad habit that is less harmful."
+    ],
     "quiz_q20": "What role does the environment play in habit formation?",
-    "quiz_q20_o": ["It has no importance if you have enough willpower.", "It is only a secondary factor compared to genetics.", "The environment is the invisible cue that shapes our behavior.", "It only influences habits you perform outside the home."],
+    "quiz_q20_o": [
+      "It has no importance if you have enough willpower.",
+      "It is only a secondary factor compared to genetics.",
+      "The environment is the invisible cue that shapes our behavior.",
+      "It only influences habits you perform outside the home."
+    ],
     "quiz_question_counter": "Question {current} of {total}",
     "recursos_flashcards": [
-      { "q": "What is the 2-Minute Rule?", "a": "When you start a new habit, it should take you less than two minutes to do." },
-      { "q": "How to make a habit OBVIOUS?", "a": "Design your environment. Put visual cues for your good habits." },
-      { "q": "Identity vs. Results", "a": "Focus on who you want to become, not what you want to achieve." },
-      { "q": "Result of being 1% better every day?", "a": "You end up being 37 times better at the end of a year." },
-      { "q": "Concept: Plateau of Latent Potential", "a": "Period where habit changes don't seem to generate results until reaching a critical point." },
-      { "q": "What is the fundamental difference between a goal and a system?", "a": "Goals are the results you want to achieve, while systems are the processes you follow." },
-      { "q": "Why is focusing only on goals a problem for distinguishing success from failure?", "a": "Because both winners and losers share the same goals." },
-      { "q": "Mention the three layers of behavior change according to the text.", "a": "Change in results, change in processes, and change in identity." },
-      { "q": "What is the deepest and most effective layer for developing lasting habits?", "a": "Changing identity (what you believe about yourself)." },
-      { "q": "A habit is a behavior that has been repeated enough to become _____.", "a": "automatic" },
-      { "q": "Identify the four steps of the habit cycle in the correct order.", "a": "Cue, craving, response, and reward." },
-      { "q": "What function does the 'cue' serve in the habit cycle?", "a": "Triggering the brain process that initiates a behavior by anticipating a reward." },
-      { "q": "\"In the habit cycle, the _____ is the motivational force behind every behavior.\"", "a": "craving" },
-      { "q": "What does a 'response' (habit execution) depend on?", "a": "How motivated you are and how much tension or resistance is associated with the behavior." },
-      { "q": "\"According to the First Law of Behavior Change, to create a good habit you must make it _____.\"", "a": "obvious" },
-      { "q": "What is the inversion of the First Law to eliminate a bad habit?", "a": "Make it invisible." },
-      { "q": "Technique: Habit Scorecard", "a": "Listing daily behaviors and assigning a sign (+) for good, (-) for bad, or (=) for neutral." },
-      { "q": "Complete the implementation intention formula: I will [behavior] at [_____] in [place].", "a": "time" },
-      { "q": "What is the 'habit stacking' strategy?", "a": "Linking a new habit with one you already do daily." },
-      { "q": "\"Formula: After [Current Habit], I will [_____].\"", "a": "New Habit" },
-      { "q": "Why is environment design the most powerful tool for changing habits?", "a": "Because sight is the most powerful human sense and visual cues catalyze behavior." },
-      { "q": "\"To facilitate a positive habit, you should _____ exposure to its cues in your environment.\"", "a": "increase" },
-      { "q": "What does the 'Law of Least Effort' establish in human behavior?", "a": "That when choosing between two similar options, people will tend to choose the one that requires less work." },
-      { "q": "Technique: Temptation Bundling", "a": "Linking an action you 'need' to do with an action you 'want' to do." },
-      { "q": "When is the most dopamine released in the brain regarding a habit?", "a": "During anticipation of the reward, not just when receiving it." },
-      { "q": "\"According to the Second Law of Behavior Change, to create a good habit you must make it _____.\"", "a": "attractive" },
-      { "q": "\"Humans imitate the habits of three social groups: the close, the many, and _____.\"", "a": "the powerful" },
-      { "q": "What is the most effective strategy for a difficult habit to become socially attractive?", "a": "Joining an environment where the desired behavior is the group's common norm." },
-      { "q": "\"According to the Third Law of Behavior Change, to create a good habit you must make it _____.\"", "a": "easy" },
-      { "q": "What is the difference between 'motion' and 'action'?", "a": "Motion is planning or learning; action is the behavior that produces a direct result." },
-      { "q": "Why is frequency more important than total time for developing automaticity?", "a": "Because each repetition activates and strengthens specific neural circuits for the habit." },
-      { "q": "2-Minute Rule: What is the requirement to start a new habit?", "a": "That the initial action must take less than two minutes to perform." },
-      { "q": "The primary goal of the 2-Minute Rule is to master the habit of _____.", "a": "showing up (or starting)" },
-      { "q": "What is a 'commitment device'?", "a": "A choice in the present that controls your actions in the future by making bad habits harder." },
-      { "q": "Mention an example of automation to avoid a bad habit.", "a": "Unplugging the TV after use so watching it requires more effort." },
-      { "q": "\"According to the Fourth Law of Behavior Change, to create a good habit you must make it _____.\"", "a": "satisfying" },
-      { "q": "Cardinal Rule of Behavior Change: What is rewarded is repeated; what is _____ is avoided.", "a": "punished" },
-      { "q": "Why are bad habits repeated easily despite long-term harm?", "a": "Because their rewards are often immediate, while their costs are delayed." },
-      { "q": "What is the function of 'immediate reinforcement' in developing good habits?", "a": "Linking the habit with a small instant reward to maintain short-term motivation." },
-      { "q": "Concept: Habit Tracker", "a": "A visual way to measure progress by marking each day the routine is fulfilled." },
-      { "q": "Rule for recovering from an interruption: Never let it happen _____.", "a": "twice" },
-      { "q": "What happens when a measure becomes the only goal (Goodhart's Law)?", "a": "It ceases to be a good measure and can lead to the wrong behaviors." },
-      { "q": "What is a 'habit contract'?", "a": "A written agreement where you establish a commitment and a specific punishment for failure." },
-      { "q": "How does an 'accountability partner' help maintain a positive habit?", "a": "It adds an immediate social cost to failure, as we care about what others think of us." },
-      { "q": "\"In the habit cycle, the 'problem phase' includes the cue and the _____.\"", "a": "craving" },
-      { "q": "\"In the habit cycle, the 'solution phase' includes the response and the _____.\"", "a": "reward" },
-      { "q": "What does 'resetting the room' refer to?", "a": "Preparing a space after use to facilitate action the next time it's required." },
-      { "q": "The inversion of the Second Law to eliminate a bad habit is to make it _____.", "a": "unattractive" },
-      { "q": "The inversion of the Third Law to eliminate a bad habit is to make it _____.", "a": "difficult" },
-      { "q": "The inversion of the Fourth Law to eliminate a bad habit is to make it _____.", "a": "unsatisfying" },
-      { "q": "How does the 'pointing-and-calling' technique help change behaviors?", "a": "It raises the awareness level of unconscious habits by verbalizing the action and its consequence." },
-      { "q": "Habits are the compound interest of _____.", "a": "self-improvement" },
-      { "q": "Why are results considered 'lagging indicators' of habits?", "a": "Because your current state is a cumulative reflection of your financial, eating, or study habits." },
-      { "q": "\"To change your identity, first decide who you want to be and then prove it to yourself with _____.\"", "a": "continuous small wins" },
-      { "q": "What is an 'atomic habit'?", "a": "A small change, a 1% improvement that is part of a larger system." },
-      { "q": "What is the pedagogical function of reward in the brain?", "a": "Teaching which actions are worth remembering and repeating in the future." },
-      { "q": "What is a 'supernormal stimulus'?", "a": "An exaggerated version of reality that triggers a biological response stronger than normal." },
-      { "q": "\"Why does the 'one place, one use' mantra help with concentration?\"", "a": "Because it avoids mixing contexts and associates a specific space with a single mindset or habit." },
-      { "q": "What did Thorndike's cat experiment reveal about animal learning?", "a": "That behaviors followed by satisfying consequences tend to be repeated automatically." },
-      { "q": "Habits reduce cognitive load to free up the capacity of the _____.", "a": "conscious mind" },
-      { "q": "Concept: Time Inconsistency", "a": "The tendency of the human brain to value the present more than the future." },
-      { "q": "The purpose of building systems is to keep _____ in the game of continuous improvement.", "a": "participating" },
-      { "q": "What does 'standardizing before optimizing' a habit mean?", "a": "That you must make the basic action consistent before trying to improve its performance." },
-      { "q": "What is the relationship between genes and habits according to the text?", "a": "Genes determine your strengths; success comes from choosing habits that best fit them." },
-      { "q": "Concept: Automaticity", "a": "The ability to perform a behavior without having to think consciously about each step." },
-      { "q": "\"Habits don't restrict freedom, they actually _____ it.\"", "a": "promote" },
-      { "q": "The environment is the _____ that shapes human behavior.", "a": "invisible hand" },
-      { "q": "What did the Vietnam soldiers case prove about addiction and the environment?", "a": "That an addiction can disappear if the environmental cues that trigger it are radically removed." }
+      {
+        "q": "What is the 2-Minute Rule?",
+        "a": "When you start a new habit, it should take you less than two minutes to do."
+      },
+      {
+        "q": "How to make a habit OBVIOUS?",
+        "a": "Design your environment. Put visual cues for your good habits."
+      },
+      {
+        "q": "Identity vs. Results",
+        "a": "Focus on who you want to become, not what you want to achieve."
+      },
+      {
+        "q": "Result of being 1% better every day?",
+        "a": "You end up being 37 times better at the end of a year."
+      },
+      {
+        "q": "Concept: Plateau of Latent Potential",
+        "a": "Period where habit changes don't seem to generate results until reaching a critical point."
+      },
+      {
+        "q": "What is the fundamental difference between a goal and a system?",
+        "a": "Goals are the results you want to achieve, while systems are the processes you follow."
+      },
+      {
+        "q": "Why is focusing only on goals a problem for distinguishing success from failure?",
+        "a": "Because both winners and losers share the same goals."
+      },
+      {
+        "q": "Mention the three layers of behavior change according to the text.",
+        "a": "Change in results, change in processes, and change in identity."
+      },
+      {
+        "q": "What is the deepest and most effective layer for developing lasting habits?",
+        "a": "Changing identity (what you believe about yourself)."
+      },
+      {
+        "q": "A habit is a behavior that has been repeated enough to become _____.",
+        "a": "automatic"
+      },
+      {
+        "q": "Identify the four steps of the habit cycle in the correct order.",
+        "a": "Cue, craving, response, and reward."
+      },
+      {
+        "q": "What function does the 'cue' serve in the habit cycle?",
+        "a": "Triggering the brain process that initiates a behavior by anticipating a reward."
+      },
+      {
+        "q": "\"In the habit cycle, the _____ is the motivational force behind every behavior.\"",
+        "a": "craving"
+      },
+      {
+        "q": "What does a 'response' (habit execution) depend on?",
+        "a": "How motivated you are and how much tension or resistance is associated with the behavior."
+      },
+      {
+        "q": "\"According to the First Law of Behavior Change, to create a good habit you must make it _____.\"",
+        "a": "obvious"
+      },
+      {
+        "q": "What is the inversion of the First Law to eliminate a bad habit?",
+        "a": "Make it invisible."
+      },
+      {
+        "q": "Technique: Habit Scorecard",
+        "a": "Listing daily behaviors and assigning a sign (+) for good, (-) for bad, or (=) for neutral."
+      },
+      {
+        "q": "Complete the implementation intention formula: I will [behavior] at [_____] in [place].",
+        "a": "time"
+      },
+      {
+        "q": "What is the 'habit stacking' strategy?",
+        "a": "Linking a new habit with one you already do daily."
+      },
+      {
+        "q": "\"Formula: After [Current Habit], I will [_____].\"",
+        "a": "New Habit"
+      },
+      {
+        "q": "Why is environment design the most powerful tool for changing habits?",
+        "a": "Because sight is the most powerful human sense and visual cues catalyze behavior."
+      },
+      {
+        "q": "\"To facilitate a positive habit, you should _____ exposure to its cues in your environment.\"",
+        "a": "increase"
+      },
+      {
+        "q": "What does the 'Law of Least Effort' establish in human behavior?",
+        "a": "That when choosing between two similar options, people will tend to choose the one that requires less work."
+      },
+      {
+        "q": "Technique: Temptation Bundling",
+        "a": "Linking an action you 'need' to do with an action you 'want' to do."
+      },
+      {
+        "q": "When is the most dopamine released in the brain regarding a habit?",
+        "a": "During anticipation of the reward, not just when receiving it."
+      },
+      {
+        "q": "\"According to the Second Law of Behavior Change, to create a good habit you must make it _____.\"",
+        "a": "attractive"
+      },
+      {
+        "q": "\"Humans imitate the habits of three social groups: the close, the many, and _____.\"",
+        "a": "the powerful"
+      },
+      {
+        "q": "What is the most effective strategy for a difficult habit to become socially attractive?",
+        "a": "Joining an environment where the desired behavior is the group's common norm."
+      },
+      {
+        "q": "\"According to the Third Law of Behavior Change, to create a good habit you must make it _____.\"",
+        "a": "easy"
+      },
+      {
+        "q": "What is the difference between 'motion' and 'action'?",
+        "a": "Motion is planning or learning; action is the behavior that produces a direct result."
+      },
+      {
+        "q": "Why is frequency more important than total time for developing automaticity?",
+        "a": "Because each repetition activates and strengthens specific neural circuits for the habit."
+      },
+      {
+        "q": "2-Minute Rule: What is the requirement to start a new habit?",
+        "a": "That the initial action must take less than two minutes to perform."
+      },
+      {
+        "q": "The primary goal of the 2-Minute Rule is to master the habit of _____.",
+        "a": "showing up (or starting)"
+      },
+      {
+        "q": "What is a 'commitment device'?",
+        "a": "A choice in the present that controls your actions in the future by making bad habits harder."
+      },
+      {
+        "q": "Mention an example of automation to avoid a bad habit.",
+        "a": "Unplugging the TV after use so watching it requires more effort."
+      },
+      {
+        "q": "\"According to the Fourth Law of Behavior Change, to create a good habit you must make it _____.\"",
+        "a": "satisfying"
+      },
+      {
+        "q": "Cardinal Rule of Behavior Change: What is rewarded is repeated; what is _____ is avoided.",
+        "a": "punished"
+      },
+      {
+        "q": "Why are bad habits repeated easily despite long-term harm?",
+        "a": "Because their rewards are often immediate, while their costs are delayed."
+      },
+      {
+        "q": "What is the function of 'immediate reinforcement' in developing good habits?",
+        "a": "Linking the habit with a small instant reward to maintain short-term motivation."
+      },
+      {
+        "q": "Concept: Habit Tracker",
+        "a": "A visual way to measure progress by marking each day the routine is fulfilled."
+      },
+      {
+        "q": "Rule for recovering from an interruption: Never let it happen _____.",
+        "a": "twice"
+      },
+      {
+        "q": "What happens when a measure becomes the only goal (Goodhart's Law)?",
+        "a": "It ceases to be a good measure and can lead to the wrong behaviors."
+      },
+      {
+        "q": "What is a 'habit contract'?",
+        "a": "A written agreement where you establish a commitment and a specific punishment for failure."
+      },
+      {
+        "q": "How does an 'accountability partner' help maintain a positive habit?",
+        "a": "It adds an immediate social cost to failure, as we care about what others think of us."
+      },
+      {
+        "q": "\"In the habit cycle, the 'problem phase' includes the cue and the _____.\"",
+        "a": "craving"
+      },
+      {
+        "q": "\"In the habit cycle, the 'solution phase' includes the response and the _____.\"",
+        "a": "reward"
+      },
+      {
+        "q": "What does 'resetting the room' refer to?",
+        "a": "Preparing a space after use to facilitate action the next time it's required."
+      },
+      {
+        "q": "The inversion of the Second Law to eliminate a bad habit is to make it _____.",
+        "a": "unattractive"
+      },
+      {
+        "q": "The inversion of the Third Law to eliminate a bad habit is to make it _____.",
+        "a": "difficult"
+      },
+      {
+        "q": "The inversion of the Fourth Law to eliminate a bad habit is to make it _____.",
+        "a": "unsatisfying"
+      },
+      {
+        "q": "How does the 'pointing-and-calling' technique help change behaviors?",
+        "a": "It raises the awareness level of unconscious habits by verbalizing the action and its consequence."
+      },
+      {
+        "q": "Habits are the compound interest of _____.",
+        "a": "self-improvement"
+      },
+      {
+        "q": "Why are results considered 'lagging indicators' of habits?",
+        "a": "Because your current state is a cumulative reflection of your financial, eating, or study habits."
+      },
+      {
+        "q": "\"To change your identity, first decide who you want to be and then prove it to yourself with _____.\"",
+        "a": "continuous small wins"
+      },
+      {
+        "q": "What is an 'atomic habit'?",
+        "a": "A small change, a 1% improvement that is part of a larger system."
+      },
+      {
+        "q": "What is the pedagogical function of reward in the brain?",
+        "a": "Teaching which actions are worth remembering and repeating in the future."
+      },
+      {
+        "q": "What is a 'supernormal stimulus'?",
+        "a": "An exaggerated version of reality that triggers a biological response stronger than normal."
+      },
+      {
+        "q": "\"Why does the 'one place, one use' mantra help with concentration?\"",
+        "a": "Because it avoids mixing contexts and associates a specific space with a single mindset or habit."
+      },
+      {
+        "q": "What did Thorndike's cat experiment reveal about animal learning?",
+        "a": "That behaviors followed by satisfying consequences tend to be repeated automatically."
+      },
+      {
+        "q": "Habits reduce cognitive load to free up the capacity of the _____.",
+        "a": "conscious mind"
+      },
+      {
+        "q": "Concept: Time Inconsistency",
+        "a": "The tendency of the human brain to value the present more than the future."
+      },
+      {
+        "q": "The purpose of building systems is to keep _____ in the game of continuous improvement.",
+        "a": "participating"
+      },
+      {
+        "q": "What does 'standardizing before optimizing' a habit mean?",
+        "a": "That you must make the basic action consistent before trying to improve its performance."
+      },
+      {
+        "q": "What is the relationship between genes and habits according to the text?",
+        "a": "Genes determine your strengths; success comes from choosing habits that best fit them."
+      },
+      {
+        "q": "Concept: Automaticity",
+        "a": "The ability to perform a behavior without having to think consciously about each step."
+      },
+      {
+        "q": "\"Habits don't restrict freedom, they actually _____ it.\"",
+        "a": "promote"
+      },
+      {
+        "q": "The environment is the _____ that shapes human behavior.",
+        "a": "invisible hand"
+      },
+      {
+        "q": "What did the Vietnam soldiers case prove about addiction and the environment?",
+        "a": "That an addiction can disappear if the environmental cues that trigger it are radically removed."
+      }
     ],
     "recursos_guide": {
       "title": "Study Guide: Atomic Habits by James Clear",
@@ -1038,29 +2110,121 @@
       ],
       "glossary_title": "Key Terms Glossary",
       "glossary": [
-        { "t": "Atomic Habit", "d": "A regular routine or practice that is not only small and easy to do, but is the source of incredible power; a component of a compound growth system." },
-        { "t": "Automaticity", "d": "The ability to perform a behavior without having to think about every step; occurs when the unconscious mind takes over the execution of the habit." },
-        { "t": "Cue", "d": "The piece of information that anticipates a reward and triggers the process in the brain to start a behavior." },
-        { "t": "Craving", "d": "The motivational force or desire to change the internal state that drives action; it is not the habit itself, but the state change it produces." },
-        { "t": "Dopamine", "d": "Central neurotransmitter in motivation, learning, and memory; it is released both when experiencing pleasure and when anticipating a reward." },
-        { "t": "Implementation Intention", "d": "A plan established in advance that defines when and where a specific behavior will be performed (Formula: \"I will do [BEHAVIOR] at [TIME] in [PLACE]\")." },
-        { "t": "Diderot Effect", "d": "Tendency where obtaining a new possession creates a spiral of consumption that leads to additional purchases or actions." },
-        { "t": "Commitment Device", "d": "A choice made in the present to control actions in the future, ensuring good habits are maintained and bad ones are avoided." },
-        { "t": "Time Inconsistency", "d": "Propensity of the human brain to value the present more than the future, prioritizing instant gratification over delayed benefits." },
-        { "t": "Reinforcement", "d": "The process of using an immediate reward to increase the chances of repeating a behavior, closing the habit cycle satisfactorily." },
-        { "t": "Law of Least Effort", "d": "Principle that establishes that, given two similar options, people will naturally tend to choose the option that requires the least amount of work or energy." },
-        { "t": "Habit Tracker", "d": "Visual method (like marking a calendar) to measure if a routine was fulfilled, providing clear evidence of progress and immediate satisfaction." }
+        {
+          "t": "Atomic Habit",
+          "d": "A regular routine or practice that is not only small and easy to do, but is the source of incredible power; a component of a compound growth system."
+        },
+        {
+          "t": "Automaticity",
+          "d": "The ability to perform a behavior without having to think about every step; occurs when the unconscious mind takes over the execution of the habit."
+        },
+        {
+          "t": "Cue",
+          "d": "The piece of information that anticipates a reward and triggers the process in the brain to start a behavior."
+        },
+        {
+          "t": "Craving",
+          "d": "The motivational force or desire to change the internal state that drives action; it is not the habit itself, but the state change it produces."
+        },
+        {
+          "t": "Dopamine",
+          "d": "Central neurotransmitter in motivation, learning, and memory; it is released both when experiencing pleasure and when anticipating a reward."
+        },
+        {
+          "t": "Implementation Intention",
+          "d": "A plan established in advance that defines when and where a specific behavior will be performed (Formula: \"I will do [BEHAVIOR] at [TIME] in [PLACE]\")."
+        },
+        {
+          "t": "Diderot Effect",
+          "d": "Tendency where obtaining a new possession creates a spiral of consumption that leads to additional purchases or actions."
+        },
+        {
+          "t": "Commitment Device",
+          "d": "A choice made in the present to control actions in the future, ensuring good habits are maintained and bad ones are avoided."
+        },
+        {
+          "t": "Time Inconsistency",
+          "d": "Propensity of the human brain to value the present more than the future, prioritizing instant gratification over delayed benefits."
+        },
+        {
+          "t": "Reinforcement",
+          "d": "The process of using an immediate reward to increase the chances of repeating a behavior, closing the habit cycle satisfactorily."
+        },
+        {
+          "t": "Law of Least Effort",
+          "d": "Principle that establishes that, given two similar options, people will naturally tend to choose the option that requires the least amount of work or energy."
+        },
+        {
+          "t": "Habit Tracker",
+          "d": "Visual method (like marking a calendar) to measure if a routine was fulfilled, providing clear evidence of progress and immediate satisfaction."
+        }
       ]
     },
     "recursos_challenges_table": {
-      "headers": ["Challenge", "Motive", "Strategy", "Law", "Result", "Impact", "Source"],
+      "headers": [
+        "Challenge",
+        "Motive",
+        "Strategy",
+        "Law",
+        "Result",
+        "Impact",
+        "Source"
+      ],
       "rows": [
-        ["Serious brain injury recovery.", "Desire to regain control and identity.", "Small daily habits (sleep, clean, weights).", "Make it easy", "Best male athlete Denison University.", "Radical transformation by 1% improvements.", "[1]"],
-        ["Mediocre British cycling.", "Competitive optimization.", "1% marginal gains.", "Make it obvious", "66 Olympic golds, 5 Tour de France.", "Global dominance by organizational system.", "[1]"],
-        ["Exercise inconsistency.", "Reduce uncertainty and procrastination.", "Implementation intention (time and place).", "Make it obvious", "91% compliance vs 35% control.", "Automation by cognitive load reduction.", "[1]"],
-        ["Nail biting habit.", "Deep identity change.", "Small win (professional manicure).", "Make it satisfying", "Immediate cessation of habit.", "Durable behavior aligned with identity.", "[1]"],
-        ["Healthy diet difficulty.", "Influence of negative visual cues.", "Environment design (visible fruit).", "Make it obvious", "Significant increase in healthy consumption.", "Good habits by default without willpower.", "[1]"],
-        ["Meditation inconsistency.", "Chaotic environment.", "Habit stacking (link to coffee).", "Make it obvious", "Predictable sequence of actions.", "Structured lifestyle by inertia.", "[1]"]
+        [
+          "Serious brain injury recovery.",
+          "Desire to regain control and identity.",
+          "Small daily habits (sleep, clean, weights).",
+          "Make it easy",
+          "Best male athlete Denison University.",
+          "Radical transformation by 1% improvements.",
+          "[1]"
+        ],
+        [
+          "Mediocre British cycling.",
+          "Competitive optimization.",
+          "1% marginal gains.",
+          "Make it obvious",
+          "66 Olympic golds, 5 Tour de France.",
+          "Global dominance by organizational system.",
+          "[1]"
+        ],
+        [
+          "Exercise inconsistency.",
+          "Reduce uncertainty and procrastination.",
+          "Implementation intention (time and place).",
+          "Make it obvious",
+          "91% compliance vs 35% control.",
+          "Automation by cognitive load reduction.",
+          "[1]"
+        ],
+        [
+          "Nail biting habit.",
+          "Deep identity change.",
+          "Small win (professional manicure).",
+          "Make it satisfying",
+          "Immediate cessation of habit.",
+          "Durable behavior aligned with identity.",
+          "[1]"
+        ],
+        [
+          "Healthy diet difficulty.",
+          "Influence of negative visual cues.",
+          "Environment design (visible fruit).",
+          "Make it obvious",
+          "Significant increase in healthy consumption.",
+          "Good habits by default without willpower.",
+          "[1]"
+        ],
+        [
+          "Meditation inconsistency.",
+          "Chaotic environment.",
+          "Habit stacking (link to coffee).",
+          "Make it obvious",
+          "Predictable sequence of actions.",
+          "Structured lifestyle by inertia.",
+          "[1]"
+        ]
       ]
     },
     "pricing_basic": "Basic Plan",
@@ -1070,11 +2234,35 @@
     "pricing_per_year": "year",
     "pricing_activate": "Activate now",
     "pricing_start_free": "Start for Free",
-    "features_basic": ["Habit Control (Basic)", "Mood Tracking", "Monthly Analysis"],
-    "features_habitos": ["Everything in Basic", "Unlimited Habits", "Advanced Charts", "Priority Support"],
-    "features_enfoque": ["Everything in Basic", "Weekly Planner", "Task Management", "Deep Work Mode"],
-    "features_max": ["Habits & Focus", "Personal Finance", "+ Academy Resources", "24/7 Support"],
-    "features_finanzas": ["Income/Expense Management", "Financial Dashboard", "Budget Traffic Light", "Debt Liquidation"],
+    "features_basic": [
+      "Habit Control (Basic)",
+      "Mood Tracking",
+      "Monthly Analysis"
+    ],
+    "features_habitos": [
+      "Everything in Basic",
+      "Unlimited Habits",
+      "Advanced Charts",
+      "Priority Support"
+    ],
+    "features_enfoque": [
+      "Everything in Basic",
+      "Weekly Planner",
+      "Task Management",
+      "Deep Work Mode"
+    ],
+    "features_max": [
+      "Habits & Focus",
+      "Personal Finance",
+      "+ Academy Resources",
+      "24/7 Support"
+    ],
+    "features_finanzas": [
+      "Income/Expense Management",
+      "Financial Dashboard",
+      "Budget Traffic Light",
+      "Debt Liquidation"
+    ],
     "pricing_finanzas": "Finance Plan",
     "auth_login": "Login",
     "nav_home": "Home",
@@ -1215,7 +2403,20 @@
     "streak_sub": "Consistência pura",
     "monthly_progress": "Progresso Mensal",
     "mood_avg": "Bem-estar Anual",
-    "months": ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
+    "months": [
+      "Janeiro",
+      "Fevereiro",
+      "Março",
+      "Abril",
+      "Maio",
+      "Junho",
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Outubro",
+      "Novembro",
+      "Dezembro"
+    ],
     "analysis_title": "ANÁLISE DO MÊS",
     "no_habits": "Sem hábitos ainda",
     "loading": "Carregando hábitos...",
@@ -1280,9 +2481,33 @@
     "planner_progress_75": "✨ Você está no caminho certo! Continue assim.",
     "planner_unstoppable": "🔥 VOCÊ É IMPARÁVEL! Meta cumprida.",
     "planner_quote": "\"Não julgue cada dia pela colheita que faz, mas pelas sementes que planta.\"",
-    "planner_days": ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"],
-    "planner_days_abbr": ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],
-    "planner_cal_headers": ["D","S","T","Q","Q","S","S"],
+    "planner_days": [
+      "Domingo",
+      "Segunda",
+      "Terça",
+      "Quarta",
+      "Quinta",
+      "Sexta",
+      "Sábado"
+    ],
+    "planner_days_abbr": [
+      "Dom",
+      "Seg",
+      "Ter",
+      "Qua",
+      "Qui",
+      "Sex",
+      "Sáb"
+    ],
+    "planner_cal_headers": [
+      "D",
+      "S",
+      "T",
+      "Q",
+      "Q",
+      "S",
+      "S"
+    ],
     "planner_deep_work_active": "TRABAJO PROFUNDO ACTIVO",
     "planner_atomic_quotes": [
       "Hábitos são o juro composto da auto-melhoria. 📈",
@@ -1347,7 +2572,20 @@
     "finances_total_pct": "DO TOTAL",
     "finances_footer_quote": "\"O sucesso financeiro não é um evento, é um sistema operacional. MÉTODO STACK ⚖️\"",
     "finances_delete_confirm": "Excluir registro?",
-    "months_short": ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+    "months_short": [
+      "Jan",
+      "Fev",
+      "Mar",
+      "Abr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Set",
+      "Out",
+      "Nov",
+      "Dez"
+    ],
     "common_authorized_device": "Dispositivo Autorizado",
     "common_security_access": "Segurança de Acesso",
     "common_active_sessions": "Sessões ativas: {count} de {total} permitidas.",
@@ -1412,26 +2650,63 @@
     "recursos_item_6_layer_3": "O Ciclo",
     "recursos_item_6_layer_4": "Leis",
     "quiz_q1": "De acordo com a lógica dos hábitos atômicos, que resultado matemático você obtém ao final de um ano se conseguir ser 1% melhor a cada dia?",
-    "quiz_q1_o": ["Você será exatamente 365% melhor.", "Você acabará sendo cerca de 37 vezes melhor.", "Você melhorará sua capacidade inicial em cerca de 10 vezes.", "Você se tornará 3,7 vezes melhor."],
+    "quiz_q1_o": [
+      "Você será exatamente 365% melhor.",
+      "Você acabará sendo cerca de 37 vezes melhor.",
+      "Você melhorará sua capacidade inicial em cerca de 10 vezes.",
+      "Você se tornará 3,7 vezes melhor."
+    ],
     "quiz_q2": "Qual é o problema fundamental de focar apenas nas metas em vez dos sistemas?",
-    "quiz_q2_o": ["As metas são impossíveis de medir com precisão.", "Vencedores e perdedores têm metas totalmente diferentes.", "As metas restringem a felicidade a um único cenário futuro.", "As metas impedem que as pessoas se esforcem ao máximo."],
+    "quiz_q2_o": [
+      "As metas são impossíveis de medir com precisão.",
+      "Vencedores e perdedores têm metas totalmente diferentes.",
+      "As metas restringem a felicidade a um único cenário futuro.",
+      "As metas impedem que as pessoas se esforcem ao máximo."
+    ],
     "quiz_q3": "Nas três camadas da mudança de comportamento, qual é o nível mais profundo que garante hábitos duradouros?",
-    "quiz_q3_o": ["Mudança de identidade.", "Mudança de processos.", "Mudança de motivação extrínseca.", "Mudança de resultados."],
+    "quiz_q3_o": [
+      "Mudança de identidade.",
+      "Mudança de processos.",
+      "Mudança de motivação extrínseca.",
+      "Mudança de resultados."
+    ],
     "quiz_q4": "Que conceito explica por que muitas vezes não vemos resultados imediatos após semanas de esforço ao tentar formar um novo hábito?",
-    "quiz_q4_o": ["A lei do menor esforço.", "O platô do potencial latente.", "O ciclo de feedback negativo.", "O vale da desmotivação."],
+    "quiz_q4_o": [
+      "A lei do menor esforço.",
+      "O platô do potencial latente.",
+      "O ciclo de feedback negativo.",
+      "O vale da desmotivação."
+    ],
     "quiz_q5": "Quais são os quatro passos que compõem o ciclo neurológico de um hábito na ordem correta?",
-    "quiz_q5_o": ["Sinal, anseio, resposta e recompensa.", "Desejo, sinal, ação e satisfação.", "Sinal, rotina, recompensa e repetição.", "Estímulo, pensamento, ação e prêmio."],
+    "quiz_q5_o": [
+      "Sinal, anseio, resposta e recompensa.",
+      "Desejo, sinal, ação e satisfação.",
+      "Sinal, rotina, recompensa e repetição.",
+      "Estímulo, pensamento, ação e prêmio."
+    ],
     "quiz_completed": "Concluído!",
     "quiz_correct_label": "CORRECTAS",
     "recursos_pilar_1_title": "Pilar 1: Tracker (Controle Diário)",
     "recursos_pilar_1_desc": "Avalia a correlação entre a execução quantificável e o estado mental interno (Mood & Motivation).",
-    "recursos_pilar_1_points": ["Rastreador de hábitos", "Termostato emocional", "Micro-gamificação"],
+    "recursos_pilar_1_points": [
+      "Rastreador de hábitos",
+      "Termostato emocional",
+      "Micro-gamificação"
+    ],
     "recursos_pilar_2_title": "Pilar 2: Planner (Foco Tático)",
     "recursos_pilar_2_desc": "Priorização impecável para evitar sobrecarga cerebral.",
-    "recursos_pilar_2_points": ["Matriz de prioridades", "Modo Deep Work", "Ciclo de reflexão"],
+    "recursos_pilar_2_points": [
+      "Matriz de prioridades",
+      "Modo Deep Work",
+      "Ciclo de reflexão"
+    ],
     "recursos_pilar_3_title": "Pilar 3: Dashboard (Centro Estratégico)",
     "recursos_pilar_3_desc": "Visualização anual para identificar padrões de longo prazo.",
-    "recursos_pilar_3_points": ["Cruzamento de variáveis", "Identificação de SuperHábitos", "Tendências anuais"],
+    "recursos_pilar_3_points": [
+      "Cruzamento de variáveis",
+      "Identificação de SuperHábitos",
+      "Tendências anuais"
+    ],
     "recursos_executive_summary": "Resumo Executivo",
     "recursos_executive_desc": "O Método STACK combina a matemática de os hábitos atômicos com um sistema de engenharia comportamental projetado para otimizar o desempenho pessoal sem sacrificar o bem-estar emocional.",
     "recursos_systems_over_goals": "Sistemas sobre Metas",
@@ -1451,108 +2726,397 @@
     "recursos_table_strategy": "Estrategia",
     "recursos_table_law": "Lei",
     "recursos_table_result": "Resultado",
-    "recursos_table_row1": ["Acidente de beisebol e recuperação.", "Pequenos hábitos diários.", "Simples", "Melhor atleta masculino."],
-    "recursos_table_row2": ["Ciclismo britânico medíocre.", "Ganhos marginais de 1%.", "Óbvio", "Domínio olímpico total."],
+    "recursos_table_row1": [
+      "Acidente de beisebol e recuperação.",
+      "Pequenos hábitos diários.",
+      "Simples",
+      "Melhor atleta masculino."
+    ],
+    "recursos_table_row2": [
+      "Ciclismo britânico medíocre.",
+      "Ganhos marginais de 1%.",
+      "Óbvio",
+      "Domínio olímpico total."
+    ],
     "quiz_q6": "Em que consiste a técnica de \"empilhamento de hábitos\"?",
-    "quiz_q6_o": ["Realizar múltiplas tarefas produtivas simultaneamente.", "Repetir um hábito muitas vezes seguidas para automatizá-lo.", "Eliminar todos os hábitos antigos antes de começar novos.", "Vincular um novo hábito a um que você já faz diariamente."],
+    "quiz_q6_o": [
+      "Realizar múltiplas tarefas produtivas simultaneamente.",
+      "Repetir um hábito muitas vezes seguidas para automatizá-lo.",
+      "Eliminar todos os hábitos antigos antes de começar novos.",
+      "Vincular um novo hábito a um que você já faz diariamente."
+    ],
     "quiz_q7": "De acordo com o design do ambiente, por que a estratégia \"torne-o óbvio\" é tão eficaz para bons hábitos?",
-    "quiz_q7_o": ["Porque reduz a necessidade de disciplina interna ou força de vontade.", "Porque permite que o hábito seja lembrado pela mente consciente o tempo todo.", "Porque a visão é o sentido humano com o maior número de receptores sensoriais.", "Porque o cérebro prefere cores brilhantes para iniciar uma tarefa."],
+    "quiz_q7_o": [
+      "Porque reduz a necessidade de disciplina interna ou força de vontade.",
+      "Porque permite que o hábito seja lembrado pela mente consciente o tempo todo.",
+      "Porque a visão é o sentido humano com o maior número de receptores sensoriais.",
+      "Porque o cérebro prefere cores brilhantes para iniciar uma tarefa."
+    ],
     "quiz_q8": "O que o estudo de Lee Robins sobre soldados viciados em heroína que retornavam do Vietnã descobriu?",
-    "quiz_q8_o": ["O vício era una condição permanente gravada no cérebro.", "O vício desaparecia quase totalmente ao mudar o ambiente e seus sinais.", "A maioria recaiu devido à falta de força de vontade.", "O tratamento médico foi o único factor para a sua recuperação."],
+    "quiz_q8_o": [
+      "O vício era una condição permanente gravada no cérebro.",
+      "O vício desaparecia quase totalmente ao mudar o ambiente e seus sinais.",
+      "A maioria recaiu devido à falta de força de vontade.",
+      "O tratamento médico foi o único factor para a sua recuperação."
+    ],
     "quiz_q9": "Qual é a função principal da \"Regra dos 2 minutos\" ao iniciar um novo hábito?",
-    "quiz_q9_o": ["Cronometrar exatamente quanto tempo leva para um hábito se tornar automático.", "Garantir que o hábito seja sempre produtivo e de alta qualidade.", "Evitar que o cérebro fique entediado com tarefas muito longas.", "Dominar a arte de aparecer antes de otimizar o desempenho."],
+    "quiz_q9_o": [
+      "Cronometrar exatamente quanto tempo leva para um hábito se tornar automático.",
+      "Garantir que o hábito seja sempre produtivo e de alta qualidade.",
+      "Evitar que o cérebro fique entediado com tarefas muito longas.",
+      "Dominar a arte de aparecer antes de otimizar o desempenho."
+    ],
     "quiz_q10": "De acordo com a \"Regra Cardinal da Mudança de Comportamento\", que tipo de consequências o cérebro humano prioriza?",
-    "quiz_q10_o": ["Consequências de grande magnitude e longo prazo.", "Consequências lógicas baseadas em dados estatísticos.", "Consequências sociais de aprovação ou rejeição.", "Consequências imediatas."],
+    "quiz_q10_o": [
+      "Consequências de grande magnitude e longo prazo.",
+      "Consequências lógicas baseadas em dados estatísticos.",
+      "Consequências sociais de aprovação ou rejeição.",
+      "Consequências imediatas."
+    ],
     "quiz_q11": "Qual é o conselho do autor para recuperar um hábito após uma falha acidental ou interrupção?",
-    "quiz_q11_o": ["Esperar até a próxima segunda-feira ou início do mês para reiniciar a sequência.", "Punir-se financeiramente para garantir que não aconteça novamente.", "Dobrar o esforço no dia seguinte para compensar o que foi perdido.", "Nunca deixe acontecer duas vezes."],
+    "quiz_q11_o": [
+      "Esperar até a próxima segunda-feira ou início do mês para reiniciar a sequência.",
+      "Punir-se financeiramente para garantir que não aconteça novamente.",
+      "Dobrar o esforço no dia seguinte para compensar o que foi perdido.",
+      "Nunca deixe acontecer duas vezes."
+    ],
     "quiz_q12": "Qual das afirmações a seguir melhor descreve como os hábitos moldam nossa identidade?",
-    "quiz_q12_o": ["Apenas grandes conquistas mudam a maneira como nos vemos.", "Você deve mudar sua identidade através da meditação antes de tentar mudar qualquer hábito.", "Cada ação que você realiza é um voto para o tipo de pessoa que você deseja se tornar.", "A identidade é algo inato que determina quais hábitos podemos ou não ter."],
+    "quiz_q12_o": [
+      "Apenas grandes conquistas mudam a maneira como nos vemos.",
+      "Você deve mudar sua identidade através da meditação antes de tentar mudar qualquer hábito.",
+      "Cada ação que você realiza é um voto para o tipo de pessoa que você deseja se tornar.",
+      "A identidade é algo inato que determina quais hábitos podemos ou não ter."
+    ],
     "quiz_q13": "O que é 'juros compostos' aplicados aos hábitos?",
-    "quiz_q13_o": ["Pequenas mudanças diárias que se acumulam e geram resultados massivos.", "Economizar dinheiro toda vez que você cumpre um hábito saudável.", "A pressão social que o obriga a melhorar todos os dias.", "Exaustão mental após tentar muitas mudanças ao mesmo tempo."],
+    "quiz_q13_o": [
+      "Pequenas mudanças diárias que se acumulam e geram resultados massivos.",
+      "Economizar dinheiro toda vez que você cumpre um hábito saudável.",
+      "A pressão social que o obriga a melhorar todos os dias.",
+      "Exaustão mental após tentar muitas mudanças ao mesmo tempo."
+    ],
     "quiz_q14": "Qual é a primeira lei da mudança de comportamento?",
-    "quiz_q14_o": ["Torná-lo óbvio.", "Torná-lo atraente.", "Torná-lo fácil.", "Torná-lo satisfatório."],
+    "quiz_q14_o": [
+      "Torná-lo óbvio.",
+      "Torná-lo atraente.",
+      "Torná-lo fácil.",
+      "Torná-lo satisfatório."
+    ],
     "quiz_q15": "Qual é a segunda lei da mudança de comportamento?",
-    "quiz_q15_o": ["Torná-lo óbvio.", "Torná-lo atraente.", "Torná-lo fácil.", "Torná-lo satisfatório."],
+    "quiz_q15_o": [
+      "Torná-lo óbvio.",
+      "Torná-lo atraente.",
+      "Torná-lo fácil.",
+      "Torná-lo satisfatório."
+    ],
     "quiz_q16": "Qual é a terceira lei da mudança de comportamento?",
-    "quiz_q16_o": ["Torná-lo óbvio.", "Torná-lo atraente.", "Torná-lo fácil.", "Torná-lo satisfatório."],
+    "quiz_q16_o": [
+      "Torná-lo óbvio.",
+      "Torná-lo atraente.",
+      "Torná-lo fácil.",
+      "Torná-lo satisfatório."
+    ],
     "quiz_q17": "Qual é a quarta lei da mudança de comportamento?",
-    "quiz_q17_o": ["Torná-lo óbvio.", "Torná-lo atraente.", "Torná-lo fácil.", "Torná-lo satisfatório."],
+    "quiz_q17_o": [
+      "Torná-lo óbvio.",
+      "Torná-lo atraente.",
+      "Torná-lo fácil.",
+      "Torná-lo satisfatório."
+    ],
     "quiz_q18": "O que é 'empilhamento de hábitos'?",
-    "quiz_q18_o": ["Escrever seus objetivos no papel para não esquecê-los.", "Integrar um novo hábito imediatamente após um já estabelecido.", "Parar um hábito quando você se sentir cansado.", "Tornar o hábito mais difícil para provar sua força de vontade."],
+    "quiz_q18_o": [
+      "Escrever seus objetivos no papel para não esquecê-los.",
+      "Integrar um novo hábito imediatamente após um já estabelecido.",
+      "Parar um hábito quando você se sentir cansado.",
+      "Tornar o hábito mais difícil para provar sua força de vontade."
+    ],
     "quiz_q19": "Como quebrar um mau hábito de acordo com a inversão das leis?",
-    "quiz_q19_o": ["Torná-lo invisível, pouco atraente, difícil e insatisfatório.", "Escondê-lo dos seus amigos para não sentir vergonha.", "Tentar parar de uma vez sem qualquer estratégia.", "Substituí-lo por outro mau hábito que seja menos prejudicial."],
+    "quiz_q19_o": [
+      "Torná-lo invisível, pouco atraente, difícil e insatisfatório.",
+      "Escondê-lo dos seus amigos para não sentir vergonha.",
+      "Tentar parar de uma vez sem qualquer estratégia.",
+      "Substituí-lo por outro mau hábito que seja menos prejudicial."
+    ],
     "quiz_q20": "Qual o papel do ambiente na formação de hábitos?",
-    "quiz_q20_o": ["Não tem importância se você tiver força de vontade suficiente.", "É apenas um fator secundário em comparação com a genética.", "O ambiente é a deixa invisível que molda nosso comportamento.", "Isso só influencia os hábitos que você realiza fora de casa."],
+    "quiz_q20_o": [
+      "Não tem importância se você tiver força de vontade suficiente.",
+      "É apenas um fator secundário em comparação com a genética.",
+      "O ambiente é a deixa invisível que molda nosso comportamento.",
+      "Isso só influencia os hábitos que você realiza fora de casa."
+    ],
     "quiz_question_counter": "Pergunta {current} de {total}",
     "recursos_flashcards": [
-      { "q": "O que é a Regra dos 2 Minutos?", "a": "Quando você começa um novo hábito, deve levar menos de dois minutos para fazê-lo." },
-      { "q": "Como tornar um hábito ÓBVIO?", "a": "Projete seu ambiente. Coloque sinais visuais de seus bons hábitos." },
-      { "q": "Identidade vs. Resultados", "a": "Concentre-se em quem você quer se tornar, não no que quer alcançar." },
-      { "q": "Resultado de ser 1% melhor a cada dia?", "a": "Você acaba sendo 37 vezes melhor ao final de um ano." },
-      { "q": "Conceito: Platô do Potencial Latente", "a": "Período onde as mudanças de hábito não parecem gerar resultados até atingir um ponto crítico." },
-      { "q": "Qual é a diferença fundamental entre uma meta e um sistema?", "a": "Metas são os resultados que você quer alcançar, enquanto sistemas são os processos que você segue." },
-      { "q": "Por que focar apenas em metas é um problema para distinguir sucesso de fracasso?", "a": "Porque tanto os vencedores quanto os perdedores compartilham as mesmas metas." },
-      { "q": "Mencione as três camadas da mudança de comportamento segundo o texto.", "a": "Mudança de resultados, mudança de processos e mudança de identidade." },
-      { "q": "Qual é a camada mais profunda e eficaz para desenvolver hábitos duradouros?", "a": "Mudar a identidade (o que você acredita sobre si mesmo)." },
-      { "q": "Um hábito é um comportamento que foi repetido o suficiente para se tornar _____.", "a": "automático" },
-      { "q": "Identifique as quatro etapas do ciclo dos hábitos na ordem correta.", "a": "Sinal, anseio, resposta e recompensa." },
-      { "q": "Que função o 'sinal' desempenha no ciclo do hábito?", "a": "Acionar o processo cerebral que inicia um comportamento ao antecipar uma recompensa." },
-      { "q": "\"No ciclo do hábito, o _____ é a força motivacional por trás de cada comportamento.\"", "a": "anseio" },
-      { "q": "De que depende a ocorrência de uma 'resposta' (execução do hábito)?", "a": "De quão motivado você está e de quanta tensão ou resistência está associada ao comportamento." },
-      { "q": "\"Segundo a Primeira Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"", "a": "óbvio" },
-      { "q": "Qual é a inversão da Primeira Lei para eliminar um mau hábito?", "a": "Torná-lo invisível." },
-      { "q": "Técnica: Scorecard de Hábitos", "a": "Listar comportamentos diários e atribuir um sinal (+) para bons, (-) para ruins ou (=) para neutros." },
-      { "q": "Complete a fórmula da intenção de implementação: Eu farei [comportamento] às [_____] em [local].", "a": "tempo" },
-      { "q": "Em que consiste a estratégia de 'empilhamento de hábitos'?", "a": "Vincular um novo hábito a um que você já faz diariamente." },
-      { "q": "\"Fórmula: Depois de [Hábito Atual], eu farei [_____].\"", "a": "Novo Hábito" },
-      { "q": "Por que o design do ambiente é a ferramenta mais poderosa para mudar hábitos?", "a": "Porque a visão é o sentido humano mais poderoso e as dicas visuais catalisam o comportamento." },
-      { "q": "\"Para facilitar um hábito positivo, você deve _____ a exposição às suas dicas em seu ambiente.\"", "a": "aumentar" },
-      { "q": "O que estabelece a 'Lei do Menor Esforço' no comportamento humano?", "a": "Que ao escolher entre duas opções semelhantes, as pessoas tenderão a escolher a que exige menos trabalho." },
-      { "q": "Técnica: Empilhamento de Tentações", "a": "Vincular uma ação que você 'precisa' fazer com uma ação que você 'quer' fazer." },
-      { "q": "Quando a maior quantidade de dopamina é liberada no cérebro em relação a um hábito?", "a": "Durante a antecipação da recompensa, não apenas ao recebê-la." },
-      { "q": "\"Segundo a Segunda Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"", "a": "atraente" },
-      { "q": "\"Os humanos imitam os hábitos de três grupos sociais: os próximos, a maioria e _____.\"", "a": "os poderosos" },
-      { "q": "Qual é a estratégia mais eficaz para que um hábito difícil se torne socialmente atraente?", "a": "Juntar-se a um ambiente onde o comportamento desejado seja a norma comum do grupo." },
-      { "q": "\"Segundo a Terceira Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"", "a": "fácil" },
-      { "q": "Qual é a diferença entre 'movimento' e 'ação'?", "a": "Movimento é planejar ou aprender; ação é o comportamento que produz um resultado direto." },
-      { "q": "Por que a frequência é mais importante que o tempo total para desenvolver a automaticidade?", "a": "Porque cada repetição ativa e fortalece circuitos neurais específicos para o hábito." },
-      { "q": "Regra dos 2 Minutos: Qual o requisito para iniciar um novo hábito?", "a": "Que a ação inicial leve menos de dois minutos para ser realizada." },
-      { "q": "O objetivo fundamental da Regra dos 2 Minutos é dominar o hábito de _____.", "a": "aparecer (ou começar)" },
-      { "q": "O que é um 'dispositivo de compromisso'?", "a": "Uma escolha no presente que controla suas ações no futuro, dificultando os maus hábitos." },
-      { "q": "Mencione um exemplo de automação para evitar um mau hábito.", "a": "Desconectar a TV após o uso para que assisti-la exija mais esforço." },
-      { "q": "\"Segundo a Quarta Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"", "a": "satisfatório" },
-      { "q": "Regra Cardinal da Mudança de Comportamento: O que é recompensado é repetido; o que é _____ é evitado.", "a": "punido" },
-      { "q": "Por que os maus hábitos se repetem facilmente apesar dos danos a longo prazo?", "a": "Porque suas recompensas costumam ser imediatas, enquanto seus custos são retardados." },
-      { "q": "Qual é a função do 'reforço imediato' no desenvolvimento de bons hábitos?", "a": "Vincular o hábito a uma pequena recompensa instantânea para manter a motivação a curto prazo." },
-      { "q": "Conceito: Habit Tracker", "a": "Uma forma visual de medir o progresso marcando cada dia que a rotina é cumprida." },
-      { "q": "Regra para se recuperar de uma interrupção: Nunca deixe acontecer _____.", "a": "duas vezes" },
-      { "q": "O que acontece quando uma medida se torna o único objetivo (Lei de Goodhart)?", "a": "Deixa de ser uma boa medida e pode gerar comportamentos errados." },
-      { "q": "O que é um 'contrato de hábitos'?", "a": "Um acordo escrito onde você estabelece um compromisso e uma punição específica por falha." },
-      { "q": "Como um 'parceiro de responsabilidade' ajuda a manter um hábito positivo?", "a": "Adiciona um custo social e imediato à falha, pois nos importamos com o que os outros pensam de nós." },
-      { "q": "\"No ciclo dos hábitos, a 'fase do problema' inclui o sinal e o _____.\"", "a": "anseio" },
-      { "q": "\"No ciclo dos hábitos, a 'fase da solução' inclui a resposta e a _____.\"", "a": "recompensa" },
-      { "q": "A que se refere o termo 'resetar o quarto'?", "a": "Preparar um espaço após o uso para facilitar a ação na próxima vez que for necessário." },
-      { "q": "A inversão da Segunda Lei para eliminar um mau hábito é torná-lo _____.", "a": "pouco atraente" },
-      { "q": "A inversão da Terceira Lei para eliminar un mau hábito é torná-lo _____.", "a": "difícil" },
-      { "q": "A inversão da Quarta Lei para eliminar um mau hábito é torná-lo _____.", "a": "insatisfatório" },
-      { "q": "Como a técnica 'apontar e chamar' (pointing-and-calling) ajuda a mudar comportamentos?", "a": "Eleva o nível de consciência de hábitos inconscientes ao verbalizar a ação e sua consequência." },
-      { "q": "Hábitos são os juros compostos da _____.", "a": "auto-melhoria" },
-      { "q": "Por que os resultados son considerados 'indicadores atrasados' de hábitos?", "a": "Porque seu estado atual é um reflexo cumulativo de seus hábitos financeiros, alimentares ou de estudo." },
-      { "q": "\"Para mudar sua identidade, primeiro decida quem você quer ser e depois prove para si mesmo com _____.\"", "a": "pequenas vitórias contínuas" },
-      { "q": "O que é um 'hábito atômico'?", "a": "Uma pequena mudança, uma melhoria de 1% que faz parte de um sistema maior." },
-      { "q": "Qual é a função pedagógica da recompensa no cérebro?", "a": "Ensinar quais ações valem a pena lembrar e repetir no futuro." },
-      { "q": "O que é um 'estímulo supernormal'?", "a": "Uma versão exagerada da realidade que desencadeia uma resposta biológica mais forte que o normal." },
-      { "q": "\"Por que o mantra 'um lugar, um uso' ajuda na concentração?\"", "a": "Porque evita misturar contextos e associa um espaço específico a uma única mentalidade ou hábito." },
-      { "q": "O que o experimento do gato de Thorndike revelou sobre a aprendizagem animal?", "a": "Que comportamentos seguidos de consequências satisfatórias tendem a ser repetidos automaticamente." },
-      { "q": "Hábitos reduzem a carga cognitiva para liberar a capacidade da _____.", "a": "mente consciente" },
-      { "q": "Conceito: Inconsistência Temporal", "a": "A tendência do cérebro humano de valorizar mais o presente do que o futuro." },
-      { "q": "O propósito de construir sistemas é continuar _____ no jogo da melhoria contínua.", "a": "participando" },
-      { "q": "O que significa 'padronizar antes de otimizar' um hábito?", "a": "Que você deve tornar a ação básica consistente antes de tentar melhorar seu desempenho." },
-      { "q": "Qual é a relação entre genes e hábitos segundo o texto?", "a": "Genes determine seus pontos fortes; o sucesso vem de escolher hábitos que melhor se adaptam a eles." },
-      { "q": "Conceito: Automaticidade", "a": "A capacidade de realizar um comportamento sem ter que pensar conscientemente em cada etapa." },
-      { "q": "\"Hábitos não restringem a liberdade, eles na verdade a _____.\"", "a": "promovem" },
-      { "q": "O ambiente é a _____ que molda o comportamento humano.", "a": "mão invisível" },
-      { "q": "O que o caso dos soldados do Vietnã provou sobre o vício e o ambiente?", "a": "Que um vício pode desaparecer se as pistas ambientais que o desencadeiam forem radicalmente removidas." }
+      {
+        "q": "O que é a Regra dos 2 Minutos?",
+        "a": "Quando você começa um novo hábito, deve levar menos de dois minutos para fazê-lo."
+      },
+      {
+        "q": "Como tornar um hábito ÓBVIO?",
+        "a": "Projete seu ambiente. Coloque sinais visuais de seus bons hábitos."
+      },
+      {
+        "q": "Identidade vs. Resultados",
+        "a": "Concentre-se em quem você quer se tornar, não no que quer alcançar."
+      },
+      {
+        "q": "Resultado de ser 1% melhor a cada dia?",
+        "a": "Você acaba sendo 37 vezes melhor ao final de um ano."
+      },
+      {
+        "q": "Conceito: Platô do Potencial Latente",
+        "a": "Período onde as mudanças de hábito não parecem gerar resultados até atingir um ponto crítico."
+      },
+      {
+        "q": "Qual é a diferença fundamental entre uma meta e um sistema?",
+        "a": "Metas são os resultados que você quer alcançar, enquanto sistemas são os processos que você segue."
+      },
+      {
+        "q": "Por que focar apenas em metas é um problema para distinguir sucesso de fracasso?",
+        "a": "Porque tanto os vencedores quanto os perdedores compartilham as mesmas metas."
+      },
+      {
+        "q": "Mencione as três camadas da mudança de comportamento segundo o texto.",
+        "a": "Mudança de resultados, mudança de processos e mudança de identidade."
+      },
+      {
+        "q": "Qual é a camada mais profunda e eficaz para desenvolver hábitos duradouros?",
+        "a": "Mudar a identidade (o que você acredita sobre si mesmo)."
+      },
+      {
+        "q": "Um hábito é um comportamento que foi repetido o suficiente para se tornar _____.",
+        "a": "automático"
+      },
+      {
+        "q": "Identifique as quatro etapas do ciclo dos hábitos na ordem correta.",
+        "a": "Sinal, anseio, resposta e recompensa."
+      },
+      {
+        "q": "Que função o 'sinal' desempenha no ciclo do hábito?",
+        "a": "Acionar o processo cerebral que inicia um comportamento ao antecipar uma recompensa."
+      },
+      {
+        "q": "\"No ciclo do hábito, o _____ é a força motivacional por trás de cada comportamento.\"",
+        "a": "anseio"
+      },
+      {
+        "q": "De que depende a ocorrência de uma 'resposta' (execução do hábito)?",
+        "a": "De quão motivado você está e de quanta tensão ou resistência está associada ao comportamento."
+      },
+      {
+        "q": "\"Segundo a Primeira Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"",
+        "a": "óbvio"
+      },
+      {
+        "q": "Qual é a inversão da Primeira Lei para eliminar um mau hábito?",
+        "a": "Torná-lo invisível."
+      },
+      {
+        "q": "Técnica: Scorecard de Hábitos",
+        "a": "Listar comportamentos diários e atribuir um sinal (+) para bons, (-) para ruins ou (=) para neutros."
+      },
+      {
+        "q": "Complete a fórmula da intenção de implementação: Eu farei [comportamento] às [_____] em [local].",
+        "a": "tempo"
+      },
+      {
+        "q": "Em que consiste a estratégia de 'empilhamento de hábitos'?",
+        "a": "Vincular um novo hábito a um que você já faz diariamente."
+      },
+      {
+        "q": "\"Fórmula: Depois de [Hábito Atual], eu farei [_____].\"",
+        "a": "Novo Hábito"
+      },
+      {
+        "q": "Por que o design do ambiente é a ferramenta mais poderosa para mudar hábitos?",
+        "a": "Porque a visão é o sentido humano mais poderoso e as dicas visuais catalisam o comportamento."
+      },
+      {
+        "q": "\"Para facilitar um hábito positivo, você deve _____ a exposição às suas dicas em seu ambiente.\"",
+        "a": "aumentar"
+      },
+      {
+        "q": "O que estabelece a 'Lei do Menor Esforço' no comportamento humano?",
+        "a": "Que ao escolher entre duas opções semelhantes, as pessoas tenderão a escolher a que exige menos trabalho."
+      },
+      {
+        "q": "Técnica: Empilhamento de Tentações",
+        "a": "Vincular uma ação que você 'precisa' fazer com uma ação que você 'quer' fazer."
+      },
+      {
+        "q": "Quando a maior quantidade de dopamina é liberada no cérebro em relação a um hábito?",
+        "a": "Durante a antecipação da recompensa, não apenas ao recebê-la."
+      },
+      {
+        "q": "\"Segundo a Segunda Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"",
+        "a": "atraente"
+      },
+      {
+        "q": "\"Os humanos imitam os hábitos de três grupos sociais: os próximos, a maioria e _____.\"",
+        "a": "os poderosos"
+      },
+      {
+        "q": "Qual é a estratégia mais eficaz para que um hábito difícil se torne socialmente atraente?",
+        "a": "Juntar-se a um ambiente onde o comportamento desejado seja a norma comum do grupo."
+      },
+      {
+        "q": "\"Segundo a Terceira Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"",
+        "a": "fácil"
+      },
+      {
+        "q": "Qual é a diferença entre 'movimento' e 'ação'?",
+        "a": "Movimento é planejar ou aprender; ação é o comportamento que produz um resultado direto."
+      },
+      {
+        "q": "Por que a frequência é mais importante que o tempo total para desenvolver a automaticidade?",
+        "a": "Porque cada repetição ativa e fortalece circuitos neurais específicos para o hábito."
+      },
+      {
+        "q": "Regra dos 2 Minutos: Qual o requisito para iniciar um novo hábito?",
+        "a": "Que a ação inicial leve menos de dois minutos para ser realizada."
+      },
+      {
+        "q": "O objetivo fundamental da Regra dos 2 Minutos é dominar o hábito de _____.",
+        "a": "aparecer (ou começar)"
+      },
+      {
+        "q": "O que é um 'dispositivo de compromisso'?",
+        "a": "Uma escolha no presente que controla suas ações no futuro, dificultando os maus hábitos."
+      },
+      {
+        "q": "Mencione um exemplo de automação para evitar um mau hábito.",
+        "a": "Desconectar a TV após o uso para que assisti-la exija mais esforço."
+      },
+      {
+        "q": "\"Segundo a Quarta Lei da Mudança de Comportamento, para criar um bom hábito você deve torná-lo _____.\"",
+        "a": "satisfatório"
+      },
+      {
+        "q": "Regra Cardinal da Mudança de Comportamento: O que é recompensado é repetido; o que é _____ é evitado.",
+        "a": "punido"
+      },
+      {
+        "q": "Por que os maus hábitos se repetem facilmente apesar dos danos a longo prazo?",
+        "a": "Porque suas recompensas costumam ser imediatas, enquanto seus custos são retardados."
+      },
+      {
+        "q": "Qual é a função do 'reforço imediato' no desenvolvimento de bons hábitos?",
+        "a": "Vincular o hábito a uma pequena recompensa instantânea para manter a motivação a curto prazo."
+      },
+      {
+        "q": "Conceito: Habit Tracker",
+        "a": "Uma forma visual de medir o progresso marcando cada dia que a rotina é cumprida."
+      },
+      {
+        "q": "Regra para se recuperar de uma interrupção: Nunca deixe acontecer _____.",
+        "a": "duas vezes"
+      },
+      {
+        "q": "O que acontece quando uma medida se torna o único objetivo (Lei de Goodhart)?",
+        "a": "Deixa de ser uma boa medida e pode gerar comportamentos errados."
+      },
+      {
+        "q": "O que é um 'contrato de hábitos'?",
+        "a": "Um acordo escrito onde você estabelece um compromisso e uma punição específica por falha."
+      },
+      {
+        "q": "Como um 'parceiro de responsabilidade' ajuda a manter um hábito positivo?",
+        "a": "Adiciona um custo social e imediato à falha, pois nos importamos com o que os outros pensam de nós."
+      },
+      {
+        "q": "\"No ciclo dos hábitos, a 'fase do problema' inclui o sinal e o _____.\"",
+        "a": "anseio"
+      },
+      {
+        "q": "\"No ciclo dos hábitos, a 'fase da solução' inclui a resposta e a _____.\"",
+        "a": "recompensa"
+      },
+      {
+        "q": "A que se refere o termo 'resetar o quarto'?",
+        "a": "Preparar um espaço após o uso para facilitar a ação na próxima vez que for necessário."
+      },
+      {
+        "q": "A inversão da Segunda Lei para eliminar um mau hábito é torná-lo _____.",
+        "a": "pouco atraente"
+      },
+      {
+        "q": "A inversão da Terceira Lei para eliminar un mau hábito é torná-lo _____.",
+        "a": "difícil"
+      },
+      {
+        "q": "A inversão da Quarta Lei para eliminar um mau hábito é torná-lo _____.",
+        "a": "insatisfatório"
+      },
+      {
+        "q": "Como a técnica 'apontar e chamar' (pointing-and-calling) ajuda a mudar comportamentos?",
+        "a": "Eleva o nível de consciência de hábitos inconscientes ao verbalizar a ação e sua consequência."
+      },
+      {
+        "q": "Hábitos são os juros compostos da _____.",
+        "a": "auto-melhoria"
+      },
+      {
+        "q": "Por que os resultados son considerados 'indicadores atrasados' de hábitos?",
+        "a": "Porque seu estado atual é um reflexo cumulativo de seus hábitos financeiros, alimentares ou de estudo."
+      },
+      {
+        "q": "\"Para mudar sua identidade, primeiro decida quem você quer ser e depois prove para si mesmo com _____.\"",
+        "a": "pequenas vitórias contínuas"
+      },
+      {
+        "q": "O que é um 'hábito atômico'?",
+        "a": "Uma pequena mudança, uma melhoria de 1% que faz parte de um sistema maior."
+      },
+      {
+        "q": "Qual é a função pedagógica da recompensa no cérebro?",
+        "a": "Ensinar quais ações valem a pena lembrar e repetir no futuro."
+      },
+      {
+        "q": "O que é um 'estímulo supernormal'?",
+        "a": "Uma versão exagerada da realidade que desencadeia uma resposta biológica mais forte que o normal."
+      },
+      {
+        "q": "\"Por que o mantra 'um lugar, um uso' ajuda na concentração?\"",
+        "a": "Porque evita misturar contextos e associa um espaço específico a uma única mentalidade ou hábito."
+      },
+      {
+        "q": "O que o experimento do gato de Thorndike revelou sobre a aprendizagem animal?",
+        "a": "Que comportamentos seguidos de consequências satisfatórias tendem a ser repetidos automaticamente."
+      },
+      {
+        "q": "Hábitos reduzem a carga cognitiva para liberar a capacidade da _____.",
+        "a": "mente consciente"
+      },
+      {
+        "q": "Conceito: Inconsistência Temporal",
+        "a": "A tendência do cérebro humano de valorizar mais o presente do que o futuro."
+      },
+      {
+        "q": "O propósito de construir sistemas é continuar _____ no jogo da melhoria contínua.",
+        "a": "participando"
+      },
+      {
+        "q": "O que significa 'padronizar antes de otimizar' um hábito?",
+        "a": "Que você deve tornar a ação básica consistente antes de tentar melhorar seu desempenho."
+      },
+      {
+        "q": "Qual é a relação entre genes e hábitos segundo o texto?",
+        "a": "Genes determine seus pontos fortes; o sucesso vem de escolher hábitos que melhor se adaptam a eles."
+      },
+      {
+        "q": "Conceito: Automaticidade",
+        "a": "A capacidade de realizar um comportamento sem ter que pensar conscientemente em cada etapa."
+      },
+      {
+        "q": "\"Hábitos não restringem a liberdade, eles na verdade a _____.\"",
+        "a": "promovem"
+      },
+      {
+        "q": "O ambiente é a _____ que molda o comportamento humano.",
+        "a": "mão invisível"
+      },
+      {
+        "q": "O que o caso dos soldados do Vietnã provou sobre o vício e o ambiente?",
+        "a": "Que um vício pode desaparecer se as pistas ambientais que o desencadeiam forem radicalmente removidas."
+      }
     ],
     "recursos_guide": {
       "title": "Guia de Estudo: Hábitos Atômicos de James Clear",
@@ -1594,29 +3158,121 @@
       ],
       "glossary_title": "Glossário de Termos-Chave",
       "glossary": [
-        { "t": "Hábito Atômico", "d": "Uma rotina ou prática regular que não é apenas pequena e fácil de realizar, mas é a fonte de um poder incrível; um componente de um sistema de crescimento composto." },
-        { "t": "Automaticidade", "d": "A habilidade de realizar uma conduta sem ter que pensar em cada passo; ocorre quando a mente inconsciente assume a execução do hábito." },
-        { "t": "Sinal", "d": "A peça de informação que antecipa uma recompensa e que aciona o processo no cérebro para iniciar um comportamento." },
-        { "t": "Anseio", "d": "A força motivacional ou desejo de mudar o estado interno que impulsiona a agir; não é o hábito em si, mas a mudança de estado que este produz." },
-        { "t": "Dopamina", "d": "Neurotransmissor central na motivação, aprendizado e memória; é liberado tanto ao sentir prazer quanto ao antecipar uma recompensa." },
-        { "t": "Intenção de Implementação", "d": "Um plano estabelecido de antemão que define quando e onde uma conduta específica será realizada (Fórmula: \"Eu farei [CONDUTA] às [TEMPO] em [LOCAL]\")." },
-        { "t": "Efeito Diderot", "d": "Tendência em que a obtenção de uma nova posse cria uma espiral de consumo que leva a compras ou ações adicionais." },
-        { "t": "Mecanismo de Compromisso", "d": "Uma escolha feita no presente para controlar as ações no futuro, garantindo que os bons hábitos sejam mantidos e os maus evitados." },
-        { "t": "Inconsistência Temporal", "d": "Propensão do cérebro humano a valorizar mais o presente do que o futuro, priorizando a gratificação instantânea sobre os benefícios retardados." },
-        { "t": "Reforço", "d": "O processo de usar uma recompensa imediata para aumentar as chances de repetir um comportamento, fechando o ciclo do hábito de forma satisfatória." },
-        { "t": "Lei do Menor Esfuerzo", "d": "Princípio que estabelece que, diante de duas opções semelhantes, as pessoas tenderão naturalmente a escolher a opção que requer a menor quantidade de trabalho ou energia." },
-        { "t": "Registro de Hábitos", "d": "Método visual (como marcar um calendário) para medir se uma rotina foi cumprida, fornecendo evidência clara do progresso e satisfação imediata." }
+        {
+          "t": "Hábito Atômico",
+          "d": "Uma rotina ou prática regular que não é apenas pequena e fácil de realizar, mas é a fonte de um poder incrível; um componente de um sistema de crescimento composto."
+        },
+        {
+          "t": "Automaticidade",
+          "d": "A habilidade de realizar uma conduta sem ter que pensar em cada passo; ocorre quando a mente inconsciente assume a execução do hábito."
+        },
+        {
+          "t": "Sinal",
+          "d": "A peça de informação que antecipa uma recompensa e que aciona o processo no cérebro para iniciar um comportamento."
+        },
+        {
+          "t": "Anseio",
+          "d": "A força motivacional ou desejo de mudar o estado interno que impulsiona a agir; não é o hábito em si, mas a mudança de estado que este produz."
+        },
+        {
+          "t": "Dopamina",
+          "d": "Neurotransmissor central na motivação, aprendizado e memória; é liberado tanto ao sentir prazer quanto ao antecipar uma recompensa."
+        },
+        {
+          "t": "Intenção de Implementação",
+          "d": "Um plano estabelecido de antemão que define quando e onde uma conduta específica será realizada (Fórmula: \"Eu farei [CONDUTA] às [TEMPO] em [LOCAL]\")."
+        },
+        {
+          "t": "Efeito Diderot",
+          "d": "Tendência em que a obtenção de uma nova posse cria uma espiral de consumo que leva a compras ou ações adicionais."
+        },
+        {
+          "t": "Mecanismo de Compromisso",
+          "d": "Uma escolha feita no presente para controlar as ações no futuro, garantindo que os bons hábitos sejam mantidos e os maus evitados."
+        },
+        {
+          "t": "Inconsistência Temporal",
+          "d": "Propensão do cérebro humano a valorizar mais o presente do que o futuro, priorizando a gratificação instantânea sobre os benefícios retardados."
+        },
+        {
+          "t": "Reforço",
+          "d": "O processo de usar uma recompensa imediata para aumentar as chances de repetir um comportamento, fechando o ciclo do hábito de forma satisfatória."
+        },
+        {
+          "t": "Lei do Menor Esfuerzo",
+          "d": "Princípio que estabelece que, diante de duas opções semelhantes, as pessoas tenderão naturalmente a escolher a opção que requer a menor quantidade de trabalho ou energia."
+        },
+        {
+          "t": "Registro de Hábitos",
+          "d": "Método visual (como marcar um calendário) para medir se uma rotina foi cumprida, fornecendo evidência clara do progresso e satisfação imediata."
+        }
       ]
     },
     "recursos_challenges_table": {
-      "headers": ["Desafio", "Motivo", "Estratégia", "Lei", "Resultado", "Impacto", "Fonte"],
+      "headers": [
+        "Desafio",
+        "Motivo",
+        "Estratégia",
+        "Lei",
+        "Resultado",
+        "Impacto",
+        "Fonte"
+      ],
       "rows": [
-        ["Recuperação lesão cerebral grave.", "Desejo recuperar controle e identidade.", "Pequenos hábitos diários (sono, limpeza).", "Tornar fácil", "Melhor atleta Univ. Denison.", "Transformação radical por melhorias de 1%.", "[1]"],
-        ["Ciclismo britânico mediocre.", "Otimização competitiva.", "Ganhos marginais de 1%.", "Tornar óbvio", "66 ouros olímpicos, 5 Tour de France.", "Domínio global por sistema organizacional.", "[1]"],
-        ["Falta consistência exercício.", "Reduzir incerteza e procrastinação.", "Intenção de implementação (tempo e local).", "Tornar óbvio", "91% cumprimento vs 35% controle.", "Automação por redução de carga cognitiva.", "[1]"],
-        ["Hábito roer unhas.", "Mudança de identidade profunda.", "Pequena vitória (manicure profissional).", "Tornar satisfatório", "Cessação imediata do hábito.", "Conduta duradoura alinhada com identidade.", "[1]"],
-        ["Dificuldade dieta saudável.", "Influência sinais visuais negativos.", "Design do ambiente (fruta visível).", "Tornar óbvio", "Aumento significativo consumo saudável.", "Bons hábitos por defeito sem vontade.", "[1]"],
-        ["Inconsistência meditação.", "Ambiente caótico.", "Empilhamento de hábitos (vincular ao café).", "Tornar óbvio", "Sequência previsível de ações.", "Estilo de vida estruturado por inércia.", "[1]"]
+        [
+          "Recuperação lesão cerebral grave.",
+          "Desejo recuperar controle e identidade.",
+          "Pequenos hábitos diários (sono, limpeza).",
+          "Tornar fácil",
+          "Melhor atleta Univ. Denison.",
+          "Transformação radical por melhorias de 1%.",
+          "[1]"
+        ],
+        [
+          "Ciclismo britânico mediocre.",
+          "Otimização competitiva.",
+          "Ganhos marginais de 1%.",
+          "Tornar óbvio",
+          "66 ouros olímpicos, 5 Tour de France.",
+          "Domínio global por sistema organizacional.",
+          "[1]"
+        ],
+        [
+          "Falta consistência exercício.",
+          "Reduzir incerteza e procrastinação.",
+          "Intenção de implementação (tempo e local).",
+          "Tornar óbvio",
+          "91% cumprimento vs 35% controle.",
+          "Automação por redução de carga cognitiva.",
+          "[1]"
+        ],
+        [
+          "Hábito roer unhas.",
+          "Mudança de identidade profunda.",
+          "Pequena vitória (manicure profissional).",
+          "Tornar satisfatório",
+          "Cessação imediata do hábito.",
+          "Conduta duradoura alinhada com identidade.",
+          "[1]"
+        ],
+        [
+          "Dificuldade dieta saudável.",
+          "Influência sinais visuais negativos.",
+          "Design do ambiente (fruta visível).",
+          "Tornar óbvio",
+          "Aumento significativo consumo saudável.",
+          "Bons hábitos por defeito sem vontade.",
+          "[1]"
+        ],
+        [
+          "Inconsistência meditação.",
+          "Ambiente caótico.",
+          "Empilhamento de hábitos (vincular ao café).",
+          "Tornar óbvio",
+          "Sequência previsível de ações.",
+          "Estilo de vida estruturado por inércia.",
+          "[1]"
+        ]
       ]
     },
     "pricing_basic": "Plano Básico",
@@ -1626,11 +3282,35 @@
     "pricing_per_year": "ano",
     "pricing_activate": "Ativar agora",
     "pricing_start_free": "Começar Grátis",
-    "features_basic": ["Controle de Hábitos (Básico)", "Registro de Humor", "Análise Mensal"],
-    "features_habitos": ["Tudo no Basic", "Hábitos Ilimitados", "Gráficos Avanzados", "Suporte Prioritário"],
-    "features_enfoque": ["Tudo no Basic", "Planejador Semanal", "Gestão de Tarefas", "Modo Deep Work"],
-    "features_max": ["Tudo no Foco", "Finanças Pessoais", "EmmaStack Engine", "Suporte 24/7"],
-    "features_finanzas": ["Gestão de Entradas/Saídas", "Dashboard Financeiro", "Semáforo de Orçamento", "Liquidação de Dívidas"],
+    "features_basic": [
+      "Controle de Hábitos (Básico)",
+      "Registro de Humor",
+      "Análise Mensal"
+    ],
+    "features_habitos": [
+      "Tudo no Basic",
+      "Hábitos Ilimitados",
+      "Gráficos Avanzados",
+      "Suporte Prioritário"
+    ],
+    "features_enfoque": [
+      "Tudo no Basic",
+      "Planejador Semanal",
+      "Gestão de Tarefas",
+      "Modo Deep Work"
+    ],
+    "features_max": [
+      "Tudo no Foco",
+      "Finanças Pessoais",
+      "EmmaStack Engine",
+      "Suporte 24/7"
+    ],
+    "features_finanzas": [
+      "Gestão de Entradas/Saídas",
+      "Dashboard Financeiro",
+      "Semáforo de Orçamento",
+      "Liquidação de Dívidas"
+    ],
     "pricing_finanzas": "Plano Finanças",
     "auth_login": "Entrar",
     "nav_home": "Início",
