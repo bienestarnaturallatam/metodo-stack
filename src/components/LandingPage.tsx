@@ -134,7 +134,7 @@ export default function LandingPage() {
                   alt="Plataforma Método Stack — App de hábitos y finanzas"
                   fill
                   priority
-                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1000px"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 80vw, 1000px"
                   className="object-contain"
                 />
               </div>
@@ -180,11 +180,11 @@ export default function LandingPage() {
                 {/* Captura real */}
                 <div className="p-[12px_12px_0] bg-[#F8F8F8]">
                   <Image
-                    src="/testimonios/testimonio-1.png"
+                    src="/testimonios/testimonio-1.webp"
                     alt="Mensaje real de Carlos R. sobre Método STACK"
                     width={400}
                     height={300}
-                    sizes="(max-width: 768px) 90vw, 30vw"
+                    sizes="(max-width: 768px) 40vw, 30vw"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -212,11 +212,11 @@ export default function LandingPage() {
                 {/* Captura real */}
                 <div className="p-[16px_12px_0] bg-[#F8F8F8]">
                   <Image
-                    src="/testimonios/testimonio-2.png"
+                    src="/testimonios/testimonio-2.webp"
                     alt="Mensaje real de María A. sobre Método STACK"
                     width={400}
                     height={300}
-                    sizes="(max-width: 768px) 90vw, 30vw"
+                    sizes="(max-width: 768px) 40vw, 30vw"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
@@ -241,11 +241,11 @@ export default function LandingPage() {
                 {/* Captura real */}
                 <div className="p-[12px_12px_0] bg-[#F8F8F8]">
                   <Image
-                    src="/testimonios/testimonio-3.png"
+                    src="/testimonios/testimonio-3.webp"
                     alt="Mensaje real de Jorge P. sobre Método STACK"
                     width={400}
                     height={300}
-                    sizes="(max-width: 768px) 90vw, 30vw"
+                    sizes="(max-width: 768px) 40vw, 30vw"
                     className="rounded-[8px] w-full h-auto shadow-sm border border-black/5"
                   />
                 </div>
