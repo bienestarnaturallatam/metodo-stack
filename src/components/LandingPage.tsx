@@ -98,12 +98,12 @@ export default function LandingPage() {
       {/* HERO SECTION */}
       <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center">
         <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4 animate-in fade-in">
               <Zap className="w-3 h-3 fill-[#00C853]" />
               {t('auth_tagline')}
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter text-[#111111] mb-4 uppercase leading-tight">
+            <h1 className="hero-title text-[#111111]">
               {t('hero_title')}
             </h1>
             
@@ -125,20 +125,19 @@ export default function LandingPage() {
               </a>
             </div>
 
-            {/* MOCKUP IMAGE */}
-            <div className="mt-10 relative group max-w-4xl mx-auto overflow-hidden">
+            {/* MOCKUP IMAGE OPTIMIZED */}
+            <div className="hero-img-container group">
               <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative aspect-[3/2] w-full shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden group-hover:scale-[1.01]">
-                <Image
-                  src="/hero.webp"
-                  alt="Plataforma Método Stack — App de hábitos y finanzas"
-                  fill
-                  priority
-                  fetchPriority="high"
-                  loading="eager"
-                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1000px"
-                  className="object-contain"
-                />
+                <picture>
+                  <source srcSet="/hero-mobile.webp" media="(max-width: 600px)" />
+                  <img
+                    src="/hero.webp"
+                    alt="Plataforma Método Stack — App de hábitos y finanzas"
+                    fetchpriority="high"
+                    style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+                  />
+                </picture>
               </div>
             </div>
         </div>

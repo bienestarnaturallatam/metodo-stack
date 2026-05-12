@@ -18,6 +18,13 @@ const tasks = [
     quality: 80,
     keepPng: true
   },
+  // hero mobile: 450px wide for LCP optimization
+  {
+    input: path.join(pub, 'hero.webp'),
+    output: path.join(pub, 'hero-mobile.webp'),
+    resize: { width: 450, withoutEnlargement: true },
+    quality: 80
+  },
 ];
 
 tasks.forEach(({ input, output, resize, quality, keepPng }) => {
