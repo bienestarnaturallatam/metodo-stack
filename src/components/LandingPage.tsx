@@ -75,10 +75,10 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* HERO SECTION */}
+      {/* HERO SECTION - FLATTENED DOM */}
       <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center">
         <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4 animate-in fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4">
               <Zap className="w-3 h-3 fill-[#00C853]" />
               {t('auth_tagline')}
             </div>
@@ -91,35 +91,35 @@ export default function LandingPage() {
               {t('hero_subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
               <a 
                 href={WSP_GLOBAL_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-10 py-4 md:py-5 bg-[#00C853] text-black rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto max-w-[90vw] mx-auto"
+                className="group relative flex items-center justify-center px-10 py-5 bg-[#00C853] text-black rounded-full font-black italic text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto"
               >
-                <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
+                <span className="mr-3 uppercase">EMPEZAR MI TRANSFORMACIÓN</span>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
                   <Zap className="w-4 h-4 text-[#00C853] fill-[#00C853]" />
                 </div>
               </a>
             </div>
 
-            {/* MOCKUP IMAGE OPTIMIZED */}
-            <div className="hero-img-container group">
-              <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative aspect-[3/2] w-full shadow-[0_35px_60px_rgba(0,0,0,0.15)] rounded-2xl border-4 border-white shadow-2xl overflow-hidden group-hover:scale-[1.01]">
-                <picture>
-                  <source srcSet="/hero-mobile.webp" media="(max-width: 600px)" />
-                  <img
-                    src="/hero.webp"
-                    alt="Plataforma Método Stack — App de hábitos y finanzas"
-                    width={1200}
-                    height={800}
-                    style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
-                  />
-                </picture>
-              </div>
+            {/* MOCKUP IMAGE - REDUCED DEPTH */}
+            <div className="hero-img-container group relative">
+              <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity -z-10"></div>
+              <picture className="relative block aspect-[3/2] w-full shadow-2xl rounded-2xl border-4 border-white overflow-hidden group-hover:scale-[1.005] transition-transform duration-500">
+                <source srcSet="/hero-mobile.webp" media="(max-width: 600px)" />
+                <img
+                  src="/hero.webp"
+                  alt="Plataforma Método Stack"
+                  width={1200}
+                  height={800}
+                  className="w-full h-auto object-contain"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </picture>
             </div>
         </div>
       </section>

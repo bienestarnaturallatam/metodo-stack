@@ -54,7 +54,13 @@ export default function RegisterPage() {
         console.error('Error detectando país:', e);
       }
     }
-    detectCountry();
+    
+    // Defer execution to avoid blocking mount
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(() => detectCountry(), { timeout: 3000 });
+    } else {
+      setTimeout(detectCountry, 1000);
+    }
   }, []);
 
   async function handleRegister(e: React.FormEvent) {

@@ -24,47 +24,51 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [country, setCountry] = useState('PE');
 
   useEffect(() => {
-    // Read cached values immediately — no network call on critical path
-    const savedLang = localStorage.getItem('app-lang') as Lang;
-    const savedCountry = localStorage.getItem('app-country');
+    // Break long task — yield thread before accessing localStorage and running logic
+    const timer = setTimeout(() => {
+      const savedLang = localStorage.getItem('app-lang') as Lang;
+      const savedCountry = localStorage.getItem('app-country');
 
-    if (savedLang && ['es', 'en', 'pt'].includes(savedLang)) {
-      setLangState(savedLang);
-      if (savedCountry) {
-        setCountry(savedCountry);
-        setCurrency(savedCountry === 'PE' ? 'S/' : '$');
-      }
-    } else {
-      // Geo-detect LAZILY — after first paint, never blocks LCP
-      const run = () => {
-        fetch('https://ipapi.co/json/')
-          .then(res => res.json())
-          .then(data => {
-            const code = data.country_code;
-            setCountry(code);
-            localStorage.setItem('app-country', code);
-            const cur = code === 'PE' ? 'S/' : '$';
-            setCurrency(cur);
-            if (['US', 'GB', 'CA', 'AU', 'NZ'].includes(code)) {
-              setLangState('en');
-              localStorage.setItem('app-lang', 'en');
-            } else if (['BR', 'PT'].includes(code)) {
-              setLangState('pt');
-              localStorage.setItem('app-lang', 'pt');
-            } else {
-              setLangState('es');
-              localStorage.setItem('app-lang', 'es');
-            }
-          })
-          .catch(() => { /* keep defaults: es / $ */ });
-      };
-      // Use idle callback so it never competes with rendering
-      if (typeof requestIdleCallback !== 'undefined') {
-        requestIdleCallback(run, { timeout: 3000 });
+      if (savedLang && ['es', 'en', 'pt'].includes(savedLang)) {
+        setLangState(savedLang);
+        if (savedCountry) {
+          setCountry(savedCountry);
+          setCurrency(savedCountry === 'PE' ? 'S/' : '$');
+        }
       } else {
-        setTimeout(run, 1500);
+        // Geo-detect LAZILY — after first paint, never blocks LCP
+        const run = () => {
+          fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+              const code = data.country_code;
+              setCountry(code);
+              localStorage.setItem('app-country', code);
+              const cur = code === 'PE' ? 'S/' : '$';
+              setCurrency(cur);
+              if (['US', 'GB', 'CA', 'AU', 'NZ'].includes(code)) {
+                setLangState('en');
+                localStorage.setItem('app-lang', 'en');
+              } else if (['BR', 'PT'].includes(code)) {
+                setLangState('pt');
+                localStorage.setItem('app-lang', 'pt');
+              } else {
+                setLangState('es');
+                localStorage.setItem('app-lang', 'es');
+              }
+            })
+            .catch(() => { /* keep defaults: es / $ */ });
+        };
+        // Use idle callback with longer timeout to ensure it doesn't compete with LCP
+        if (typeof requestIdleCallback !== 'undefined') {
+          requestIdleCallback(run, { timeout: 5000 });
+        } else {
+          setTimeout(run, 3000);
+        }
       }
-    }
+    }, 50); // Yield 50ms to allow browser to handle layout/paint
+
+    return () => clearTimeout(timer);
   }, []);
 
   const setLang = (l: Lang) => {
