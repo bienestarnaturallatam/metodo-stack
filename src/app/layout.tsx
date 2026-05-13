@@ -69,10 +69,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
         ` }} />
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         
         {/* 2. LCP PRELOAD: CRITICAL FOR 2.5s TARGET */}
         <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 600px)" fetchPriority="high" />
