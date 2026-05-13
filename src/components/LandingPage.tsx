@@ -23,7 +23,7 @@ const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup'), {
 export const WSP_GLOBAL_LINK = "https://wa.me/51989078285?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20y%20quiero%20mi%20llave%20de%20acceso%20gratis%20por%203%20d%C3%ADas%20al%20M%C3%A9todo%20STACK.%20%F0%9F%8C%BF";
 
 export default function LandingPage() {
-  const { lang, setLang, t } = useTranslation();
+  const { lang, t } = useTranslation();
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
 
   useEffect(() => {

@@ -17,7 +17,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: Props) {
   const router = useRouter();
   const supabase = createClient();
-  const { t, lang, setLang } = useTranslation();
+  const { t, lang } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   async function signOut() {
@@ -70,20 +70,6 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
           </div>
         )}
         
-        {/* Language Selector */}
-        <div className="relative group/lang z-[1000]">
-          <select 
-            value={lang} 
-            onChange={(e) => setLang(e.target.value as any)}
-            className="appearance-none bg-app-surface2/50 border border-app-border rounded-lg pl-3 pr-8 py-1.5 text-[11px] font-bold text-app-text2 cursor-pointer outline-none hover:bg-app-surface2 transition-all"
-          >
-            <option value="es">🇪🇸 ES</option>
-            <option value="en">🇺🇸 EN</option>
-            <option value="pt">🇧🇷 PT</option>
-          </select>
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[8px] text-app-text3 group-hover/lang:text-app-text transition-colors">▼</div>
-        </div>
-
         <span className="text-[11px] text-app-text3 hidden sm:block font-medium">{userEmail}</span>
         <button
           onClick={signOut}

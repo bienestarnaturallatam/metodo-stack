@@ -148,7 +148,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
 
   const router = useRouter();
   const supabase = createClient();
-  const { t, lang, setLang } = useTranslation();
+  const { t, lang } = useTranslation();
 
   useEffect(() => {
     async function checkExpiration() {

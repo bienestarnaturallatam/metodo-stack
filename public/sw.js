@@ -31,7 +31,7 @@ self.addEventListener('push', function (event) {
       // He ajustado esto a /icon.png para que coincida con tu archivo real
       icon: data.icon || '/icon.png',
       badge: '/icon.png',
-      vibrate:,
+      vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
         primaryKey: '2',
