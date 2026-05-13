@@ -41,28 +41,6 @@ export default function RegisterPage() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    async function detectCountry() {
-      try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
-        if (data.country_code) {
-          const match = countries.find(c => c.iso === data.country_code);
-          if (match) setCodigoPais(match.code);
-        }
-      } catch (e) {
-        console.error('Error detectando país:', e);
-      }
-    }
-    
-    // Defer execution to avoid blocking mount
-    if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(() => detectCountry(), { timeout: 3000 });
-    } else {
-      setTimeout(detectCountry, 1000);
-    }
-  }, []);
-
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     setError(''); 
@@ -96,10 +74,8 @@ export default function RegisterPage() {
       const now     = new Date();
       const expires = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
 
-      const res = await fetch('https://ipapi.co/json/');
-      const geoData = await res.json();
-      const detected_country = geoData.country_code || 'PE';
-      const detected_lang = detected_country === 'US' ? 'en' : detected_country === 'BR' ? 'pt' : 'es';
+      const detected_country = 'PE';
+      const detected_lang = 'es';
 
       const numeroCompleto = codigoPais + soloNumeros;
 
@@ -118,7 +94,6 @@ export default function RegisterPage() {
           plan_expires_at: expires.toISOString(),
         });
 
-
       if (profileError) {
         console.error('Error creating profile:', profileError);
         setError('Error al crear perfil: ' + profileError.message);
@@ -127,7 +102,6 @@ export default function RegisterPage() {
       }
       
       console.log('Perfil creado con éxito para:', email);
-
 
       // Registrar sesión inicial para auditoría
       await fetch('/api/session-check', {

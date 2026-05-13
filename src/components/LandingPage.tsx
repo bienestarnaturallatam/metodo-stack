@@ -42,26 +42,12 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-[#00C853] rounded-full flex items-center justify-center">
-              <LayoutDashboard className="text-white w-6 h-6" />
+              <svg className="text-white w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
             </div>
             <span className="text-xl font-black italic tracking-tighter uppercase">MÉTODO STACK</span>
           </div>
           
           <div className="hidden md:flex items-center gap-10">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-black/5 rounded-full border border-black/5">
-              <Globe className="w-3.5 h-3.5 text-[#00C853]" />
-              <select 
-                value={lang} 
-                onChange={(e) => setLang(e.target.value as any)}
-                aria-label="Seleccionar idioma"
-                className="bg-transparent text-[10px] font-black uppercase outline-none cursor-pointer"
-              >
-                <option value="es">Español</option>
-                <option value="en">English</option>
-                <option value="pt">Português</option>
-              </select>
-            </div>
-
             <a href="#hero" className="text-sm font-bold hover:text-[#00C853] transition-colors">{t('nav_home')}</a>
             <a href="#beneficios" className="text-sm font-bold hover:text-[#00C853] transition-colors">{t('nav_benefits')}</a>
             <a href="#precios" className="text-sm font-bold hover:text-[#00C853] transition-colors">{t('nav_pricing')}</a>
@@ -75,51 +61,50 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* HERO SECTION - FLATTENED DOM */}
-      <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center">
+      {/* HERO SECTION - ZERO-DELAY RENDER STRUCTURE */}
+      <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center bg-white">
         <div className="max-w-5xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4">
-              <Zap className="w-3 h-3 fill-[#00C853]" />
+              <svg className="w-3 h-3 fill-[#00C853]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
               {t('auth_tagline')}
             </div>
             
-            <h1 className="hero-title text-[#111111]">
+            <h1 className="hero-title text-[#111111] leading-[1.05] m-0 mb-6 font-black italic uppercase tracking-tighter">
               {t('hero_title')}
             </h1>
             
-            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-8">
+            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-10">
               {t('hero_subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
               <a 
                 href={WSP_GLOBAL_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex items-center justify-center px-10 py-5 bg-[#00C853] text-black rounded-full font-black italic text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto"
+                className="relative flex items-center justify-center px-10 py-5 bg-[#00C853] text-black rounded-full font-black italic text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto"
               >
                 <span className="mr-3 uppercase">EMPEZAR MI TRANSFORMACIÓN</span>
                 <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
-                  <Zap className="w-4 h-4 text-[#00C853] fill-[#00C853]" />
+                  <svg className="w-4 h-4 text-[#00C853] fill-[#00C853]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 </div>
               </a>
             </div>
 
-            {/* MOCKUP IMAGE - REDUCED DEPTH */}
-            <div className="hero-img-container group relative">
-              <div className="absolute -inset-4 bg-[#00C853]/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition-opacity -z-10"></div>
-              <picture className="relative block aspect-[3/2] w-full shadow-2xl rounded-2xl border-4 border-white overflow-hidden group-hover:scale-[1.005] transition-transform duration-500">
-                <source srcSet="/hero-mobile.webp" media="(max-width: 600px)" />
-                <img
-                  src="/hero.webp"
-                  alt="Plataforma Método Stack"
-                  width={1200}
-                  height={800}
-                  className="w-full h-auto object-contain"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </picture>
+            {/* CRITICAL: Simplified Image - No 'picture', no 'aspect-ratio' delay, no transitions */}
+            <div className="relative w-full max-w-4xl mx-auto rounded-2xl border-4 border-white shadow-2xl overflow-hidden bg-[#00C853]/5">
+              <img
+                src="/hero-mobile.webp"
+                srcSet="/hero-mobile.webp 600w, /hero.webp 1200w"
+                sizes="(max-width: 600px) 100vw, 1200px"
+                alt="Plataforma Método Stack"
+                width={1200}
+                height={800}
+                className="w-full h-auto block object-contain"
+                loading="eager"
+                fetchPriority="high"
+                decoding="sync"
+              />
             </div>
         </div>
       </section>

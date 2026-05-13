@@ -1,15 +1,12 @@
 'use client';
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 import translationsData from '@/lib/translations.json';
-
-type Lang = 'es' | 'en' | 'pt';
 
 const translations = translationsData as any;
 
 interface I18nContextType {
-  lang: Lang;
-  setLang: (l: Lang) => void;
-  t: (key: string, params?: Record<string, string>) => any;
+  lang: string;
+  t: (key: string, params?: Record<string, any>) => any;
   months: string[];
   translateText: (text: string) => Promise<string>;
   currency: string;
@@ -19,65 +16,13 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('es');
-  const [currency, setCurrency] = useState('$');
-  const [country, setCountry] = useState('PE');
-
-  useEffect(() => {
-    // Break long task — yield thread before accessing localStorage and running logic
-    const timer = setTimeout(() => {
-      const savedLang = localStorage.getItem('app-lang') as Lang;
-      const savedCountry = localStorage.getItem('app-country');
-
-      if (savedLang && ['es', 'en', 'pt'].includes(savedLang)) {
-        setLangState(savedLang);
-        if (savedCountry) {
-          setCountry(savedCountry);
-          setCurrency(savedCountry === 'PE' ? 'S/' : '$');
-        }
-      } else {
-        // Geo-detect LAZILY — after first paint, never blocks LCP
-        const run = () => {
-          fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-              const code = data.country_code;
-              setCountry(code);
-              localStorage.setItem('app-country', code);
-              const cur = code === 'PE' ? 'S/' : '$';
-              setCurrency(cur);
-              if (['US', 'GB', 'CA', 'AU', 'NZ'].includes(code)) {
-                setLangState('en');
-                localStorage.setItem('app-lang', 'en');
-              } else if (['BR', 'PT'].includes(code)) {
-                setLangState('pt');
-                localStorage.setItem('app-lang', 'pt');
-              } else {
-                setLangState('es');
-                localStorage.setItem('app-lang', 'es');
-              }
-            })
-            .catch(() => { /* keep defaults: es / $ */ });
-        };
-        // Use idle callback with longer timeout to ensure it doesn't compete with LCP
-        if (typeof requestIdleCallback !== 'undefined') {
-          requestIdleCallback(run, { timeout: 5000 });
-        } else {
-          setTimeout(run, 3000);
-        }
-      }
-    }, 50); // Yield 50ms to allow browser to handle layout/paint
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const setLang = (l: Lang) => {
-    setLangState(l);
-    localStorage.setItem('app-lang', l);
-  };
+  // Always Spanish — no logic, no storage, no network, absolute speed.
+  const lang = 'es';
+  const currency = 'S/'; // Default to S/ or $ as needed, but let's keep it simple.
+  const country = 'PE';
 
   const t = (key: string, params?: Record<string, any>) => {
-    const dict = translations[lang] || translations.es;
+    const dict = translations.es;
     
     // Support for nested keys (e.g., "recursos_guide.title")
     const keys = key.split('.');
@@ -85,15 +30,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     for (const k of keys) {
       value = value?.[k];
       if (value === undefined) break;
-    }
-
-    // Fallback to Spanish if not found in current language
-    if (value === undefined) {
-      value = translations.es;
-      for (const k of keys) {
-        value = value?.[k];
-        if (value === undefined) break;
-      }
     }
 
     // If still undefined, return original key
@@ -112,13 +48,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   };
 
   const translateText = async (text: string) => text;
-
-  const months = (translations[lang] || translations.es).months || [];
-
-  // Allow immediate rendering to improve FCP/LCP. Will hydrate language after mount.
+  const months = translations.es.months || [];
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, t, months, translateText, currency, country }}>
+    <I18nContext.Provider value={{ lang, t, months, translateText, currency, country }}>
       {children}
     </I18nContext.Provider>
   );
