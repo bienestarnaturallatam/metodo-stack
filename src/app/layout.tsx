@@ -55,11 +55,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* CRITICAL CSS: HERO & CORE RESET (First to process) */}
         <style dangerouslySetInnerHTML={{ __html: `
           :root { --brand-green: #00C853; --text-dark: #111111; }
-          html, body { background: #fff; color: var(--text-dark); margin: 0; padding: 0; font-family: sans-serif; }
-          .hero-section { padding-top: 6rem; padding-bottom: 3rem; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-          .hero-title { font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; font-style: italic; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1.1; margin-bottom: 1rem; }
-          .hero-btn { display: inline-flex; align-items: center; justify-content: center; padding: 1.25rem 2.5rem; background: var(--brand-green); color: #000; border-radius: 9999px; font-weight: 900; text-decoration: none; transition: transform 0.2s; }
-          .hero-img-container { margin-top: 2.5rem; position: relative; max-width: 56rem; margin-left: auto; margin-right: auto; }
+          html, body { background: #fff; color: var(--text-dark); margin: 0; padding: 0; font-family: sans-serif; -webkit-font-smoothing: antialiased; }
+          #hero { padding-top: 6rem; padding-bottom: 3rem; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+          .hero-title { font-size: clamp(2.5rem, 8vw, 7rem); font-weight: 900; font-style: italic; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1.05; margin-bottom: 1.5rem; color: #111; }
+          .hero-img-container { position: relative; width: 100%; max-width: 1024px; margin: 3rem auto; aspect-ratio: 3/2; background: rgba(0,200,83,0.05); border-radius: 1.5rem; border: 4px solid #fff; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); overflow: hidden; }
+          .hero-img-container img { width: 100%; height: auto; object-fit: contain; }
+          @media (max-width: 640px) { #hero { padding-top: 5rem; } .hero-title { font-size: 3.5rem; } }
         ` }} />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -70,9 +71,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://metodo-stack.supabase.co" />
         <link rel="dns-prefetch" href="https://metodo-stack.supabase.co" />
         
-        {/* LCP PRELOAD */}
+        {/* LCP PRELOAD: ONLY MOBILE HAS FETCHPRIORITY="HIGH" AS REQUESTED */}
         <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 600px)" fetchPriority="high" />
-        <link rel="preload" as="image" href="/hero.webp" media="(min-width: 601px)" fetchPriority="high" />
+        <link rel="preload" as="image" href="/hero.webp" media="(min-width: 601px)" />
       </head>
       <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>
         <I18nProvider>
