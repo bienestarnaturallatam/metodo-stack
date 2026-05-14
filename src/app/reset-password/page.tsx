@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
       setError('La contraseña debe tener al menos 6 caracteres');
       return;
     }
-    
+
     setLoading(true);
     setError('');
 
@@ -58,7 +58,7 @@ export default function ResetPasswordPage() {
       <div className="absolute inset-0 z-0 bg-white/70 backdrop-blur-[2px]" />
 
       <div className="w-full max-w-sm relative z-10">
-        
+
         {/* Header Section */}
         <div className="flex flex-col items-center gap-1 mb-8 text-center">
           <div className="flex items-center gap-2">
@@ -69,16 +69,16 @@ export default function ResetPasswordPage() {
         </div>
 
         <div className="bg-white border border-[#DDDFE2] rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] overflow-hidden">
-          
+
           <div className="border-b border-[#EBEDF0] px-6 py-4 flex justify-center">
-             <span className="text-[#28A745] text-xs font-bold border-b-2 border-[#28A745] pb-4 -mb-4">Restablecer clave</span>
+            <span className="text-[#28A745] text-xs font-bold border-b-2 border-[#28A745] pb-4 -mb-4">Restablecer clave</span>
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
             <p className="text-[12px] text-[#4B4F56] text-center mb-2">
               Ingresa tu nueva contraseña para acceder a tu cuenta.
             </p>
-            
+
             {/* Nueva Contraseña */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-[#4B4F56] uppercase tracking-wider px-1">Nueva Contraseña</label>

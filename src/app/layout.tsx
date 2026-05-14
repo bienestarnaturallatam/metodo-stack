@@ -52,7 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        {/* 1. CRITICAL CSS INLINED (ZERO EXTERNAL DEPENDENCIES FOR HERO) */}
+        {/* 1. LCP PRELOAD: CRITICAL FOR 2.5s TARGET */}
+        <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 767px)" fetchPriority="high" />
+        <link rel="preload" as="image" href="/hero.webp" media="(min-width: 768px)" fetchPriority="high" />
+
+        {/* 2. CRITICAL CSS INLINED (ZERO EXTERNAL DEPENDENCIES FOR HERO) */}
         <style dangerouslySetInnerHTML={{ __html: `
           :root { --brand-green: #00C853; --text-dark: #111111; --brand-green-light: rgba(0, 200, 83, 0.1); }
           html, body { background: #fff; color: var(--text-dark); margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -69,12 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
         ` }} />
 
-        
-        {/* 2. LCP PRELOAD: CRITICAL FOR 2.5s TARGET */}
-        <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 600px)" fetchPriority="high" />
-        <link rel="preload" as="image" href="/hero.webp" media="(min-width: 601px)" />
-
-        {/* 3. NON-CRITICAL CSS DEFERRAL (If possible in your env, but Next.js standard is used) */}
+        {/* 3. NON-CRITICAL CSS DEFERRAL */}
         {/* We rely on the inlined CSS above to prevent FCP/LCP delay while globals.css loads */}
       </head>
       <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>

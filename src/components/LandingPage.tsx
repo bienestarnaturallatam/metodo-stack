@@ -63,18 +63,17 @@ export default function LandingPage() {
             </div>
 
             {/* CRITICAL LCP IMAGE: NO JS REQUIRED TO RENDER */}
-            <div className="relative w-full max-w-4xl mx-auto rounded-2xl border-4 border-white shadow-2xl overflow-hidden bg-[#00C853]/5">
+            <div className="hero-img-container">
               <img
                 src="/hero-mobile.webp"
-                srcSet="/hero-mobile.webp 600w, /hero.webp 1200w"
-                sizes="(max-width: 600px) 100vw, 1200px"
+                srcSet="/hero-mobile.webp 767w, /hero.webp 1200w"
+                sizes="(max-width: 767px) 100vw, 1024px"
                 alt="Plataforma Método Stack"
                 width={1200}
                 height={800}
                 className="w-full h-auto block object-contain"
                 loading="eager"
                 fetchPriority="high"
-                decoding="sync"
               />
             </div>
         </div>
