@@ -27,7 +27,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
   const allMoodLogs = useYearMoodLogs(year);
 
   // 1. Per-month stats
-  const monthStats = months.map((name, mi) => {
+  const monthStats = months.map((name: string, mi: number) => {
     const days = daysInMonth(mi, year);
     const start = `${year}-${String(mi + 1).padStart(2, '0')}-01`;
     const end = `${year}-${String(mi + 1).padStart(2, '0')}-${String(days).padStart(2, '0')}`;
@@ -85,7 +85,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
   const currentMonthStart = `${year}-${String(currentMonth + 1).padStart(2, '0')}-01`;
   const currentMonthEnd   = `${year}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentMonthDays).padStart(2, '0')}`;
 
-  const habitCompletion = habits.map(h => {
+  const habitCompletion = habits.map((h: Habit) => {
     const count = allCompletions.filter(
       c => c.habit_id === h.id && c.date >= currentMonthStart && c.date <= currentMonthEnd
     ).length;
@@ -103,7 +103,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
 
   const checkDay = (dStr: string) => {
     const dObj = new Date(dStr + "T00:00:00");
-    const active = habits.filter(h => {
+    const active = habits.filter((h: Habit) => {
       const created = new Date(h.created_at);
       created.setHours(0,0,0,0);
       if (created > dObj) return false;
@@ -201,9 +201,9 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
           <div className="h-44">
             <Line
               data={{
-                labels: months.map(m => m.slice(0, 3)),
+                labels: months.map((m: string) => m.slice(0, 3)),
                 datasets: [{
-                  data: monthStats.map(s => s.pct),
+                  data: monthStats.map((s: any) => s.pct),
                   fill: true,
                   backgroundColor: 'rgba(45,158,107,0.1)',
                   borderColor: '#2d9e6b',
@@ -234,11 +234,11 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
           <div className="h-56">
             <Line
               data={{
-                labels: months.map(m => m.slice(0, 3)),
+                labels: months.map((m: string) => m.slice(0, 3)),
                 datasets: [
                   {
                     label: t('mood_legend'),
-                    data: monthStats.map(s => s.avgMood),
+                    data: monthStats.map((s: any) => s.avgMood),
                     borderColor: '#c94f7a',
                     backgroundColor: 'rgba(201,79,122,0.06)',
                     borderWidth: 3,
@@ -254,7 +254,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
                   },
                   {
                     label: t('mot_legend'),
-                    data: monthStats.map(s => s.avgMot),
+                    data: monthStats.map((s: any) => s.avgMot),
                     borderColor: '#3a7bc8',
                     backgroundColor: 'rgba(58,123,200,0.06)',
                     borderWidth: 3,
@@ -277,7 +277,7 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
 
         {/* ── GRID DE MESES ── */}
         <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {monthStats.map((s, mi) => (
+          {monthStats.map((s: any, mi: number) => (
             <button
               key={mi}
               onClick={() => onMonthClick(mi)}
