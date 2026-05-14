@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import '../app/globals.css';
 import dynamic from 'next/dynamic';
 
 const MainSections = dynamic(() => import('@/components/MainSections'), {

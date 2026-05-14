@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import './globals.css';
 import { I18nProvider } from '@/hooks/useTranslation';
 import { Sora, DM_Sans, DM_Mono } from 'next/font/google';
 
@@ -52,29 +51,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
-        {/* 1. LCP PRELOAD: CRITICAL FOR 2.5s TARGET */}
+        {/* 1. CRITICAL PRELOADS */}
         <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 767px)" fetchPriority="high" />
         <link rel="preload" as="image" href="/hero.webp" media="(min-width: 768px)" fetchPriority="high" />
 
-        {/* 2. CRITICAL CSS INLINED (ZERO EXTERNAL DEPENDENCIES FOR HERO) */}
+        {/* 2. MINIFIED CRITICAL CSS */}
         <style dangerouslySetInnerHTML={{ __html: `
-          :root { --brand-green: #00C853; --text-dark: #111111; --brand-green-light: rgba(0, 200, 83, 0.1); }
-          html, body { background: #fff; color: var(--text-dark); margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-          #hero { padding-top: 6rem; padding-bottom: 3rem; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-          .hero-title { font-size: clamp(2.5rem, 8vw, 7rem); font-weight: 900; font-style: italic; letter-spacing: -0.05em; text-transform: uppercase; line-height: 1.05; margin-bottom: 1.5rem; color: #111; }
-          .hero-img-container { position: relative; width: 100%; max-width: 1024px; margin: 3rem auto; aspect-ratio: 3/2; background: var(--brand-green-light); border-radius: 1.5rem; border: 4px solid #fff; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); overflow: hidden; }
-          .hero-img-container img { width: 100%; height: auto; object-fit: contain; }
-          @media (max-width: 640px) { #hero { padding-top: 5rem; } .hero-title { font-size: 3.5rem; } }
-          
-          /* Utility classes used in Hero to prevent layout jump before Tailwind loads */
-          .max-w-5xl { max-width: 64rem; margin-left: auto; margin-right: auto; }
-          .mx-auto { margin-left: auto; margin-right: auto; }
-          .text-center { text-align: center; }
-          .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+          :root{--brand-green:#00C853;--text-dark:#111;--brand-green-light:rgba(0,200,83,.1)}
+          html,body{background:#fff;color:var(--text-dark);margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-display:swap;-webkit-font-smoothing:antialiased}
+          #hero{padding-top:6rem;padding-bottom:3rem;min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+          .max-w-7xl{max-width:80rem;margin:0 auto}.max-w-5xl{max-width:64rem;margin:0 auto}.px-6{padding-left:1.5rem;padding-right:1.5rem}
+          nav{position:fixed;top:0;width:100%;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.05);z-index:50;height:5rem;display:flex;align-items:center}
+          .nav-container{width:100%;max-width:80rem;margin:0 auto;padding:0 1.5rem;display:flex;justify-content:space-between;align-items:center}
+          .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:9999px;background:var(--brand-green-light);border:1px solid rgba(0,200,83,.2);color:var(--brand-green);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;margin-bottom:1rem}
+          .hero-title{font-size:clamp(2.5rem,8vw,7rem);font-weight:900;font-style:italic;letter-spacing:-.05em;text-transform:uppercase;line-height:1.05;margin-bottom:1.5rem;color:#111}
+          .hero-p{font-size:1.25rem;color:rgba(17,17,17,.7);font-weight:500;max-width:48rem;margin:0 auto 2.5rem;line-height:1.5}
+          .btn-primary{position:relative;display:flex;align-items:center;justify-content:center;padding:1.25rem 2.5rem;background:var(--brand-green);color:#000;border-radius:9999px;font-weight:900;font-style:italic;font-size:1.125rem;letter-spacing:.1em;transition:all .2s;box-shadow:0 25px 50px -12px rgba(0,200,83,.3);text-decoration:none}
+          .btn-icon{width:2rem;height:2rem;background:#fff;border-radius:9999px;display:flex;align-items:center;justify-content:center;margin-left:.75rem}
+          .hero-img-container{position:relative;width:100%;max-width:1024px;margin:3rem auto;aspect-ratio:3/2;background:var(--brand-green-light);border-radius:1.5rem;border:4px solid #fff;box-shadow:0 25px 50px -12px rgba(0,0,0,.15);overflow:hidden}
+          .hero-img-container img{width:100%;height:auto;object-fit:contain;display:block}
+          @media (max-width:640px){#hero{padding-top:5rem}.hero-title{font-size:3.5rem}}
         ` }} />
-
-        {/* 3. NON-CRITICAL CSS DEFERRAL */}
-        {/* We rely on the inlined CSS above to prevent FCP/LCP delay while globals.css loads */}
       </head>
       <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>
         <I18nProvider>

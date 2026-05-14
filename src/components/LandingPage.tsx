@@ -9,8 +9,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white text-[#111111] font-sans selection:bg-[#00C853]/20">
       
       {/* NAVBAR - SERVER RENDERED FOR ZERO DELAY */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-black/5 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <nav>
+        <div className="nav-container">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-[#00C853] rounded-full flex items-center justify-center">
               <svg className="text-white w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm0 11h7v7h-7v-7zm-11 0h7v7H3v-7z"/></svg>
@@ -33,50 +33,45 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION - SERVER RENDERED + HARDCODED SPANISH = INSTANT LCP */}
-      <section id="hero" className="pt-24 sm:pt-32 pb-12 px-6 min-h-[70vh] flex flex-col justify-center bg-white">
-        <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00C853]/10 border border-[#00C853]/20 text-[#00C853] text-[10px] font-black uppercase tracking-[0.2em] mb-4">
-              <svg className="w-3 h-3 fill-[#00C853]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-              Empiezas con energía. A la semana, ya abandonaste.
-            </div>
-            
-            <h1 className="hero-title text-[#111111] leading-[1.05] m-0 mb-6 font-black italic uppercase tracking-tighter">
-              Esto lo resuelve.
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-[#111111]/70 font-medium max-w-3xl mx-auto mb-10">
-              Método STACK es el sistema que convierte tus intenciones en rutinas reales — con seguimiento de hábitos, planeador semanal y control financiero en un solo lugar.
-            </p>
+      <section id="hero" className="max-w-5xl">
+          <div className="hero-badge">
+            <svg className="w-3 h-3 fill-[#00C853]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Empiezas con energía. A la semana, ya abandonaste.
+          </div>
+          
+          <h1 className="hero-title">
+            Esto lo resuelve.
+          </h1>
+          
+          <p className="hero-p">
+            Método STACK es el sistema que convierte tus intenciones en rutinas reales — con seguimiento de hábitos, planeador semanal y control financiero en un solo lugar.
+          </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
-              <a 
-                href={WSP_GLOBAL_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative flex items-center justify-center px-10 py-5 bg-[#00C853] text-black rounded-full font-black italic text-lg tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 w-full md:w-auto"
-              >
-                <span className="mr-3 uppercase">EMPEZAR MI TRANSFORMACIÓN</span>
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm">
-                  <svg className="w-4 h-4 text-[#00C853] fill-[#00C853]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                </div>
-              </a>
+          <a 
+            href={WSP_GLOBAL_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+          >
+            <span className="uppercase">EMPEZAR MI TRANSFORMACIÓN</span>
+            <div className="btn-icon">
+              <svg className="w-4 h-4 text-[#00C853] fill-[#00C853]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             </div>
+          </a>
 
-            {/* CRITICAL LCP IMAGE: NO JS REQUIRED TO RENDER */}
-            <div className="hero-img-container">
-              <img
-                src="/hero-mobile.webp"
-                srcSet="/hero-mobile.webp 767w, /hero.webp 1200w"
-                sizes="(max-width: 767px) 100vw, 1024px"
-                alt="Plataforma Método Stack"
-                width={1200}
-                height={800}
-                className="w-full h-auto block object-contain"
-                loading="eager"
-                fetchPriority="high"
-              />
-            </div>
-        </div>
+          {/* CRITICAL LCP IMAGE: NO JS REQUIRED TO RENDER */}
+          <div className="hero-img-container">
+            <img
+              src="/hero-mobile.webp"
+              srcSet="/hero-mobile.webp 767w, /hero.webp 1200w"
+              sizes="(max-width: 767px) 100vw, 1024px"
+              alt="Plataforma Método Stack"
+              width={1200}
+              height={800}
+              loading="eager"
+              fetchPriority="high"
+            />
+          </div>
       </section>
 
       {/* CLIENT BOUNDARY STARTS HERE - DEFERRED INITIALIZATION */}
