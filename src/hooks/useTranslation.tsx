@@ -15,38 +15,31 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
+// Helper to get translation value (ES only)
+const getTranslation = (key: string, params?: Record<string, any>) => {
+  const dict = translations.es;
+  const keys = key.split('.');
+  let value: any = dict;
+  for (const k of keys) {
+    value = value?.[k];
+    if (value === undefined) break;
+  }
+  if (value === undefined) return key;
+  if (params && typeof value === 'string') {
+    let str = value;
+    Object.entries(params).forEach(([k, v]) => {
+      str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+    });
+    return str;
+  }
+  return value;
+};
+
 export function I18nProvider({ children }: { children: ReactNode }) {
-  // Always Spanish — no logic, no storage, no network, absolute speed.
   const lang = 'es';
-  const currency = 'S/'; // Default to S/ or $ as needed, but let's keep it simple.
+  const currency = 'S/';
   const country = 'PE';
-
-  const t = (key: string, params?: Record<string, any>) => {
-    const dict = translations.es;
-    
-    // Support for nested keys (e.g., "recursos_guide.title")
-    const keys = key.split('.');
-    let value: any = dict;
-    for (const k of keys) {
-      value = value?.[k];
-      if (value === undefined) break;
-    }
-
-    // If still undefined, return original key
-    if (value === undefined) return key;
-
-    // Process parameters {key}
-    if (params && typeof value === 'string') {
-      let str = value;
-      Object.entries(params).forEach(([k, v]) => {
-        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
-      });
-      return str;
-    }
-
-    return value;
-  };
-
+  const t = getTranslation;
   const translateText = async (text: string) => text;
   const months = translations.es.months || [];
 
@@ -59,8 +52,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
 export function useTranslation() {
   const context = useContext(I18nContext);
+  
+  // Resilient fallback: If no provider, return default Spanish logic
   if (context === undefined) {
-    throw new Error('useTranslation must be used within an I18nProvider');
+    return {
+      lang: 'es',
+      t: getTranslation,
+      months: translations.es.months || [],
+      translateText: async (text: string) => text,
+      currency: 'S/',
+      country: 'PE'
+    };
   }
   return context;
 }
