@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { I18nProvider } from '@/hooks/useTranslation';
 import { Sora, DM_Sans, DM_Mono } from 'next/font/google';
 
 // 1. CONFIGURACIÓN DE METADATOS Y PWA
@@ -74,11 +73,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ` }} />
       </head>
       <body className={`${sora.variable} ${dmSans.variable} ${dmMono.variable} bg-app-bg text-app-text font-sora antialiased`}>
-        <I18nProvider>
           <main>
             {children}
           </main>
-        </I18nProvider>
 
         {/* 4. THIRD-PARTY SCRIPTS: LAZY ONLOAD */}
         <script

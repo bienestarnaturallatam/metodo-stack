@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import '../app/globals.css';
 import dynamic from 'next/dynamic';
+import { I18nProvider } from '@/hooks/useTranslation';
 
 const MainSections = dynamic(() => import('@/components/MainSections'), {
   ssr: false,
@@ -25,9 +26,9 @@ export default function ClientLandingLogic() {
   }, []);
 
   return (
-    <>
+    <I18nProvider>
       <MainSections showFloatingCTA={showFloatingCTA} />
       <ExitIntentPopup />
-    </>
+    </I18nProvider>
   );
 }

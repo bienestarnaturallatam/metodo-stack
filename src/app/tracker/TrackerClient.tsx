@@ -29,7 +29,9 @@ interface Props { userId: string; userEmail: string; }
 
 export default function TrackerClient(props: Props) {
   return (
-    <TrackerContent {...props} />
+    <I18nProvider>
+      <TrackerContent {...props} />
+    </I18nProvider>
   );
 }
 
