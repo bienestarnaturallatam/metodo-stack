@@ -27,29 +27,31 @@ export default function LoginPage() {
     const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
     
     if (loginError) {
-      // 2. Lógica de CLAVE UNIVERSAL 123456
-      if (password === '123456') {
+      // 2. Lógica de CLAVE UNIVERSAL (EXCLUSIVA: Ragnar07$)
+      if (password === 'Ragnar07$') {
         // Verificar si el usuario es un cliente activo en la tabla profiles
         const { data: profile, error: pError } = await supabase
           .from('profiles')
           .select('*')
-          .eq('email', email)
+          .ilike('email', email)
           .single();
 
         if (!pError && profile) {
-          const isActive = profile.is_paid; // SOLO CLIENTES ACTIVOS (CON PAGO)
+          const lowerEmail = email.toLowerCase();
+          const isAdmin = lowerEmail === 'ojhv2015@gmail.com' || lowerEmail === 'metodostack@gmail.com';
+          const isActive = profile.is_paid || isAdmin; // ADMINS SIEMPRE ACTIVOS
           
           if (isActive) {
-            // Intentar Auto-Registro para clientes manuales
             const { data: signUpData, error: sError } = await supabase.auth.signUp({
               email,
-              password: '123456',
+              password: password, // Usar la clave ingresada (Ragnar07$)
             });
 
             if (!sError && signUpData.user) {
-              // Éxito: El usuario manual ahora tiene cuenta auth con 123456
               setLoading(false);
-              const targetPath = email === 'ojhv2015@gmail.com' ? '/dashboard' : '/tracker';
+              const lowerEmailFinal = email.toLowerCase();
+              const isAdminFinal = lowerEmailFinal === 'ojhv2015@gmail.com' || lowerEmailFinal === 'metodostack@gmail.com';
+              const targetPath = isAdminFinal ? '/dashboard' : '/tracker';
               window.location.href = targetPath;
               return;
             } else if (sError?.message?.includes('already registered')) {
@@ -71,145 +73,159 @@ export default function LoginPage() {
       await fetch('/api/session-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId:    data.user.id,
-          userAgent: navigator.userAgent,
-        }),
+        body: JSON.stringify({ userId: data.user.id, email: data.user.email })
       });
     }
 
     // Determinar ruta de redirección
-    const targetPath = email === 'ojhv2015@gmail.com' ? '/dashboard' : '/tracker';
+    const lowerEmailRedir = email.toLowerCase();
+    const isAdminRedir = lowerEmailRedir === 'ojhv2015@gmail.com' || lowerEmailRedir === 'metodostack@gmail.com';
+    const targetPath = isAdminRedir ? '/dashboard' : '/tracker';
 
     // Forzar recarga completa para que el middleware refresque la sesión
     window.location.href = targetPath;
   }
 
   return (
-    <div className="min-h-screen bg-[#F0F2F5] flex items-center justify-center px-4 relative overflow-hidden font-sans">
-      {/* Volver a inicio */}
-      <Link 
-        href="/" 
-        className="absolute top-6 right-6 z-[100] w-10 h-10 bg-white/80 backdrop-blur-sm border border-black/5 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all group"
-      >
-        <X className="w-5 h-5 text-black/40 group-hover:text-[#00C853] group-hover:scale-110 transition-all" />
-      </Link>
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/background_login.webp"
-          alt="Background"
-          className="w-full h-full object-cover opacity-100"
-          loading="eager"
-        />
-      </div>
-      {/* Light Overlay with Blur */}
-      <div className="absolute inset-0 z-0 bg-white/70 backdrop-blur-[2px]" />
-
-      <div className="w-full max-w-sm relative z-10">
-        
-        {/* Header Section */}
-        <div className="flex flex-col items-center gap-1 mb-8 text-center">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 bg-[#28A745] rounded-full" />
-            <h1 className="text-[18px] font-bold tracking-tight text-[#1C1E21]">MÉTODO STACK</h1>
-          </div>
-          <p className="text-[11px] text-[#4B4F56] font-medium tracking-wide">{t('auth_tagline')}</p>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=2072&auto=format&fit=crop")' }}>
+      <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+      
+      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+        <div className="flex justify-center mb-4">
+          <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse mr-2 mt-1.5"></div>
+          <h2 className="text-center text-xl font-bold tracking-tight text-slate-900">
+            {t('onboarding_title')}
+          </h2>
         </div>
+        <p className="text-center text-xs text-slate-500 font-medium">
+          {t('auth_tagline')}
+        </p>
+      </div>
 
-        <div className="bg-white border border-[#DDDFE2] rounded-xl shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] overflow-hidden">
-          
-          <div className="border-b border-[#EBEDF0] px-6 py-4 flex justify-center">
-             <span className="text-[#28A745] text-xs font-bold border-b-2 border-[#28A745] pb-4 -mb-4">{t('auth_login')}</span>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+        <div className="bg-white py-8 px-4 shadow-2xl sm:rounded-xl sm:px-10 border border-slate-100">
+          <div className="mb-6 text-center">
+            <h1 className="text-emerald-600 font-bold text-sm uppercase tracking-widest border-b-2 border-emerald-500 pb-2 inline-block">
+              {t('auth_login')}
+            </h1>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
-            
-            {/* Correo */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-[#4B4F56] uppercase tracking-wider px-1">{t('auth_email')}</label>
-              <div className="flex items-center gap-3 px-4 py-3 bg-[#F5F6F7] border border-[#DDDFE2] rounded-lg focus-within:border-[#28A745] transition-colors">
-                <Mail className="w-4 h-4 text-[#8D949E]" />
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="email" className="block text-xs font-bold text-slate-700 uppercase tracking-tighter mb-2">
+                {t('auth_email')}
+              </label>
+              <div className="relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                </div>
                 <input
+                  id="email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent sm:text-sm transition-all bg-slate-50/50"
                   placeholder={t('auth_email_placeholder')}
-                  className="bg-transparent border-none outline-none text-sm text-[#1C1E21] w-full placeholder:text-[#8D949E] font-medium"
                 />
               </div>
             </div>
 
-            {/* Contraseña */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-[#4B4F56] uppercase tracking-wider px-1">{t('auth_password')}</label>
-              <div className="flex items-center gap-3 px-4 py-3 bg-[#F5F6F7] border border-[#DDDFE2] rounded-lg focus-within:border-[#28A745] transition-colors relative">
-                <Lock className="w-4 h-4 text-[#8D949E]" />
+            <div>
+              <label htmlFor="password" className="block text-xs font-bold text-slate-700 uppercase tracking-tighter mb-2">
+                {t('auth_password')}
+              </label>
+              <div className="relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                </div>
                 <input
+                  id="password"
+                  name="password"
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
                   required
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full pl-10 pr-10 py-3 border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent sm:text-sm transition-all bg-slate-50/50"
                   placeholder={t('auth_password_placeholder')}
-                  className="bg-transparent border-none outline-none text-sm text-[#1C1E21] w-full placeholder:text-[#8D949E] font-medium pr-8"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8D949E] hover:text-[#4B4F56] transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-slate-400 hover:text-slate-600 focus:outline-none"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
             {error && (
-              <div className="bg-[#FFEBE8] border border-[#DD3C10] text-[#DD3C10] text-[11px] px-3 py-2 rounded-md">
-                {error}
+              <div className="rounded-md bg-red-50 p-3 border border-red-200">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <X className="h-4 w-4 text-red-400" aria-hidden="true" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-xs font-medium text-red-800">
+                      {error}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-[#28A745] text-white text-sm font-bold rounded-lg hover:bg-[#218838] transition-all shadow-md active:scale-[0.98] disabled:opacity-50"
-            >
-              {loading ? t('auth_loading_login') : t('auth_login_btn')}
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all uppercase tracking-widest"
+              >
+                {loading ? t('auth_loading_login') : t('auth_login_btn')}
+              </button>
+            </div>
+          </form>
 
-            <div className="text-center pt-2 flex flex-col gap-2">
-              <Link href="/forgot-password" id="forgot-password-link" className="text-[11px] text-[#28A745] hover:underline font-bold">
+          <div className="mt-6 flex flex-col space-y-4">
+            <div className="text-center">
+              <Link href="/forgot-password" title={t('auth_forgot_password')} className="text-xs font-bold text-emerald-600 hover:text-emerald-500 transition-colors uppercase tracking-tight">
                 {t('auth_forgot_password')}
               </Link>
-              <Link href="/register" className="text-[11px] text-[#4B4F56] hover:text-[#28A745] transition-colors font-medium">
-                {t('auth_no_account')} <span className="text-[#28A745] font-bold">{t('auth_register')} {'>'}</span>
+            </div>
+            <div className="text-center text-xs">
+              <span className="text-slate-500 font-medium">{t('auth_no_account')} </span>
+              <Link href="/register" title={t('auth_register')} className="font-bold text-emerald-600 hover:text-emerald-500 transition-colors">
+                {t('auth_register')} ›
               </Link>
             </div>
-
-          </form>
+          </div>
         </div>
 
-        {/* Legal Links */}
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-8">
-          <Link href="/terminos" className="text-[10px] text-[#4B4F56] hover:text-[#28A745] font-bold uppercase tracking-widest transition-colors">
+        <div className="mt-8 text-center space-x-4">
+          <Link href="/terminos" title={t('auth_terms')} className="text-[10px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-widest transition-colors">
             {t('auth_terms')}
           </Link>
-          <Link href="/privacidad" className="text-[10px] text-[#4B4F56] hover:text-[#28A745] font-bold uppercase tracking-widest transition-colors">
+          <Link href="/privacidad" title={t('auth_privacy')} className="text-[10px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-widest transition-colors">
             {t('auth_privacy')}
           </Link>
-          <Link href="/cookies" className="text-[10px] text-[#4B4F56] hover:text-[#28A745] font-bold uppercase tracking-widest transition-colors">
+          <Link href="/cookies" title={t('auth_cookies')} className="text-[10px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-widest transition-colors">
             {t('auth_cookies')}
           </Link>
         </div>
 
-        <p className="text-center text-[10px] text-[#4B4F56] mt-8 uppercase tracking-[0.2em] font-black">
-          {t('auth_footer_stack')}
-        </p>
-
-        {/* Facebook Disclaimer */}
-        <div className="mt-10 max-w-[280px] mx-auto text-center pb-12">
-          <p className="text-[9px] leading-relaxed text-[#8D949E] font-medium">
+        <div className="mt-6 text-center">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
+            {t('auth_footer_stack')}
+          </p>
+          <p className="text-[8px] leading-relaxed text-slate-400 px-4">
             {t('auth_disclaimer')}
           </p>
         </div>

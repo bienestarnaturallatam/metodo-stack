@@ -202,7 +202,7 @@
     "finances_paid": "Pagado",
     "finances_total_pct": "DEL TOTAL",
     "finances_footer_quote": "\"El éxito financiero no es un evento, es un sistema operativo. MÉTODO STACK ⚖️\"",
-    "finances_delete_confirm": "¿Eliminar registro?",
+    "finances_death_confirm": "¿Eliminar registro?",
     "months_short": [
       "Ene",
       "Feb",
@@ -683,7 +683,7 @@
       {
         "q": "Los hábitos son el interés compuesto de la _____.",
         "a": "superación personal"
-    },
+      },
       {
         "q": "¿Por qué los resultados se consideran 'indicadores reactivos' de los hábitos?",
         "a": "Porque tu estado actual es un reflexo acumulado de tus hábitos financieros, alimenticios o de estudio."
@@ -1004,14 +1004,13 @@
     "auth_forgot_password": "¿Olvidaste tu contraseña?",
     "auth_no_account": "¿Aún no tienes cuenta?",
     "auth_register": "Regístrate ahora",
-    "auth_footer_stack": "PLATAFORMA DE INGENIERÍA CONDUCTUAL",
     "auth_disclaimer": "MÉTODO STACK NO ES UNA ENTIDAD FINANCIERA. ESTE SITIO NO FORMA PARTE DE FACEBOOK NI DE FACEBOOK INC. ADEMÁS, ESTE SITIO NO ESTÁ RESPALDADO POR FACEBOOK DE NINGUNA MANERA. FACEBOOK ES UNA MARCA REGISTRADA DE META, INC.",
-    "auth_error_credentials": "Email o contraseña incorrectos. Si eres cliente nuevo, recuerda que tu clave inicial es 123456.",
-    "auth_error_universal": "Tu cuenta ya está registrada. Por favor, usa tu clave personal o contacta a soporte para resetearla a 123456 si la olvidaste.",
+    "auth_error_credentials": "Email o contraseña incorrectos. Si eres cliente nuevo, recuerda que tu clave inicial es Ragnar07$.",
+    "auth_error_universal": "Tu cuenta ya está registrada. Por favor, usa tu clave personal o contacta a soporte para resetearla a Ragnar07$ si la olvidaste.",
     "auth_phone": "Teléfono Móvil",
     "auth_phone_placeholder": "987 654 321",
     "auth_password_min": "Mínimo 6 caracteres",
-    "auth_trial_btn": "Empezar Prueba Gratuita",
+    "auth_trial_btn": "Empezar Prueba Gratuita - 3 Días Gratis",
     "auth_already_account": "¿Ya tienes una cuenta?",
     "auth_loading_register": "Creando cuenta...",
     "planner_strategic_center": "CENTRO ESTRATÉGICO",

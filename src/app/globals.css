@@ -8,10 +8,17 @@
   }
   * { box-sizing: border-box; }
 
+  body {
+    @apply bg-[#f8faf8] text-emerald-950 antialiased;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.03) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(5, 150, 105, 0.03) 0px, transparent 50%);
+  }
+
   /* Scrollbar */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #d0cec6; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
 }
 
 @layer components {

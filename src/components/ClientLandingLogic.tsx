@@ -14,7 +14,11 @@ const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup'), {
   ssr: false
 });
 
-export default function ClientLandingLogic() {
+export default function ClientLandingLogic({ 
+  onOpenPayment 
+}: { 
+  onOpenPayment: (name: string, price: string) => void 
+}) {
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
 
   useEffect(() => {
@@ -27,7 +31,10 @@ export default function ClientLandingLogic() {
 
   return (
     <I18nProvider>
-      <MainSections showFloatingCTA={showFloatingCTA} />
+      <MainSections 
+        showFloatingCTA={showFloatingCTA} 
+        onOpenPayment={onOpenPayment}
+      />
       <ExitIntentPopup />
     </I18nProvider>
   );

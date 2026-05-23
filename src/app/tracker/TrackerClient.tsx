@@ -36,7 +36,7 @@ export default function TrackerClient(props: Props) {
 }
 
 function TrackerContent({ userId, userEmail }: Props) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const { t } = useTranslation();
   const now = new Date();
@@ -48,9 +48,17 @@ function TrackerContent({ userId, userEmail }: Props) {
   const userName = formatName(userEmail);
 
   const [page, setPage]   = useState<'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos' | 'modulos'>('tracker');
-  const [month, setMonth] = useState(now.getMonth());
-  const [year, setYear]   = useState(now.getFullYear());
-  const [selectedDay, setSelectedDay] = useState(now.getDate());
+  const [month, setMonth] = useState(0);
+  const [year, setYear]   = useState(2026);
+  const [selectedDay, setSelectedDay] = useState(1);
+
+  useEffect(() => {
+    const d = new Date();
+    setMonth(d.getMonth());
+    setYear(d.getFullYear());
+    setSelectedDay(d.getDate());
+  }, []);
+
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [userTier, setUserTier] = useState<string>('trial');
@@ -61,18 +69,33 @@ function TrackerContent({ userId, userEmail }: Props) {
 
   useEffect(() => {
     async function initUser() {
-      const { data: profile } = await supabase
+      let { data: profile, error } = await supabase
         .from('profiles')
-        .select('tier, is_paid, created_at')
+        .select('tier, is_paid, created_at, email')
         .eq('id', userId)
         .single();
       
+      // Fallback: Si no lo encuentra por ID, buscar por Email
+      if (!profile || error) {
+        console.warn('Perfil no encontrado por ID, intentando por Email...');
+        const { data: profileByEmail } = await supabase
+          .from('profiles')
+          .select('tier, is_paid, created_at, email')
+          .eq('email', userEmail)
+          .single();
+        if (profileByEmail) profile = profileByEmail;
+      }
+      
       if (profile) {
+        const currentTier = (profile.tier || 'trial').toLowerCase();
+        const hasPaidTier = !['trial', 'free', 'gratis'].includes(currentTier) && !currentTier.startsWith('suspended');
+        
         setUserTier(profile.tier || 'trial');
-        setIsPaid(profile.is_paid || false);
+        setIsPaid(profile.is_paid || hasPaidTier);
+        const isActuallyPaid = profile.is_paid || hasPaidTier;
 
         // Verificación de Expiración de Prueba (72h)
-        const isTrialUser = !profile.is_paid || profile.tier === 'trial' || profile.tier === 'free' || profile.tier === 'gratis';
+        const isTrialUser = !isActuallyPaid;
         if (isTrialUser && profile.created_at) {
           const start = new Date(profile.created_at);
           const now = new Date();
@@ -243,33 +266,38 @@ function TrackerContent({ userId, userEmail }: Props) {
   const isTrackerSection = page === 'tracker' || page === 'dashboard';
 
   const handlePageChange = (p: 'tracker' | 'dashboard' | 'planner' | 'finances' | 'recursos' | 'modulos') => {
+    const tier = (userTier || '').toLowerCase();
+    const isTrialUser = !isPaid || ['trial', 'free', 'gratis'].includes(tier);
+
+    // 1. Recursos & Modulos (ACCESO LIBRE PARA TRIAL DURANTE 72H)
     if (p === 'recursos' || p === 'modulos') {
       setPage(p);
       return;
     }
     
-    // Si es trial o stack completo/duo, permitir todo
-    if (!isPaid || ['duo', 'max', 'stack completo', 'completo', 'trial', 'free', 'gratis'].includes(userTier)) {
+    // 2. Full Access or Trial (Trial has access to everything except specific restrictions within Recursos)
+    const isFullAccess = ['duo', 'max', 'plan_max', 'plan max', 'stack completo', 'completo'].includes(tier);
+    if (isFullAccess || isTrialUser) {
       setPage(p);
       return;
     }
 
-    // Restricciones por plan pagado (tiers individuales)
-    if (userTier === 'habitos') {
+    // 3. Paid Tier Restrictions
+    if (tier === 'habitos') {
       if (p !== 'tracker' && p !== 'dashboard') {
         setShowLockedModal(p === 'finances' ? 'finances' : 'planner');
         return;
       }
     }
     
-    if (userTier === 'tareas' || userTier === 'enfoque') {
+    if (tier === 'tareas' || tier === 'enfoque') {
       if (p !== 'planner') {
         setShowLockedModal(p === 'finances' ? 'finances' : 'tracker');
         return;
       }
     }
     
-    if (userTier === 'finanzas') {
+    if (tier === 'finanzas') {
       if (p !== 'finances') {
         setShowLockedModal(p === 'planner' ? 'planner' : 'tracker');
         return;
@@ -280,7 +308,7 @@ function TrackerContent({ userId, userEmail }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f9f7] text-[#1a2e1e] font-sans selection:bg-emerald-100 relative">
+    <div className="min-h-screen font-sora selection:bg-emerald-100 relative">
       <TourBienvenida />
       <TopNav 
         page={page === 'dashboard' ? 'tracker' : page} 
@@ -296,12 +324,12 @@ function TrackerContent({ userId, userEmail }: Props) {
         <div className="px-6 py-8 max-w-[1400px] mx-auto animate-in fade-in duration-500">
           <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-6">
-              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-app-text3 mb-2">
+              <h5 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-800/40 mb-2">
                 {t('tracker_header')}
               </h5>
               {(!isPaid || userTier === 'trial' || userTier === 'free' || userTier === 'gratis') && (
-                <div className="bg-emerald-100 text-emerald-700 px-6 py-2 rounded-full text-[10px] font-black uppercase flex items-center gap-3 border border-emerald-200 animate-pulse mb-2 shadow-sm">
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                <div className="bg-emerald-500 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase flex items-center gap-3 animate-pulse mb-2 shadow-lg shadow-emerald-200">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                   Trial Activo: 72h restantes
                 </div>
               )}
@@ -489,7 +517,8 @@ function TrackerContent({ userId, userEmail }: Props) {
 
                 {/* REGLA DE ORO (Nunca falles dos veces) */}
                 {(() => {
-                  const yesterday = new Date();
+                  const d = new Date();
+                  const yesterday = new Date(d);
                   yesterday.setDate(yesterday.getDate() - 1);
                   const yDate = toISODate(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
                   
@@ -499,7 +528,7 @@ function TrackerContent({ userId, userEmail }: Props) {
                     if (completionMap.get(h.id)?.has(yDate)) totalAyer++;
                   });
 
-                  if (totalAyer === 0 && displayHabits.length > 0 && month === now.getMonth() && year === now.getFullYear()) {
+                  if (totalAyer === 0 && displayHabits.length > 0 && month === d.getMonth() && year === d.getFullYear()) {
                     return (
                       <div className="bg-rose-50 border-2 border-rose-100 p-6 rounded-[32px] flex items-center gap-6 animate-pulse mt-4">
                         <div className="w-12 h-12 bg-rose-500 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">⚠️</div>
@@ -599,7 +628,7 @@ function TrackerContent({ userId, userEmail }: Props) {
               <button 
                 onClick={() => {
                   const msg = `Hola Orlando, mi prueba de 3 días expiró y quiero activar mi cuenta. Mi correo es: ${userEmail}`;
-                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                  window.open(`https://wa.me/51914587375?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-black uppercase text-sm hover:bg-emerald-600 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-3"
               >
@@ -628,16 +657,17 @@ function TrackerContent({ userId, userEmail }: Props) {
             <div className="w-20 h-20 bg-brand-pink/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-4xl">🔒</span>
             </div>
-            <h2 className="text-2xl font-black text-app-text mb-4 uppercase tracking-tight">Módulo Bloqueado</h2>
+            <h2 className="text-2xl font-black text-app-text mb-4 uppercase tracking-tight">Acceso Premium</h2>
             <p className="text-app-text2 text-sm leading-relaxed mb-8">
-              Este módulo no está incluido en tu plan actual (**Plan {userTier.toUpperCase()}**). 
-              Pásate al **Plan Stack Completo** para activarlo y desbloquear todo el potencial del MÉTODO STACK.
+              Este módulo es exclusivo para miembros activos. Tu plan actual es <strong>{(userTier || '').toUpperCase()}</strong>.
+              <br/><br/>
+              Pásate al <strong>Plan Stack Completo</strong> para desbloquear todas las herramientas de ingeniería conductual.
             </p>
             <div className="flex flex-col gap-3">
               <button 
                 onClick={() => {
                   const msg = `Hola Orlando, quiero mi Plan Stack Completo. Mi correo es: ${userEmail}`;
-                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                  window.open(`https://wa.me/51914587375?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-4 bg-brand-green text-white rounded-2xl font-black uppercase text-xs hover:bg-brand-green/90 transition-all shadow-lg shadow-brand-green/20 flex items-center justify-center gap-2"
               >

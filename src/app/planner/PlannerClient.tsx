@@ -115,7 +115,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
   const [isPaid, setIsPaid] = useState(initialIsPaid);
   const [isExpired, setIsExpired] = useState(false);
   const [showLockedModal, setShowLockedModal] = useState(false);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     async function checkUserPlan() {
@@ -2039,7 +2039,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
               <button
                 onClick={() => {
                   const msg = `Hola Orlando, quiero mi Plan Dúo. Mi correo es: ${userEmail}`;
-                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                  window.open(`https://wa.me/51914587375?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase text-xs hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
               >
@@ -2072,7 +2072,7 @@ function PlannerContent({ userId, userEmail = '', asEmbedded = false, isPaid: in
               <button 
                 onClick={() => {
                   const msg = `Hola Orlando, mi prueba de 3 días expiró y quiero activar mi cuenta. Mi correo es: ${userEmail}`;
-                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                  window.open(`https://wa.me/51914587375?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-black uppercase text-sm hover:bg-emerald-600 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-3"
               >

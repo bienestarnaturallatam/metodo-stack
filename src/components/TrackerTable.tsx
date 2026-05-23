@@ -25,10 +25,17 @@ export default function TrackerTable({
 }: Props) {
   const { t, lang } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const diaHoy = new Date().getDate();
+  const [diaHoy, setDiaHoy] = useState<number | null>(null);
+  const [isCM, setIsCM]     = useState(false);
+
+  useEffect(() => {
+    const now = new Date();
+    setDiaHoy(now.getDate());
+    setIsCM(month === now.getMonth() && year === now.getFullYear());
+  }, [month, year]);
+
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
-  const isCM = month === new Date().getMonth() && year === new Date().getFullYear();
 
   const days  = daysInMonth(month, year);
   const dr    = Array.from({ length: days }, (_, i) => i + 1);
@@ -66,21 +73,23 @@ export default function TrackerTable({
   };
   const isS = (d: number) => d === selectedDay;
 
-  const TH2 = 'sticky left-0 z-40 bg-white w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)] text-left px-3 sm:px-5 font-black uppercase text-brand-green tracking-wider';
-  const TD2 = 'sticky left-0 z-30 w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-app-border shadow-[4px_0_10px_-2px_rgba(0,0,0,0.1)] bg-white px-3 sm:px-5 py-2 sm:py-3.5 font-bold text-app-text overflow-hidden';
+  const TH2 = 'sticky left-0 z-40 bg-white w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-emerald-100/50 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.05)] text-left px-3 sm:px-5 font-black uppercase text-emerald-600 tracking-wider';
+  const TD2 = 'sticky left-0 z-30 w-[240px] sm:w-[280px] min-w-[240px] sm:min-w-[280px] max-w-[240px] sm:max-w-[280px] border-r-2 border-b border-emerald-100/50 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.05)] bg-white px-3 sm:px-5 py-2 sm:py-3.5 font-bold text-emerald-950 overflow-hidden';
 
-  const dayCell = 'w-[40px] sm:w-[46px] min-w-[40px] sm:min-w-[46px] max-w-[40px] sm:max-w-[46px] border-r border-b border-app-border text-center';
+  const dayCell = 'w-[40px] sm:w-[46px] min-w-[40px] sm:min-w-[46px] max-w-[40px] sm:max-w-[46px] border-r border-b border-emerald-100/50 text-center';
 
   return (
     <div className="bg-app-surface border border-app-border rounded-xl shadow-sm overflow-hidden text-[10px] sm:text-[11px] text-app-text relative">
       <div className="sm:hidden absolute top-0 right-0 bg-brand-green text-white text-[7px] font-black px-2 py-0.5 rounded-bl-lg z-[50] animate-pulse uppercase tracking-tighter">Desliza →</div>
-      <div className="p-3 sm:p-4 border-b border-app-border bg-app-bg/30">
-         <h2 className="text-base sm:text-lg font-black uppercase text-app-text2 tracking-tighter">
-           {isCM && <span className="mr-2 text-brand-green">{String(diaHoy).padStart(2, '0')}</span>}
-           {new Date(year, month).toLocaleDateString(
-             lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', 
-             { month: 'long', year: 'numeric' }
-           )}
+      <div className="p-4 sm:p-6 border-b border-emerald-100/50 bg-emerald-50/20">
+        <h2 className="text-xl sm:text-2xl font-black uppercase text-emerald-950 tracking-tighter flex items-center gap-3">
+          {(isCM && diaHoy) && <span className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow-lg shadow-emerald-200">{String(diaHoy).padStart(2, '0')}</span>}
+          <span className="italic">
+             {new Date(year, month).toLocaleDateString(
+               lang === 'pt' ? 'pt-BR' : lang === 'en' ? 'en-US' : 'es-ES', 
+               { month: 'long', year: 'numeric' }
+             )}
+           </span>
          </h2>
       </div>
       <div ref={scrollContainerRef} className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-emerald-100 scrollbar-track-transparent">

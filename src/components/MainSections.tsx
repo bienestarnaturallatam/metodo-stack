@@ -27,11 +27,25 @@ const CarruselModulos = dynamic(() => import('@/components/CarruselModulos'), {
   ssr: false
 });
 
-const WSP_GLOBAL_LINK = "https://wa.me/51989078285?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20y%20quiero%20mi%20llave%20de%20acceso%20gratis%20por%203%20d%C3%ADas%20al%20M%C3%A9todo%20STACK.%20%F0%9F%8C%BF";
+import LocalPaymentModal from './LocalPaymentModal';
 
-export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boolean }) {
-  const { lang, t, currency } = useTranslation();
+
+const WSP_GLOBAL_LINK = "https://wa.me/51914587375?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20y%20quiero%20mi%20llave%20de%20acceso%20gratis%20por%203%20d%C3%ADas%20al%20M%C3%A9todo%20STACK.%20%F0%9F%8C%BF";
+
+export default function MainSections({ 
+  showFloatingCTA, 
+  onOpenPayment 
+}: { 
+  showFloatingCTA: boolean;
+  onOpenPayment: (name: string, price: string) => void;
+}) {
+  const { lang, t, currency, isPeru } = useTranslation();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const HOTMART_LINK = isPeru 
+    ? "https://pay.hotmart.com/I93345386S?checkoutMode=10&bid=1731613271708" 
+    : "https://pay.hotmart.com/P105923727L?checkoutMode=10";
+
 
   const faqs = Array.from({ length: 8 }, (_, i) => ({
     q: t(`faq_${i + 1}_q`),
@@ -166,17 +180,15 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
 
             {/* CTA FINAL DE SECCIÓN */}
             <div className="text-center">
-              <a 
-                href={WSP_GLOBAL_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-12 py-5 md:py-6 bg-[#00C853] text-black rounded-full font-black italic text-[14px] md:text-xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 mb-6 w-full md:w-auto max-w-[90vw] mx-auto"
+              <Link 
+                href="/register"
+                className="group relative flex md:inline-flex items-center justify-center px-6 md:px-12 py-5 md:py-6 bg-[#00C853] text-black rounded-full font-black italic text-[14px] md:text-xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/30 mb-6 w-full md:w-auto max-w-[90vw] mx-auto no-underline"
               >
                 <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
                   <Zap className="w-4 h-4 md:w-5 md:h-5 text-[#00C853] fill-[#00C853]" />
                 </div>
-              </a>
+              </Link>
               <p className="text-sm font-bold text-[#111111]/40 uppercase tracking-widest mb-10">
                 Sin tarjeta de crédito · Cancela cuando quieras
               </p>
@@ -291,17 +303,15 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
             <p className="text-sm font-black text-[#00C853] uppercase tracking-widest mb-6 italic">
               "Si te identificaste con el lado izquierdo, STACK fue diseñado exactamente para ti."
             </p>
-            <a 
-              href={WSP_GLOBAL_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex md:inline-flex items-center justify-center px-6 md:px-12 py-4 md:py-5 bg-[#00C853] text-black rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 transition-all shadow-xl shadow-[#00C853]/20 group w-full md:w-auto max-w-[90vw] mx-auto"
+            <Link 
+              href="/register"
+              className="flex md:inline-flex items-center justify-center px-6 md:px-12 py-4 md:py-5 bg-[#00C853] text-black rounded-full font-black italic text-[13px] md:text-lg tracking-widest hover:scale-105 transition-all shadow-xl shadow-[#00C853]/20 group w-full md:w-auto max-w-[90vw] mx-auto no-underline"
             >
               <span className="mr-2 md:mr-3 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
               <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
                 <Zap className="w-4 h-4 text-[#00C853] fill-[#00C853]" />
               </div>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -314,7 +324,7 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
               {t('pricing_title')}
             </h2>
             <p className="text-lg font-bold text-[#111111]/40 uppercase tracking-widest max-w-2xl mx-auto">
-              Precios en dólares americanos (USD). <br className="md:hidden" />
+              Precios en {isPeru ? 'soles (PEN)' : 'dólares americanos (USD)'}. <br className="md:hidden" />
               Pago anual único — sin sorpresas ni renovaciones.
             </p>
             <div className="w-24 h-1.5 bg-[#00C853] mx-auto rounded-full mt-4" />
@@ -346,10 +356,10 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
                 price: "7.90 Cada módulo", 
                 period: "módulo / año · via Hotmart", 
                 features: [
-                  "Solo Hábitos — $7.90",
-                  "Solo Enfoque Semanal — $7.90",
-                  "Solo Finanzas — $7.90",
-                  "Solo Recursos: Habitos Atómicos — $7.90"
+                  `Solo Hábitos — ${currency}${isPeru ? ' 9.90' : ' 7.90'}`,
+                  `Solo Enfoque Semanal — ${currency}${isPeru ? ' 9.90' : ' 7.90'}`,
+                  `Solo Finanzas — ${currency}${isPeru ? ' 9.90' : ' 7.90'}`,
+                  `Solo Recursos: Habitos Atómicos — ${currency}${isPeru ? ' 9.90' : ' 7.90'}`
                 ], 
                 blockedFeatures: [],
                 cta: "ACTIVAR AHORA", 
@@ -378,7 +388,7 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
                 noteColor: "text-red-600 animate-blink-red font-black text-sm uppercase tracking-tight"
               },
             ].map((plan, i) => i === 1 ? (
-              <CarruselModulos key={i} />
+              <CarruselModulos key={i} onOpenPaymentModal={onOpenPayment} />
             ) : (
               <div key={i} className={`p-8 rounded-[40px] border flex flex-col transition-all duration-500 relative ${plan.popular ? 'border-[#00C853] border-2 shadow-2xl scale-[1.05] bg-white z-10' : 'border-black/5 bg-white/50'}`}>
                 {plan.badge && (
@@ -395,7 +405,7 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
                     </div>
                   )}
                   <div className="text-4xl font-black mb-1 italic">
-                    {plan.price === '0' ? 'FREE' : `USD $${plan.price}`} 
+                    {plan.price === '0' ? 'FREE' : `${currency}${plan.price === '14.90' ? (isPeru ? ' 19.90' : '14.90') : (isPeru ? ' 9.90' : '7.90')}`} 
                   </div>
                   <div className={`text-[10px] font-bold uppercase tracking-widest ${plan.price === '0' ? 'text-[#00C853]' : 'text-black/30'}`}>
                     {plan.price === '0' ? 'GRATIS — ACCESO 3 DÍAS' : `/ ${plan.period}`}
@@ -428,14 +438,27 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
                   </div>
                 )}
 
-                <a 
-                  href={plan.price === '0' ? WSP_GLOBAL_LINK : '/register'}
-                  target={plan.price === '0' ? '_blank' : undefined}
-                  rel={plan.price === '0' ? 'noopener noreferrer' : undefined}
-                  className={`block w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-black hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}
-                >
-                  {plan.cta}
-                </a>
+                {plan.price === '0' ? (
+                  <Link
+                    href="/register"
+                    className={`block w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all no-underline ${plan.popular ? 'bg-[#00C853] text-black hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}
+                  >
+                    {plan.cta}
+                  </Link>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      if (isPeru) {
+                        onOpenPayment(plan.name, plan.price === '14.90' ? '19.90' : '9.90');
+                      } else {
+                        window.open(HOTMART_LINK, '_blank');
+                      }
+                    }}
+                    className={`block w-full py-4 rounded-2xl text-center text-xs font-black uppercase transition-all ${plan.popular ? 'bg-[#00C853] text-black hover:scale-105 shadow-lg shadow-[#00C853]/20' : 'border-2 border-black hover:bg-black hover:text-white'}`}
+                  >
+                    {plan.cta}
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -487,17 +510,15 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
             En 5 minutos configuras tus primeros hábitos y tu planeador de la semana. Gratis.
           </p>
 
-          <a 
-            href={WSP_GLOBAL_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex md:inline-flex items-center justify-center px-6 md:px-14 py-5 md:py-7 bg-[#00C853] text-black rounded-full font-black italic text-[15px] md:text-2xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/40 mb-8 group w-full md:w-auto max-w-[90vw] mx-auto"
+          <Link 
+            href="/register"
+            className="flex md:inline-flex items-center justify-center px-6 md:px-14 py-5 md:py-7 bg-[#00C853] text-black rounded-full font-black italic text-[15px] md:text-2xl tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#00C853]/40 mb-8 group w-full md:w-auto max-w-[90vw] mx-auto no-underline"
           >
             <span className="mr-2 md:mr-4 uppercase whitespace-nowrap md:whitespace-normal">EMPEZAR MI TRANSFORMACIÓN</span>
             <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
               <Zap className="w-5 h-5 md:w-6 md:h-6 text-[#00C853] fill-[#00C853]" />
             </div>
-          </a>
+          </Link>
 
           <p className="text-[#AAAAAA]/60 text-xs font-bold uppercase tracking-widest mb-16">
             Sin tarjeta de crédito · Cancela cuando quieras · Garantía 7 días
@@ -537,7 +558,7 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 bg-[#00C853] rounded-lg flex items-center justify-center text-white text-xs font-black -rotate-12 shadow-lg shadow-[#00C853]/30">S</div>
-                <span className="font-fraunces text-2xl font-black italic text-white tracking-tighter uppercase">MÉTODO STACK</span>
+                <span className="font-sora text-2xl font-black italic text-white tracking-tighter uppercase">MÉTODO <span className="text-emerald-500">STACK</span></span>
               </div>
               <p className="text-white/40 text-sm leading-relaxed mb-8 max-w-xs font-medium uppercase tracking-widest">
                 {t('footer_tagline')}
@@ -588,7 +609,7 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
                 </div>
                 <div className="flex flex-col gap-4">
                   <a 
-                    href="https://wa.me/51989078285?text=Hola,%20vi%20tu%20plataforma%20STACK%20y%20quiero%20informaci%C3%B3n%20sobre%20tus%20servicios%20de%20desarrollo%20de%20SaaS."
+                    href="https://wa.me/51914587375?text=Hola,%20vi%20tu%20plataforma%20STACK%20y%20quiero%20informaci%C3%B3n%20sobre%20tus%20servicios%20de%20desarrollo%20de%20SaaS."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-[#FDFBF7] p-5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-black/20 block text-left border border-[#E5E5E5]/10"
@@ -621,17 +642,15 @@ export default function MainSections({ showFloatingCTA }: { showFloatingCTA: boo
 
       {/* FLOATING CTA */}
       <div className={`fixed bottom-4 left-4 right-4 md:bottom-6 md:right-6 md:left-auto md:w-auto z-[999] transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
-        <a 
-          href={WSP_GLOBAL_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center bg-[#00C853] text-black py-4 md:py-3 px-6 md:px-8 rounded-full font-black uppercase text-[11px] md:text-[10px] tracking-widest shadow-[0_20px_40px_rgba(0,200,83,0.4)] hover:scale-105 transition-all group border-2 border-white/20 w-full md:w-auto whitespace-nowrap md:whitespace-normal"
+        <Link 
+          href="/register"
+          className="flex items-center justify-center bg-[#00C853] text-black py-4 md:py-3 px-6 md:px-8 rounded-full font-black uppercase text-[11px] md:text-[10px] tracking-widest shadow-[0_20px_40px_rgba(0,200,83,0.4)] hover:scale-105 transition-all group border-2 border-white/20 w-full md:w-auto whitespace-nowrap md:whitespace-normal no-underline"
         >
           <span className="mr-2 md:mr-3 italic">EMPEZAR MI TRANSFORMACIÓN</span>
           <div className="w-7 h-7 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center shadow-sm shrink-0">
             <Zap className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#00C853] fill-[#00C853]" />
           </div>
-        </a>
+        </Link>
       </div>
     </>
   );

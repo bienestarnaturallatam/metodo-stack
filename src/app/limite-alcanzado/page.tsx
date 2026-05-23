@@ -52,7 +52,7 @@ export default function LimiteAlcanzadoPage() {
         {/* Acciones */}
         <div className="flex flex-col gap-4">
           <a
-            href="https://wa.me/51999999999?text=Hola,%20alcancé%20el%20límite%20de%20dispositivos%20en%20STACK%20y%20necesito%20ayuda."
+            href="https://wa.me/51914587375?text=Hola,%20alcancé%20el%20límite%20de%20dispositivos%20en%20STACK%20y%20necesito%20ayuda."
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-4 bg-[#25D366] text-white text-[13px] font-black uppercase tracking-widest rounded-2xl

@@ -119,7 +119,7 @@ export default function MindMap() {
   const totalHeight = mindMapData.length * BRANCH_HEIGHT;
   
   return (
-    <div className="w-full overflow-x-auto overflow-y-hidden py-10 sm:py-20 px-4 sm:px-12 bg-[#fdfdfd] rounded-[24px] sm:rounded-[48px] relative border border-gray-100">
+    <div className="w-full overflow-x-auto overflow-y-hidden py-10 sm:py-20 px-4 sm:px-12 bg-[#fdfdfd] rounded-[24px] sm:rounded-[48px] relative border border-gray-100 font-sora">
       <div className="sm:hidden absolute top-4 right-4 bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-md z-50 animate-pulse uppercase">Desliza →</div>
       
       <div className="flex items-center gap-0 min-w-max relative pr-10" style={{ height: `${totalHeight + 40}px` }}>

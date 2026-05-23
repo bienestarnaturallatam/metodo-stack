@@ -10,6 +10,7 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-dm-sans)', 'sans-serif'],
         mono: ['var(--font-dm-mono)', 'monospace'],
+        sora: ['var(--font-sora)', 'sans-serif'],
       },
       colors: {
         // Core theme colors

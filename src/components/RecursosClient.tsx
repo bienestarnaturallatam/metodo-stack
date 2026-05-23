@@ -445,7 +445,7 @@ export default function RecursosClient({
             <p className="text-lg font-medium text-gray-500 leading-relaxed italic">Este recurso (Ebook PDF + Guía de Implementación) es propiedad intelectual reservada para los alumnos que han completado su inversión en el Método Stack. Solicita tu enlace de descarga único.</p>
           </div>
           <button
-            onClick={() => window.open(`https://wa.me/51989078285?text=Hola Orlando, soy miembro del Método Stack y quiero mi libro digital. Email: ${userEmail}`, '_blank')}
+            onClick={() => window.open(`https://wa.me/51914587375?text=Hola Orlando, soy miembro del Método Stack y quiero mi libro digital. Email: ${userEmail}`, '_blank')}
             className="w-full max-w-lg py-8 bg-[#25D366] text-white rounded-[45px] font-black uppercase text-lg hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-green-500/40 flex items-center justify-center gap-8 border-b-8 border-green-700"
           >
             <Smartphone size={32} /> PEDIR COPIA POR WHATSAPP
@@ -622,7 +622,7 @@ export default function RecursosClient({
               <button 
                 onClick={() => {
                   const msg = `Hola Orlando, quiero activar mi membresía del Método STACK para entrar a la Academia. Mi correo es: ${userEmail}`;
-                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                  window.open(`https://wa.me/51914587375?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-5 bg-[#00C853] text-black rounded-2xl font-black uppercase text-xs hover:bg-[#00E676] transition-all shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
               >
@@ -652,7 +652,7 @@ export default function RecursosClient({
               </button>
             </div>
             <div className="flex-1 bg-white rounded-[80px] overflow-hidden shadow-2xl border-[15px] border-white/10 shadow-black/50">
-              <iframe src={`/planos/planos.html?lang=${lang}`} className="w-full h-full border-none" />
+              <iframe src={`/api/recursos/planos?lang=${lang}`} className="w-full h-full border-none" />
             </div>
           </div>
         </div>

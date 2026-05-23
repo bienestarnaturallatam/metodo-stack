@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/client';
 import Link from 'next/link';
 
@@ -31,7 +31,7 @@ ChartJS.register(
 );
 
 export default function AdminDashboardClient({ userId, profile }: { userId: string, profile: any }) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [emailToActivate, setEmailToActivate] = useState('');
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,6 +39,8 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
   const [sentMessages, setSentMessages] = useState<Set<string>>(new Set());
   const [prospectSearch, setProspectSearch] = useState('');
   const [clientSearch, setClientSearch] = useState('');
+  const [clientSortBy, setClientSortBy] = useState<'plan_starts_at' | 'created_at'>('plan_starts_at');
+  const [clientSortOrder, setClientSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const markAsSent = (id: string) => {
     setSentMessages(prev => {
@@ -194,10 +196,11 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
       newTier = `suspended_${currentTier}`;
     }
 
+    // Actualizamos por EMAIL para afectar a todas las posibles cuentas duplicadas
     const { error } = await supabase
       .from('profiles')
       .update({ tier: newTier, updated_at: new Date().toISOString() })
-      .eq('id', u.id);
+      .eq('email', u.email);
 
     if (error) alert(error.message);
     else fetchUsers();
@@ -211,8 +214,27 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
   const [trendYear, setTrendYear] = useState(new Date().getFullYear());
   const [newP, setNewP] = useState({ email: '', phone: '' });
 
-  const prospects = users.filter(u => u.tier === 'trial' || u.tier === 'free' || u.tier === 'suspended');
-  const activeClients = users.filter(u => !['trial', 'free', 'suspended'].includes(u.tier));
+  const prospects = users.filter(u => 
+    u.tier === 'trial' || 
+    u.tier === 'free' || 
+    u.tier === 'suspended' || 
+    u.tier?.startsWith('suspended_trial')
+  );
+
+  const activeClients = users
+    .filter(u => 
+      !['trial', 'free', 'suspended'].includes(u.tier) && 
+      !u.tier?.startsWith('suspended_trial')
+    )
+    .sort((a, b) => {
+      const valA = a[clientSortBy];
+      const valB = b[clientSortBy];
+      if (!valA) return 1;
+      if (!valB) return -1;
+      const dateA = new Date(valA).getTime();
+      const dateB = new Date(valB).getTime();
+      return clientSortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
 
   const getSalesStats = () => {
     const stats: { [key: number]: { soles: number, usd: number, count: number } } = {};
@@ -231,7 +253,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
       const isH = u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas');
       const price = u.is_usd 
         ? (isH ? 7.90 : 13.90) 
-        : (isH ? 9.90 : 12.90);
+        : (isH ? 9.90 : 19.90);
       
       if (u.is_usd) stats[day].usd += price;
       else stats[day].soles += price;
@@ -252,7 +274,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
       if (!stats[country]) stats[country] = { soles: 0, usd: 0, count: 0 };
       
       const isH = u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas');
-      const price = u.is_usd ? (isH ? 7.90 : 13.90) : (isH ? 9.90 : 12.90);
+      const price = u.is_usd ? (isH ? 7.90 : 13.90) : (isH ? 9.90 : 19.90);
       
       if (u.is_usd) stats[country].usd += price;
       else stats[country].soles += price;
@@ -378,12 +400,12 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
     }
   };
 
-  const deleteUser = async (id: string) => {
-    if (!confirm('¿ESTÁS SEGURO? Se borrarán permanentemente todos los hábitos, finanzas, tareas y sesiones de este usuario. Esta acción no se puede deshacer.')) return;
+  const deleteUser = async (u: any) => {
+    if (!confirm(`¿ESTÁS SEGURO? Se borrarán permanentemente todos los hábitos, finanzas, tareas y sesiones para el correo ${u.email}. Esta acción no se puede deshacer.`)) return;
     
     setLoading(true);
     try {
-      console.log('Iniciando eliminación total del usuario:', id);
+      console.log('Iniciando eliminación total por email:', u.email);
       
       // Lista de tablas a limpiar en orden de dependencia
       const tables = [
@@ -398,18 +420,18 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
       ];
 
       for (const table of tables) {
-        const { error } = await supabase.from(table.name).delete().eq(table.col, id);
+        const { error } = await supabase.from(table.name).delete().eq(table.col, u.id);
         if (error) console.warn(`Aviso: No se pudo limpiar la tabla ${table.name}:`, error.message);
       }
       
-      // Finalmente borrar el perfil principal
-      const { error: profileError } = await supabase.from('profiles').delete().eq('id', id);
+      // Finalmente borrar el perfil principal por EMAIL (esto borra todos los duplicados)
+      const { error: profileError } = await supabase.from('profiles').delete().eq('email', u.email);
       
       if (profileError) {
         console.error('Error final al borrar perfil:', profileError);
         alert('No se pudo eliminar el perfil principal: ' + profileError.message);
       } else {
-        alert('¡Usuario eliminado completamente!');
+        alert('¡Usuario y sus posibles duplicados eliminados completamente!');
         fetchUsers();
       }
     } catch (err: any) {
@@ -454,38 +476,38 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
 
 
   const sendWhatsAppTrialWelcome = (u: any, isUSD: boolean) => {
-    const individual = isUSD ? "Plan Individual (Hábitos O Enfoque) - $ 7.90 USD" : "Plan Individual (Hábitos O Enfoque) - S/ 9.90";
-    const planMax = isUSD ? "PlanMax (Hábitos + Enfoque + Finanzas) - $ 13.90 USD" : "PlanMax (Hábitos + Enfoque + Finanzas) - S/ 12.90";
+    const individual = isUSD ? "Plan Individual (Hábitos O Enfoque) - $ 7.90 USD" : "Plan Individual (Hábitos, Enfoque , finanza, o Recursos) -Cada uno  S/ 9.90";
+    const planMax = isUSD ? "PlanMax (Hábitos + Enfoque + Finanzas) - $ 13.90 USD" : "Stack completo (Hábitos + Enfoque + Finanzas + Recursos) - S/ 19.90";
     const message = `Hola! Tu acceso de prueba a la Plataforma SaaS METODO STACK ha sido activado por 3 días. \n\nCorreo: ${u.email}\nClave: Usa la que registraste o la universal 123456\nLogin: https://metodostack.com/login\n\nPasados los 3 días puedes activar tu cuenta anual y obtener:\n✅ Acceso completo a la Plataforma SaaS Método Stack.\n✅ Gestión inteligente de hábitos y enfoque desde cualquier dispositivo.\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nPrecios promocionales para nuestros planes anuales:\n- ${individual}\n- ${planMax}`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_welcome_usd' : '_welcome_soles'));
   };
 
   const sendWhatsAppTrialInvitation = (u: any, isUSD: boolean) => {
-    const individual = isUSD ? "$ 7.90 USD" : "S/ 9.90";
-    const planMax = isUSD ? "$ 13.90 USD" : "S/ 12.90";
-    const message = `Hola! ¿Cómo vas con tu prueba de METODO STACK? \n\nRecuerda que puedes activar el acceso completo a nuestra Plataforma SaaS para una gestión inteligente de tus hábitos y enfoque desde cualquier dispositivo.\n\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nOferta especial de hoy para planes anuales:\n- Plan Individual: ${individual}\n- PlanMax (Hábitos + Enfoque + Finanzas): ${planMax}`;
+    const individual = isUSD ? "$ 7.90 USD" : "Cada uno S/ 9.90";
+    const planMax = isUSD ? "$ 13.90 USD" : "S/ 19.90";
+    const message = `Hola! ¿Cómo vas con tu prueba de METODO STACK? \n\nRecuerda que puedes activar el acceso completo a nuestra Plataforma SaaS para una gestión inteligente de tus hábitos y enfoque desde cualquier dispositivo.\n\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nOferta especial de hoy para planes anuales:\n- Plan Individual (Hábitos, Enfoque, Finanzas, o Recursos): ${individual}\n- Stack completo (Hábitos + Enfoque + Finanzas + Recursos): ${planMax}`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_trial_usd' : '_trial_soles'));
   };
 
   const sendWhatsAppOfferReiteration = (u: any, isUSD: boolean) => {
-    const individual = isUSD ? "$ 7.90 USD" : "S/ 9.90";
-    const planMax = isUSD ? "$ 13.90 USD" : "S/ 12.90";
-    const message = `Hola! Seguimos mejorando la Plataforma SaaS METODO STACK para ti. \n\nRecuerda que al activar tu cuenta anual obtienes:\n✅ Acceso completo a la Plataforma SaaS.\n✅ Gestión inteligente de hábitos y enfoque multidispositivo.\n🎁 REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nPrecio especial del día:\n- Individual: ${individual}\n- PlanMax: ${planMax}\n\n¿Alguna duda con los módulos?`;
+    const individual = isUSD ? "$ 7.90 USD" : "Cada uno S/ 9.90";
+    const planMax = isUSD ? "$ 13.90 USD" : "S/ 19.90";
+    const message = `Hola! Seguimos mejorando la Plataforma SaaS METODO STACK para ti. \n\nRecuerda que al activar tu cuenta anual obtienes:\n✅ Acceso completo a la Plataforma SaaS.\n✅ Gestión inteligente de hábitos y enfoque multidispositivo.\n🎁 REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nPrecio especial del día:\n- Plan Individual (Hábitos, Enfoque, Finanzas, o Recursos): ${individual}\n- Stack completo (Hábitos + Enfoque + Finanzas + Recursos): ${planMax}\n\n¿Alguna duda con los módulos?`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_remark_usd' : '_remark_soles'));
   };
 
   const sendWhatsAppLastOffer = (u: any, isUSD: boolean) => {
     const planMax = isUSD ? "$ 13.90 USD" : "S/ 12.90";
-    const message = `⚠️ ÚLTIMA OPORTUNIDAD! Solo por las próximas 24 horas, llévate el PlanMax (Hábitos + Enfoque + Finanzas) anual con acceso completo a la Plataforma SaaS por solo ${planMax}.\n\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nActiva tu cuenta ahora antes de que expire la oferta. ¡Es tu última oportunidad!`;
+    const message = `⚠️ ÚLTIMA OPORTUNIDAD! Solo por las próximas 24 horas, llévate el Stack completo (Hábitos + Enfoque + Finanzas + Recursos) anual con acceso completo a la Plataforma SaaS por solo ${planMax}.\n\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nActiva tu cuenta ahora antes de que expire la oferta. ¡Es tu última oportunidad!`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_last_usd' : '_last_soles'));
   };
 
   const sendWhatsAppPaymentDetails = (u: any) => {
-    const message = `Aqui tienes los datos para tu activacion de METODO STACK: \n\n- Yape o Plin: 989078285 \n- Titular: Orlando Jose Hurtado Valle \n\nEnviame la captura por aqui e indícame qué plan deseas activar (Plan Individual o PlanMax) para darte acceso inmediato.`;
+    const message = `Aqui tienes los datos para tu activacion de METODO STACK: \n\n- Yape o Plin: 989078285 \n- Titular: Orlando Jose Hurtado Valle \n\nEnviame la captura por aqui e indícame qué plan deseas activar (Plan Individual o Stack completo) para darte acceso inmediato.`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + '_pay');
   };
@@ -577,7 +599,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
              
               <div className="space-y-4">
                  {prospects
-                   .filter(u => u.email.toLowerCase().includes(prospectSearch.toLowerCase()))
+                   .filter(u => (u.email || '').toLowerCase().includes((prospectSearch || '').toLowerCase()))
                    .map((u) => {
                      const isMatch = prospectSearch && u.email.toLowerCase().includes(prospectSearch.toLowerCase());
                      const now = new Date();
@@ -699,7 +721,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                                   </>
                                 );
                               })()}
-                              <button onClick={() => deleteUser(u.id)} className="w-7 h-7 rounded-lg bg-red-600/10 flex items-center justify-center hover:bg-red-600 transition-all group border border-red-600/10">
+                              <button onClick={() => deleteUser(u)} className="w-7 h-7 rounded-lg bg-red-600/10 flex items-center justify-center hover:bg-red-600 transition-all group border border-red-600/10">
                                  <svg className="w-3 h-3 fill-red-500 group-hover:fill-white" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm2 3h14v13H5V9zm3 2v9h2v-9H8zm4 0v9h2v-9h-2zm4 0v9h2v-9h-2zM9 4h6v2H9V4z"/></svg>
                               </button>
                              </div>
@@ -717,7 +739,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                 <input type="email" placeholder="email" value={emailToActivate} onChange={(e) => setEmailToActivate(e.target.value)} className="w-full bg-black border border-white/5 p-2 rounded text-[10px] mb-2" />
                 <button onClick={() => activateUser('habitos', false)} className="w-full py-2 bg-emerald-500 text-black rounded font-bold text-[10px] mb-1">HABITOS (S/ 9.90)</button>
                 <button onClick={() => activateUser('enfoque', false)} className="w-full py-2 bg-emerald-500/20 text-emerald-500 rounded font-bold text-[10px] mb-1">ENFOQUE (S/ 9.90)</button>
-                <button onClick={() => activateUser('plan_max', false)} className="w-full py-2 border border-white/10 rounded font-bold text-[10px]">PLAN MAX (S/ 12.90)</button>
+                <button onClick={() => activateUser('plan_max', false)} className="w-full py-2 border border-white/10 rounded font-bold text-[10px]">PLAN MAX (S/ 19.90)</button>
              </div>
              <div className="p-6 bg-white/[0.03] border border-blue-500/10 rounded-[32px] text-center">
                 <p className="text-[9px] font-black text-blue-500 uppercase mb-4">INTERNACIONAL ($)</p>
@@ -754,7 +776,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                   'Usuario / Email': u.email,
                   'Teléfono': u.phone_number || '---',
                   'País': getCountryData(u.phone_number).name,
-                  'Producto / Precio': `${u.tier?.replace('duo', 'PLAN MAX').replace('tareas', 'ENFOQUE').toUpperCase()} (${u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 13.90' : 'S/ 12.90')})`,
+                  'Producto / Precio': `${u.tier?.replace('duo', 'PLAN MAX').replace('tareas', 'ENFOQUE').toUpperCase()} (${u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 13.90' : 'S/ 19.90')})`,
                   'Sesiones': `${u.session_count || 0}/3`,
                   'Fecha Inicio': u.plan_starts_at ? new Date(u.plan_starts_at).toLocaleDateString() : '---',
                   'Fecha Término': u.plan_expires_at ? new Date(u.plan_expires_at).toLocaleDateString() : '---'
@@ -772,16 +794,24 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
               <div>Teléfono</div>
               <div>Producto / Precio</div>
               <div>Sesiones</div>
-              <div>Inicio</div>
+              <div className="relative">
+                <button 
+                  onClick={() => setClientSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                  className="flex items-center gap-1 hover:text-white transition-colors uppercase"
+                >
+                  Inicio
+                  <svg className={`w-2 h-2 fill-current transition-transform ${clientSortOrder === 'asc' ? 'rotate-180' : ''}`} viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </button>
+              </div>
               <div>Vence</div>
               <div className="text-right">Acciones</div>
            </div>
 
            <div className="space-y-2">
               {activeClients
-                .filter(u => u.email.toLowerCase().includes(clientSearch.toLowerCase()))
+                .filter(u => (u.email || '').toLowerCase().includes((clientSearch || '').toLowerCase()))
                 .map((u, idx) => {
-                  const isMatch = clientSearch && u.email.toLowerCase().includes(clientSearch.toLowerCase());
+                  const isMatch = clientSearch && (u.email || '').toLowerCase().includes((clientSearch || '').toLowerCase());
                   return (
                     <div 
                       key={u.id} 
@@ -833,7 +863,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                                  <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase flex items-center gap-1 w-fit border ${colorClass}`}>
                                     <span>{u.tier?.replace('duo', 'PLAN MAX').replace('tareas', 'ENFOQUE').toUpperCase()}</span>
                                     <span className={`border-l border-current/20 pl-1 ml-0.5 font-bold ${priceColor}`}>
-                                      {u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 13.90' : 'S/ 12.90')}
+                                      {u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 13.90' : 'S/ 19.90')}
                                     </span>
                                  </span>
                               );
@@ -869,7 +899,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                          <button onClick={() => toggleUserStatus(u)} className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all border ${u.tier?.startsWith('suspended') ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-red-500/20 text-red-500 border-red-500/30'}`}>
                             {u.tier?.startsWith('suspended') ? 'ACTIVAR' : 'SUSPENDER'}
                          </button>
-                         <button onClick={() => deleteUser(u.id)} className="w-8 h-8 rounded-lg bg-red-600/10 flex items-center justify-center hover:bg-red-600 transition-all group border border-red-600/10" title="Eliminar Cliente">
+                         <button onClick={() => deleteUser(u)} className="w-8 h-8 rounded-lg bg-red-600/10 flex items-center justify-center hover:bg-red-600 transition-all group border border-red-600/10" title="Eliminar Cliente">
                             <svg className="w-3.5 h-3.5 fill-red-500 group-hover:fill-white" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm2 3h14v13H5V9zm3 2v9h2v-9H8zm4 0v9h2v-9h-2zm4 0v9h2v-9h-2zM9 4h6v2H9V4z"/></svg>
                          </button>
                        </div>
@@ -1132,7 +1162,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                               const country = getCountryData(u.phone_number).name;
                               if (!acc[country]) acc[country] = { soles: 0, usd: 0 };
                               const isH = u.tier?.includes('habitos') || u.tier?.includes('tareas');
-                              const price = u.is_usd ? (isH ? 7.90 : 11.90) : (isH ? 9.90 : 12.90);
+                              const price = u.is_usd ? (isH ? 7.90 : 11.90) : (isH ? 9.90 : 19.90);
                               if (u.is_usd) acc[country].usd += price; else acc[country].soles += price;
                             }
                             return acc;

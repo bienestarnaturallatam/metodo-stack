@@ -159,9 +159,9 @@ export default function DashboardPage({ year, habits, currentMonth, onMonthClick
     <div className="px-6 py-8 max-w-[1400px] mx-auto animate-in fade-in duration-500">
       
       {/* CABECERA */}
-      <div className="mb-8">
-         <h2 className="font-fraunces text-3xl font-black text-app-text tracking-tight">{t('dash_title')}</h2>
-         <p className="text-[10px] uppercase font-bold tracking-widest text-app-text3 mt-1">{t('dash_subtitle')}</p>
+      <div className="mb-10">
+         <h2 className="font-sora text-4xl font-black text-emerald-950 tracking-tighter italic uppercase">{t('dash_title')}</h2>
+         <p className="text-[10px] uppercase font-black tracking-[0.4em] text-emerald-800/30 mt-2">{t('dash_subtitle')}</p>
       </div>
 
       {/* ── HIGHLIGHTS CARDS ── */}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/client';
 import { toISODate } from '@/lib/dateUtils';
 
@@ -19,7 +19,7 @@ export default function DashboardClient({ user, profile }: { user: any, profile:
   const [habits, setHabits] = useState<Habit[]>([]);
   const [logs, setLogs] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const today = toISODate(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
   const tier = profile?.tier || 'Free';

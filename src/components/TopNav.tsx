@@ -34,82 +34,96 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
   ];
 
   return (
-    <nav className="bg-app-surface border-b border-app-border sticky top-0 z-[999] pt-6 sm:pt-0 flex flex-col">
-      <div className="px-3 sm:px-6 flex items-center w-full">
-        {/* Sandwich Menu Button - Always Visible */}
-        <button 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 -ml-2 mr-2 text-app-text hover:bg-app-surface2 rounded-lg transition-colors flex-shrink-0 -translate-y-1 sm:translate-y-0"
-        >
-          <div className="space-y-1">
-            <div className={`w-5 h-0.5 bg-current transition-all ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
-            <div className={`w-5 h-0.5 bg-current transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></div>
-            <div className={`w-5 h-0.5 bg-current transition-all ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
+    <nav className="sticky top-0 z-[999] bg-white/80 backdrop-blur-xl border-b border-emerald-100/50">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Left: Menu & Logo */}
+          <div className="flex items-center gap-3 sm:gap-6">
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-emerald-900 hover:bg-emerald-50 rounded-xl sm:rounded-2xl transition-all duration-300 group"
+            >
+              <div className="space-y-1 sm:space-y-1.5">
+                <div className={`w-5 sm:w-6 h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5 sm:translate-y-2' : ''}`}></div>
+                <div className={`w-3 sm:w-4 h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0' : 'group-hover:w-6'}`}></div>
+                <div className={`w-5 sm:w-6 h-0.5 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5 sm:translate-y-2' : ''}`}></div>
+              </div>
+            </button>
+
+            <div className="flex items-center gap-2 sm:gap-3 group cursor-pointer">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-600 rounded-xl sm:rounded-2xl rotate-3 flex items-center justify-center shadow-lg shadow-emerald-200 transition-transform group-hover:rotate-6">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full animate-pulse" />
+              </div>
+              <span className="text-base sm:text-xl font-black tracking-tighter text-emerald-950 italic">MÉTODO <span className="text-emerald-600">STACK</span></span>
+            </div>
           </div>
-        </button>
 
-        {/* Logo */}
-        <div className="flex items-center gap-1.5 text-[11px] sm:text-[14px] font-black tracking-tighter py-3.5 mr-2 sm:mr-6 shrink-0 -translate-y-1 sm:translate-y-0">
-          <div className="w-2 h-2 bg-brand-green rounded-full" />
-          <span className="hidden xs:inline">MÉTODO STACK</span>
-        </div>
-
-        {/* Desktop Tabs - Hidden as requested */}
-        <div className="hidden">
-          {tabs.map((tab) => (
-            <button key={tab.id} onClick={() => setPage(tab.id)}>{tab.label}</button>
-          ))}
-        </div>
-
-      {/* Right side */}
-      <div className="ml-auto flex items-center gap-5 -translate-y-1 sm:translate-y-0">
-        {(!isPaid || userTier === 'trial' || userTier === 'free' || userTier === 'gratis') && (
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[9px] font-black uppercase border border-emerald-200 shadow-sm animate-pulse">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-            Trial Activo: 72h restantes
-          </div>
-        )}
-        
-        <span className="text-[11px] text-app-text3 hidden sm:block font-medium">{userEmail}</span>
-        <button
-          onClick={signOut}
-          className="text-[11px] text-app-text font-black uppercase tracking-widest px-4 py-1.5
-                     border border-app-border rounded-lg hover:bg-brand-pink/5 hover:text-brand-pink hover:border-brand-pink/20 transition-all shadow-sm active:scale-95"
-        >
-          {t('logout_btn')}
-        </button>
-      </div>
-      </div>
-
-      {/* Sandwich Menu Dropdown */}
-      {isMenuOpen && (
-        <div className="w-full bg-app-surface border-t border-app-border shadow-lg absolute top-full left-0 animate-in slide-in-from-top-2 duration-200 z-[1001]">
-          {tabs.map((tab) => {
-            const { id, label, icon } = tab;
-            let isLocked = false;
-            if (isPaid && userTier && !['duo', 'max', 'stack completo', 'completo', 'trial', 'free', 'gratis'].includes(userTier)) {
-              if (userTier === 'habitos' && id !== 'tracker' && id !== 'recursos' && id !== 'modulos') isLocked = true;
-              if ((userTier === 'tareas' || userTier === 'enfoque') && id !== 'planner' && id !== 'recursos' && id !== 'modulos') isLocked = true;
-              if (userTier === 'finanzas' && id !== 'finances' && id !== 'recursos' && id !== 'modulos') isLocked = true;
-            }
-
-            return (
-              <button
-                key={id}
-                onClick={() => { setPage(id); setIsMenuOpen(false); }}
-                className={`w-full text-left px-6 py-4 text-[11px] font-black uppercase tracking-widest transition-all border-b border-app-border last:border-0 flex items-center justify-between
-                  ${page === id
-                    ? 'text-brand-green bg-brand-green/5 border-l-4 border-l-brand-green'
-                    : 'text-app-text3 border-l-4 border-l-transparent hover:bg-app-surface2'}`}
-              >
-                <div className="flex items-center gap-3">
-                  {icon && icon}
-                  <span>{label}</span>
+          {/* Right: Info & Actions */}
+          <div className="flex items-center gap-4 sm:gap-8">
+            <div className="hidden lg:flex items-center gap-6 pr-6 border-r border-emerald-100">
+              <div className="flex flex-col items-end">
+                <span className="text-[10px] font-black text-emerald-800/40 uppercase tracking-widest">{t('common_authorized_device')}</span>
+                <span className="text-xs font-bold text-emerald-950">{userEmail}</span>
+              </div>
+              {(!isPaid || userTier === 'trial' || userTier === 'free' || userTier === 'gratis') && (
+                <div className="px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase border border-emerald-100 shadow-sm animate-pulse flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                  Trial: 72h
                 </div>
-                {isLocked && <span>🔒</span>}
-              </button>
-            );
-          })}
+              )}
+            </div>
+
+            <button
+              onClick={signOut}
+              className="px-4 sm:px-6 py-2 sm:py-2.5 bg-rose-50 text-rose-600 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-xl border border-rose-100 hover:bg-rose-600 hover:text-white transition-all duration-300 active:scale-95 shadow-sm shadow-rose-100"
+            >
+              {t('logout_btn')}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-white border-t border-emerald-100 shadow-2xl animate-in slide-in-from-top-4 duration-300">
+          <div className="max-w-2xl mx-auto p-4 space-y-2">
+            {tabs.map((tab) => {
+              const { id, label, icon } = tab;
+              let isLocked = false;
+              const tier = (userTier || '').toLowerCase();
+              const isTrialUser = !isPaid || ['trial', 'free', 'gratis'].includes(tier);
+              
+              if (isTrialUser) {
+                if (id === 'recursos') isLocked = true;
+              } else {
+                const isFull = ['duo', 'max', 'plan_max', 'plan max', 'stack completo', 'completo'].includes(tier);
+                if (!isFull) {
+                  if (tier === 'habitos' && id !== 'tracker' && id !== 'recursos' && id !== 'modulos') isLocked = true;
+                  if ((tier === 'tareas' || tier === 'enfoque') && id !== 'planner' && id !== 'recursos' && id !== 'modulos') isLocked = true;
+                  if (tier === 'finanzas' && id !== 'finances' && id !== 'recursos' && id !== 'modulos') isLocked = true;
+                }
+              }
+
+              return (
+                <button
+                  key={id}
+                  onClick={() => { setPage(id); setIsMenuOpen(false); }}
+                  className={`w-full group p-4 rounded-2xl flex items-center justify-between transition-all duration-200
+                    ${page === id 
+                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' 
+                      : 'hover:bg-emerald-50 text-emerald-900'}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-xl transition-colors ${page === id ? 'bg-white/20' : 'bg-emerald-100 text-emerald-600 group-hover:bg-white'}`}>
+                      {icon}
+                    </div>
+                    <span className="text-sm font-black uppercase tracking-wider">{label}</span>
+                  </div>
+                  {isLocked && <span className="text-lg opacity-50">🔒</span>}
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
     </nav>

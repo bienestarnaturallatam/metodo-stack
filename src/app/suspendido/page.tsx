@@ -36,7 +36,7 @@ export default function SuspendidoPage() {
         {/* Acciones */}
         <div className="flex flex-col gap-3">
           <a
-            href="https://wa.me/51999999999?text=Hola,%20mi%20cuenta%20fue%20suspendida%20y%20necesito%20ayuda."
+            href="https://wa.me/51914587375?text=Hola,%20mi%20cuenta%20fue%20suspendida%20y%20necesito%20ayuda."
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-2.5 bg-brand-green text-white text-xs font-medium rounded-sm

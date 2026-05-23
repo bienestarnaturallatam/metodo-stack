@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import translationsData from '@/lib/translations.json';
 
 const translations = translationsData as any;
@@ -11,11 +11,11 @@ interface I18nContextType {
   translateText: (text: string) => Promise<string>;
   currency: string;
   country: string;
+  isPeru: boolean;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-// Helper to get translation value (ES only)
 const getTranslation = (key: string, params?: Record<string, any>) => {
   const dict = translations.es;
   const keys = key.split('.');
@@ -36,15 +36,52 @@ const getTranslation = (key: string, params?: Record<string, any>) => {
 };
 
 export function I18nProvider({ children }: { children: ReactNode }) {
+  const [geo, setGeo] = useState({ country: 'PE', currency: 'S/.', isPeru: true });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const geoOverride = params.get('geo');
+
+    if (geoOverride === 'pe') {
+      setGeo({ country: 'PE', currency: 'S/.', isPeru: true });
+      return;
+    } else if (geoOverride === 'intl') {
+      setGeo({ country: 'US', currency: 'USD $', isPeru: false });
+      return;
+    }
+
+    const detectGeo = async () => {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        const isPE = data.country_code === 'PE';
+        setGeo({
+          country: data.country_code || 'PE',
+          currency: isPE ? 'S/.' : 'USD $',
+          isPeru: isPE
+        });
+      } catch (e) {
+        console.error('Geo detection failed', e);
+      }
+    };
+    
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => detectGeo());
+      } else {
+        setTimeout(detectGeo, 1000);
+      }
+    }
+  }, []);
+
   const lang = 'es';
-  const currency = 'S/';
-  const country = 'PE';
+  const { country, currency, isPeru } = geo;
   const t = getTranslation;
   const translateText = async (text: string) => text;
   const months = translations.es.months || [];
 
   return (
-    <I18nContext.Provider value={{ lang, t, months, translateText, currency, country }}>
+    <I18nContext.Provider value={{ lang, t, months, translateText, currency, country, isPeru }}>
       {children}
     </I18nContext.Provider>
   );
@@ -61,7 +98,8 @@ export function useTranslation() {
       months: translations.es.months || [],
       translateText: async (text: string) => text,
       currency: 'S/',
-      country: 'PE'
+      country: 'PE',
+      isPeru: true
     };
   }
   return context;

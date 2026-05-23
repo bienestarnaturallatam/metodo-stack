@@ -160,6 +160,20 @@ export default function RegisterPage() {
 
           <form onSubmit={handleRegister} className="p-6 flex flex-col gap-5">
             
+            {/* Indicación de Registro */}
+            <div style={{
+              background: '#E8F5E9',
+              borderLeft: '4px solid #28A745',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              fontSize: '11.5px',
+              fontWeight: '600',
+              color: '#1B5E20',
+              lineHeight: '1.4'
+            }}>
+              🚀 Completa el registro para activar instantáneamente tus 3 días de acceso gratuito. Sin tarjeta de crédito.
+            </div>
+
             {/* Teléfono FIRST */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold text-[#4B4F56] uppercase tracking-wider px-1">{t('auth_phone')}</label>

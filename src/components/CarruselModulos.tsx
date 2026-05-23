@@ -1,77 +1,78 @@
 'use client'
-
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from '@/hooks/useTranslation'
 
-const modulos = [
-  {
-    badge: "MÓDULO 1 DE 4",
-    icono: "📋",
-    nombre: "MÓDULO HÁBITOS",
-    precio: "USD $7.90 Cada módulo",
-    periodo: "/ año · via Hotmart",
-    features: [
-      "Hábitos ilimitados",
-      "Rachas y estadísticas",
-      "Gráficos avanzados",
-      "Registro de ánimo"
-    ],
-    cta: "ACTIVAR HÁBITOS",
-    link: "#", // reemplazar con link Hotmart real
-    color: "#00C853"
-  },
-  {
-    badge: "MÓDULO 2 DE 4",
-    icono: "🎯",
-    nombre: "MÓDULO ENFOQUE",
-    precio: "USD $7.90 Cada módulo",
-    periodo: "/ año · via Hotmart",
-    features: [
-      "Planeador semanal",
-      "Gestión de tareas",
-      "Modo trabajo profundo",
-      "Priorización táctica"
-    ],
-    cta: "ACTIVAR ENFOQUE",
-    link: "#",
-    color: "#1565C0"
-  },
-  {
-    badge: "MÓDULO 3 DE 4",
-    icono: "💰",
-    nombre: "MÓDULO FINANZAS",
-    precio: "USD $7.90 Cada módulo",
-    periodo: "/ año · via Hotmart",
-    features: [
-      "Motor financiero personal",
-      "Dashboard ingresos/egresos",
-      "Semáforo de presupuesto",
-      "Liquidación de deudas"
-    ],
-    cta: "ACTIVAR FINANZAS",
-    link: "#",
-    color: "#E65100"
-  },
-  {
-    badge: "MÓDULO 4 DE 4",
-    icono: "📖",
-    nombre: "MÓDULO RECURSOS",
-    precio: "USD $7.90 Cada módulo",
-    periodo: "/ año · via Hotmart",
-    features: [
-      "Guía de hábitos (PDF)",
-      "Plano interactivo",
-      "Síntesis ejecutiva",
-      "Acceso por 1 año"
-    ],
-    cta: "ACTIVAR RECURSOS",
-    link: "#",
-    color: "#6A1B9A"
-  }
-]
-
-export default function CarruselModulos() {
+export default function CarruselModulos({ onOpenPaymentModal }: { onOpenPaymentModal?: (name: string, price: string) => void }) {
+  const { isPeru } = useTranslation()
   const [actual, setActual] = useState(0)
   const [pausado, setPausado] = useState(false)
+  
+  const modulos = [
+    {
+      badge: "MÓDULO 1 DE 4",
+      icono: "📋",
+      nombre: "MÓDULO HÁBITOS",
+      precio: isPeru ? "S/. 9.90 Cada módulo" : "USD $7.90 Cada módulo",
+      periodo: "/ año · via Hotmart",
+      features: [
+        "Hábitos ilimitados",
+        "Rachas y estadísticas",
+        "Gráficos avanzados",
+        "Registro de ánimo"
+      ],
+      cta: "ACTIVAR HÁBITOS",
+      link: isPeru ? "#" : "https://pay.hotmart.com/S105741679E?off=3wb78rk1&checkoutMode=10",
+      color: "#00C853"
+    },
+    {
+      badge: "MÓDULO 2 DE 4",
+      icono: "🎯",
+      nombre: "MÓDULO ENFOQUE",
+      precio: isPeru ? "S/. 9.90 Cada módulo" : "USD $7.90 Cada módulo",
+      periodo: "/ año · via Hotmart",
+      features: [
+        "Planeador semanal",
+        "Gestión de tareas",
+        "Modo trabajo profundo",
+        "Priorización táctica"
+      ],
+      cta: "ACTIVAR ENFOQUE",
+      link: isPeru ? "#" : "https://pay.hotmart.com/S105741679E?off=4777xbw2&checkoutMode=10",
+      color: "#1565C0"
+    },
+    {
+      badge: "MÓDULO 3 DE 4",
+      icono: "💰",
+      nombre: "MÓDULO FINANZAS",
+      precio: isPeru ? "S/. 9.90 Cada módulo" : "USD $7.90 Cada módulo",
+      periodo: "/ año · via Hotmart",
+      features: [
+        "Motor financiero personal",
+        "Dashboard ingresos/egresos",
+        "Semáforo de presupuesto",
+        "Liquidación de deudas"
+      ],
+      cta: "ACTIVAR FINANZAS",
+      link: isPeru ? "#" : "https://pay.hotmart.com/S105741679E?off=v52qrhx7&checkoutMode=10",
+      color: "#E65100"
+    },
+    {
+      badge: "MÓDULO 4 DE 4",
+      icono: "📖",
+      nombre: "MÓDULO RECURSOS",
+      precio: isPeru ? "S/. 9.90 Cada módulo" : "USD $7.90 Cada módulo",
+      periodo: "/ año · via Hotmart",
+      features: [
+        "Guía de hábitos (PDF)",
+        "Plano interactivo",
+        "Síntesis ejecutiva",
+        "Acceso por 1 año"
+      ],
+      cta: "ACTIVAR RECURSOS",
+      link: isPeru ? "#" : "https://pay.hotmart.com/S105741679E?off=4wr9mj25&checkoutMode=10",
+      color: "#6A1B9A"
+    }
+  ]
   const [animando, setAnimando] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -215,10 +216,17 @@ export default function CarruselModulos() {
 
       {/* CTA */}
       <div>
-        <a
-          href={modulo.link}
+        <button
+          onClick={() => {
+            if (onOpenPaymentModal) {
+              onOpenPaymentModal(modulo.nombre, isPeru ? "9.90" : "7.90");
+            } else {
+              window.open(modulo.link, '_blank');
+            }
+          }}
           style={{
             display: 'block',
+            width: '100%',
             background: '#00C853',
             color: '#000',
             fontWeight: '900',
@@ -226,13 +234,14 @@ export default function CarruselModulos() {
             textAlign: 'center',
             padding: '16px',
             borderRadius: '16px',
-            textDecoration: 'none',
+            border: 'none',
+            cursor: 'pointer',
             marginTop: '20px',
             letterSpacing: '0.05em'
           }}
         >
           {modulo.cta}
-        </a>
+        </button>
 
         {/* Navegación — flechas */}
         <div style={{

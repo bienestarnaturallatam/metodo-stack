@@ -147,7 +147,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
   const [showDayPicker, setShowDayPicker] = useState(false);
 
   const router = useRouter();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const { t, lang } = useTranslation();
 
   useEffect(() => {
@@ -763,7 +763,7 @@ export default function FinanceClient({ userId, userEmail, onPageChange, isPaid:
               <button
                 onClick={() => {
                   const msg = `Hola Orlando, mi prueba de 3 días expiró y quiero activar mi cuenta. Mi correo es: ${userEmail}`;
-                  window.open(`https://wa.me/51989078285?text=${encodeURIComponent(msg)}`, '_blank');
+                  window.open(`https://wa.me/51914587375?text=${encodeURIComponent(msg)}`, '_blank');
                 }}
                 className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-black uppercase text-sm hover:bg-emerald-600 hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-3"
               >

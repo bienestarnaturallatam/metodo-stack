@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Sora, DM_Sans, DM_Mono } from 'next/font/google';
+import './globals.css';
 
 // 1. CONFIGURACIÓN DE METADATOS Y PWA
 // Esto conecta tu archivo public/manifest.json con el navegador
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
   description: 'Sistema integral para convertir intenciones en rutinas reales.',
   manifest: '/manifest.json', // <-- Esta línea es la que activa el icono en el celular
   icons: {
-    icon: '/icon.png',
-    apple: '/icon.png',
+    icon: '/icon.webp',
+    apple: '/icon.webp',
   },
   appleWebApp: {
     capable: true,
