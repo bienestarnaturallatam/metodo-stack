@@ -3,10 +3,12 @@ import React from 'react';
 import Link from 'next/link';
 import ClientLandingLogic from './ClientLandingLogic';
 import { I18nProvider, useTranslation } from '@/hooks/useTranslation';
-import LocalPaymentModal from './LocalPaymentModal';
-import USDModulePaymentModal from './USDModulePaymentModal';
-import LocalModulePaymentModal from './LocalModulePaymentModal';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const LocalPaymentModal = dynamic(() => import('./LocalPaymentModal'), { ssr: false });
+const USDModulePaymentModal = dynamic(() => import('./USDModulePaymentModal'), { ssr: false });
+const LocalModulePaymentModal = dynamic(() => import('./LocalModulePaymentModal'), { ssr: false });
 
 export const WSP_GLOBAL_LINK = "https://wa.me/51914587375?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20y%20quiero%20mi%20llave%20de%20acceso%20gratis%20por%203%20d%C3%ADas%20al%20M%C3%A9todo%20STACK.%20%F0%9F%8C%BF";
 
@@ -109,6 +111,7 @@ function LandingPageContent() {
               height={800}
               loading="eager"
               fetchPriority="high"
+              decoding="sync"
             />
           </div>
       </section>
