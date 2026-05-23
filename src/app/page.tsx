@@ -1,9 +1,9 @@
 import LandingPage from '@/components/LandingPage';
 
-export default function RootPage() {
+export default function RootPage({ searchParams }: { searchParams: { geo?: string } }) {
   return (
     <>
-      <LandingPage />
+      <LandingPage initialGeo={searchParams.geo} />
     </>
   );
 }

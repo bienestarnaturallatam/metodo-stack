@@ -35,12 +35,18 @@ const getTranslation = (key: string, params?: Record<string, any>) => {
   return value;
 };
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [geo, setGeo] = useState({ country: 'PE', currency: 'S/.', isPeru: true });
+export function I18nProvider({ children, initialGeo }: { children: ReactNode, initialGeo?: string }) {
+  const isIntl = initialGeo === 'intl';
+  const defaultGeo = isIntl 
+    ? { country: 'US', currency: 'USD $', isPeru: false } 
+    : { country: 'PE', currency: 'S/.', isPeru: true };
+
+  const [geo, setGeo] = useState(defaultGeo);
 
   useEffect(() => {
+    // Client-side detection or URL override if not captured on server
     const params = new URLSearchParams(window.location.search);
-    const geoOverride = params.get('geo');
+    const geoOverride = params.get('geo') || initialGeo;
 
     if (geoOverride === 'pe') {
       setGeo({ country: 'PE', currency: 'S/.', isPeru: true });
