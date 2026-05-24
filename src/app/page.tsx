@@ -1,9 +1,10 @@
 import LandingPage from '@/components/LandingPage';
 
-export default function RootPage({ searchParams }: { searchParams: { geo?: string } }) {
+export default async function RootPage({ searchParams }: { searchParams: Promise<{ geo?: string }> }) {
+  const resolvedParams = await searchParams;
   return (
     <>
-      <LandingPage initialGeo={searchParams.geo} />
+      <LandingPage initialGeo={resolvedParams?.geo} />
     </>
   );
 }

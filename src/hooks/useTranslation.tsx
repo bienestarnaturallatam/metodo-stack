@@ -57,18 +57,78 @@ export function I18nProvider({ children, initialGeo }: { children: ReactNode, in
     }
 
     const detectGeo = async () => {
+      // 1. Detección instantánea local por Zona Horaria (Perú - America/Lima)
+      // Esto funciona sin red, es inmediato y es inmune a adblockers o políticas CORS.
       try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
-        const isPE = data.country_code === 'PE';
-        setGeo({
-          country: data.country_code || 'PE',
-          currency: isPE ? 'S/.' : 'USD $',
-          isPeru: isPE
-        });
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (timeZone && timeZone.toLowerCase().includes('lima')) {
+          setGeo({ country: 'PE', currency: 'S/.', isPeru: true });
+          console.log('[Geo] Perú detectado instantáneamente mediante Zona Horaria:', timeZone);
+          return;
+        }
       } catch (e) {
-        console.error('Geo detection failed', e);
+        console.warn('[Geo] Detección por zona horaria local fallida:', e);
       }
+
+      // Helper para fetch con timeout (evita llamadas colgadas en malas conexiones)
+      const fetchWithTimeout = async (url: string, ms = 2500) => {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), ms);
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          clearTimeout(id);
+          return response;
+        } catch (error) {
+          clearTimeout(id);
+          throw error;
+        }
+      };
+
+      // 2. Cadena de contingencia con múltiples APIs de geolocalización
+      const apis = [
+        {
+          url: 'https://ipwho.is/',
+          parse: (data: any) => data?.success ? data?.country_code : null
+        },
+        {
+          url: 'https://freeipapi.com/api/json',
+          parse: (data: any) => data?.countryCode
+        },
+        {
+          url: 'https://api.country.is/',
+          parse: (data: any) => data?.country
+        },
+        {
+          url: 'https://ipapi.co/json/',
+          parse: (data: any) => data?.country_code
+        }
+      ];
+
+      for (const api of apis) {
+        try {
+          console.log(`[Geo] Intentando geolocalización mediante: ${api.url}`);
+          const res = await fetchWithTimeout(api.url, 2500);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          
+          const data = await res.json();
+          const countryCode = api.parse(data);
+          
+          if (countryCode) {
+            const isPE = countryCode.toUpperCase() === 'PE';
+            setGeo({
+              country: countryCode.toUpperCase(),
+              currency: isPE ? 'S/.' : 'USD $',
+              isPeru: isPE
+            });
+            console.log(`[Geo] Detección exitosa. País: ${countryCode} mediante ${api.url}`);
+            return; // Éxito: romper la cadena
+          }
+        } catch (err: any) {
+          console.warn(`[Geo] Proveedor temporalmente inaccesible (${api.url}):`, err.message || err);
+        }
+      }
+
+      console.warn('[Geo] Todos los proveedores de geolocalización fallaron. Usando configuración por defecto (Perú).');
     };
     
     if (typeof window !== 'undefined') {

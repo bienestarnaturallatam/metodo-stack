@@ -102,17 +102,19 @@ function LandingPageContent() {
 
           {/* CRITICAL LCP IMAGE: NO JS REQUIRED TO RENDER */}
           <div className="hero-img-container">
-            <img
-              src="/hero-mobile.webp"
-              srcSet="/hero-mobile.webp 767w, /hero.webp 1200w"
-              sizes="(max-width: 767px) 100vw, 1024px"
-              alt="Plataforma Método Stack"
-              width={1200}
-              height={800}
-              loading="eager"
-              fetchPriority="high"
-              decoding="sync"
-            />
+            <picture>
+              <source media="(max-width: 767px)" srcSet="/hero-mobile.webp" width={640} height={237} />
+              <source media="(min-width: 768px)" srcSet="/hero.webp" width={1200} height={444} />
+              <img
+                src="/hero-mobile.webp"
+                alt="Plataforma Método Stack"
+                width={640}
+                height={237}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
           </div>
       </section>
 

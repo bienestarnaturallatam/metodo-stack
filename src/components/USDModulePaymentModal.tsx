@@ -94,11 +94,19 @@ export default function USDModulePaymentModal({ isOpen, onClose, defaultModuleNa
     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 overflow-y-auto">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose} />
       
-      <div className="relative w-full max-w-5xl bg-[#0D0D0D] border border-white/10 rounded-[32px] md:rounded-[40px] overflow-hidden shadow-[0_0_60px_rgba(0,200,83,0.15)] text-white z-10 animate-in zoom-in-95 duration-300 max-h-[90vh] flex flex-col">
-        {/* Close Button */}
+      {/* Mobile Floating Close Button */}
+      <button 
+        onClick={onClose}
+        className="fixed lg:hidden top-4 right-4 p-2.5 bg-black/60 hover:bg-black/80 border border-white/10 backdrop-blur-md rounded-full transition-all duration-300 z-[1050] text-white/70 hover:text-white flex items-center justify-center shadow-lg"
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      <div className="relative w-full max-w-5xl bg-[#0D0D0D] border border-white/10 rounded-[32px] md:rounded-[40px] overflow-hidden shadow-[0_0_60px_rgba(0,200,83,0.15)] text-white z-10 animate-in zoom-in-95 duration-300 max-h-none lg:max-h-[90vh] flex flex-col">
+        {/* Desktop Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 hover:bg-white/5 rounded-full transition-colors z-20 text-white/40 hover:text-white"
+          className="hidden lg:block absolute top-6 right-6 p-2 hover:bg-white/5 rounded-full transition-colors z-20 text-white/40 hover:text-white"
         >
           <X className="w-6 h-6" />
         </button>
@@ -122,52 +130,35 @@ export default function USDModulePaymentModal({ isOpen, onClose, defaultModuleNa
         </div>
 
         {/* Modal Scrollable Content */}
-        <div className="p-8 md:p-12 pt-0 overflow-y-auto flex-grow space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-8 md:p-12 pt-0 lg:overflow-y-auto flex-grow lg:min-h-0 flex flex-col space-y-8">
+          <div className="grid grid-cols-2 gap-3 md:gap-6">
             {modules.map((mod) => {
               const active = isCardActive(mod.name);
               return (
                 <div 
                   key={mod.id}
-                  className={`flex flex-col justify-between p-6 bg-white/5 border rounded-[24px] md:rounded-[32px] transition-all duration-300 ${active ? mod.activeBorder : `border-white/10 ${mod.borderColor}`} group`}
+                  className={`flex flex-col justify-center p-3 md:p-6 bg-white/5 border rounded-[16px] md:rounded-[32px] transition-all duration-300 ${active ? mod.activeBorder : `border-white/10 ${mod.borderColor}`} group`}
                 >
                   <div>
                     {/* Header Card */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 ${mod.iconBg} rounded-xl flex items-center justify-center shrink-0`}>
-                          {mod.icon}
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-black italic uppercase tracking-tight text-white leading-none">
-                            {mod.name}
-                          </h4>
-                          {active && (
-                            <span className="text-[8px] font-black text-[#00C853] uppercase tracking-widest block mt-0.5 animate-pulse">
-                              Selección actual
-                            </span>
-                          )}
-                        </div>
+                    <div className="flex flex-col items-center text-center gap-1 mb-3">
+                      <div className={`w-8 h-8 md:w-10 md:h-10 ${mod.iconBg} rounded-xl flex items-center justify-center shrink-0 mb-1`}>
+                        {React.cloneElement(mod.icon as React.ReactElement<any>, { className: 'w-4 h-4 md:w-5 md:h-5' })}
                       </div>
-                      <div className="text-right">
-                        <span className="text-lg font-black text-white italic">USD $7.90</span>
-                        <span className="text-[9px] font-bold text-white/30 uppercase block leading-none">/ año</span>
+                      <h4 className="text-[10px] md:text-sm font-black italic uppercase tracking-tight text-white leading-tight">
+                        {mod.name}
+                      </h4>
+                      <div className="text-center mt-1">
+                        <span className="text-[11px] md:text-lg font-black text-white italic">USD $7.90</span>
+                        <span className="text-[8px] md:text-[9px] font-bold text-white/30 uppercase block leading-none">/ año</span>
                       </div>
+                      {active && (
+                        <span className="text-[8px] font-black text-[#00C853] uppercase tracking-widest block mt-1 animate-pulse">
+                          Selección actual
+                        </span>
+                      )}
                     </div>
 
-                    <p className="text-xs font-medium text-white/60 leading-relaxed mb-4">
-                      {mod.desc}
-                    </p>
-
-                    {/* Features list */}
-                    <ul className="space-y-2 mb-6">
-                      {mod.features.map((feat, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-[11px] font-semibold text-white/80 leading-snug">
-                          <Check className="w-3.5 h-3.5 text-[#00C853] shrink-0 mt-0.5" />
-                          <span>{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
 
                   {/* CTA Button */}
@@ -194,6 +185,14 @@ export default function USDModulePaymentModal({ isOpen, onClose, defaultModuleNa
               🛡️ Garantía incondicional de satisfacción de 7 días.
             </div>
           </div>
+
+          {/* Mobile Close Link */}
+          <button
+            onClick={onClose}
+            className="block lg:hidden w-full text-center text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors py-2"
+          >
+            ← Volver y Cerrar
+          </button>
         </div>
       </div>
     </div>
