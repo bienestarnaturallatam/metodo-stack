@@ -7,6 +7,11 @@ const ADMIN_EMAILS = ['ojhv2015@gmail.com', 'metodostack@gmail.com'];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // FAST PATH: Landing page NO necesita auth — retorno inmediato sin Supabase
+  if (pathname === '/') {
+    return NextResponse.next({ request });
+  }
+
   // Construir la respuesta base UNA sola vez
   let supabaseResponse = NextResponse.next({ request });
 

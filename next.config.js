@@ -7,6 +7,8 @@ const nextConfig = {
   },
   experimental: {
     optimizeCss: true,
+    // Tree-shaking agresivo de lucide-react: importa íconos individuales
+    optimizePackageImports: ['lucide-react', 'chart.js', 'date-holidays'],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
@@ -14,16 +16,8 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/hero:path(.webp)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/hero-mobile:path(.webp)',
+        // Cache agresivo inmutable para imágenes hero (LCP)
+        source: '/:path(hero\\.webp|hero-mobile\\.webp)',
         headers: [
           {
             key: 'Cache-Control',

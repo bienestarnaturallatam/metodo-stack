@@ -1,10 +1,8 @@
 import LandingPage from '@/components/LandingPage';
 
-export default async function RootPage({ searchParams }: { searchParams: Promise<{ geo?: string }> }) {
-  const resolvedParams = await searchParams;
-  return (
-    <>
-      <LandingPage initialGeo={resolvedParams?.geo} />
-    </>
-  );
+// Forzar página estática para que critters (optimizeCss) pueda
+// inlinear CSS crítico y convertir el resto a carga asíncrona.
+// La detección de geo se hace 100% en el cliente (timezone + APIs).
+export default function RootPage() {
+  return <LandingPage />;
 }

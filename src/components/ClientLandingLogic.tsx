@@ -30,10 +30,12 @@ export default function ClientLandingLogic({
 
   return (
     <I18nProvider>
-      <MainSections 
-        showFloatingCTA={showFloatingCTA} 
-        onOpenPayment={onOpenPayment}
-      />
+      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 5000px' }}>
+        <MainSections 
+          showFloatingCTA={showFloatingCTA} 
+          onOpenPayment={onOpenPayment}
+        />
+      </div>
       <ExitIntentPopup />
     </I18nProvider>
   );
