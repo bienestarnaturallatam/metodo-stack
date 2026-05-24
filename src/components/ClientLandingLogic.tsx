@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { I18nProvider } from '@/hooks/useTranslation';
 
 const MainSections = dynamic(() => import('@/components/MainSections'), {
-  ssr: false,
   loading: () => <div className="min-h-screen bg-white" />
 });
 

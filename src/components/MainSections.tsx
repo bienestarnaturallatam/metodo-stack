@@ -23,8 +23,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import dynamic from 'next/dynamic';
 
 const CarruselModulos = dynamic(() => import('@/components/CarruselModulos'), {
-  loading: () => <div className="h-[420px] w-full bg-black/5 animate-pulse rounded-[40px]" />,
-  ssr: false
+  loading: () => <div className="h-[420px] w-full bg-black/5 animate-pulse rounded-[40px]" />
 });
 
 import LocalPaymentModal from './LocalPaymentModal';

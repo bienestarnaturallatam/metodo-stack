@@ -112,7 +112,7 @@ function LandingPageContent() {
                 height={237}
                 loading="eager"
                 fetchPriority="high"
-                decoding="async"
+                decoding="sync"
               />
             </picture>
           </div>
