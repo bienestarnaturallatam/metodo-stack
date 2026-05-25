@@ -121,24 +121,30 @@ function LandingPageContent() {
       {/* CLIENT BOUNDARY STARTS HERE - DEFERRED INITIALIZATION */}
       <ClientLandingLogic onOpenPayment={openPayment} />
 
-      <LocalPaymentModal 
-        isOpen={isPaymentModalOpen} 
-        onClose={() => setIsPaymentModalOpen(false)} 
-        planName={selectedPlan.name} 
-        price={selectedPlan.price} 
-      />
+      {isPaymentModalOpen && (
+        <LocalPaymentModal 
+          isOpen={true} 
+          onClose={() => setIsPaymentModalOpen(false)} 
+          planName={selectedPlan.name} 
+          price={selectedPlan.price} 
+        />
+      )}
 
-      <USDModulePaymentModal
-        isOpen={isUSDModalOpen}
-        onClose={() => setIsUSDModalOpen(false)}
-        defaultModuleName={usdSelectedModule}
-      />
+      {isUSDModalOpen && (
+        <USDModulePaymentModal
+          isOpen={true}
+          onClose={() => setIsUSDModalOpen(false)}
+          defaultModuleName={usdSelectedModule}
+        />
+      )}
 
-      <LocalModulePaymentModal
-        isOpen={isLocalModuleOpen}
-        onClose={() => setIsLocalModuleOpen(false)}
-        defaultModuleName={localSelectedModule}
-      />
+      {isLocalModuleOpen && (
+        <LocalModulePaymentModal
+          isOpen={true}
+          onClose={() => setIsLocalModuleOpen(false)}
+          defaultModuleName={localSelectedModule}
+        />
+      )}
     </div>
   );
 }

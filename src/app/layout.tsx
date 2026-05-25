@@ -46,6 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" suppressHydrationWarning>
       <head>
         {/* 1. CRITICAL IMAGE PRELOADS — máxima prioridad para el LCP */}
+        <link rel="preconnect" href="https://metodostack.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://metodostack.com" />
         <link rel="preload" as="image" href="/hero-mobile.webp" media="(max-width: 767px)" fetchPriority="high" type="image/webp" />
         <link rel="preload" as="image" href="/hero.webp" media="(min-width: 768px)" fetchPriority="high" type="image/webp" />
 

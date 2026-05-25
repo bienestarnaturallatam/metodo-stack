@@ -18,24 +18,36 @@ export default function ClientLandingLogic({
   onOpenPayment: (name: string, price: string) => void 
 }) {
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
+  const [loadHeavy, setLoadHeavy] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowFloatingCTA(window.scrollY > 500);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    // Defer rendering the 400+ nodes until AFTER the main thread has painted the Hero
+    const timer = setTimeout(() => {
+      setLoadHeavy(true);
+    }, 100); // 100ms is enough to let the browser paint the first frame
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
     <I18nProvider>
-      <div>
-        <MainSections 
-          showFloatingCTA={showFloatingCTA} 
-          onOpenPayment={onOpenPayment}
-        />
+      <div style={{ minHeight: '100vh' }}>
+        {loadHeavy && (
+          <MainSections 
+            showFloatingCTA={showFloatingCTA} 
+            onOpenPayment={onOpenPayment}
+          />
+        )}
       </div>
-      <ExitIntentPopup />
+      {loadHeavy && <ExitIntentPopup />}
     </I18nProvider>
   );
 }
