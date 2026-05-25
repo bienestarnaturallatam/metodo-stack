@@ -29,7 +29,7 @@ export default function ClientLandingLogic({
 
   return (
     <I18nProvider>
-      <div style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 5000px' }}>
+      <div>
         <MainSections 
           showFloatingCTA={showFloatingCTA} 
           onOpenPayment={onOpenPayment}
