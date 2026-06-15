@@ -18,5 +18,5 @@ export default async function AdminDashboardPage() {
     .eq('id', userId)
     .single();
 
-  return <AdminDashboardClient userId={userId} profile={profile || {}} />;
+  return <AdminDashboardClient userId={userId} userEmail={mockUser.email} profile={profile || {}} />;
 }

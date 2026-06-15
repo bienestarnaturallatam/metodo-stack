@@ -64,7 +64,7 @@ function TrackerContent({ userId, userEmail }: Props) {
   const [userTier, setUserTier] = useState<string>('trial');
   const [isPaid, setIsPaid] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
-  const [showLockedModal, setShowLockedModal] = useState<'tracker' | 'planner' | 'finances' | null>(null);
+  const [showLockedModal, setShowLockedModal] = useState<'tracker' | 'planner' | 'finances' | 'recursos' | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -116,6 +116,8 @@ function TrackerContent({ userId, userEmail }: Props) {
             setPage('planner');
           } else if (profile.tier === 'finanzas') {
             setPage('finances');
+          } else if (profile.tier === 'recursos') {
+            setPage('recursos');
           }
         }
 
@@ -269,13 +271,13 @@ function TrackerContent({ userId, userEmail }: Props) {
     const tier = (userTier || '').toLowerCase();
     const isTrialUser = !isPaid || ['trial', 'free', 'gratis'].includes(tier);
 
-    // 1. Recursos & Modulos (ACCESO LIBRE PARA TRIAL DURANTE 72H)
-    if (p === 'recursos' || p === 'modulos') {
+    // 1. Modulos (ACCESO LIBRE PARA VER PROMOCIÓN)
+    if (p === 'modulos') {
       setPage(p);
       return;
     }
     
-    // 2. Full Access or Trial (Trial has access to everything except specific restrictions within Recursos)
+    // 2. Full Access or Trial
     const isFullAccess = ['duo', 'max', 'plan_max', 'plan max', 'stack completo', 'completo'].includes(tier);
     if (isFullAccess || isTrialUser) {
       setPage(p);
@@ -285,21 +287,28 @@ function TrackerContent({ userId, userEmail }: Props) {
     // 3. Paid Tier Restrictions
     if (tier === 'habitos') {
       if (p !== 'tracker' && p !== 'dashboard') {
-        setShowLockedModal(p === 'finances' ? 'finances' : 'planner');
+        setShowLockedModal(p === 'finances' ? 'finances' : p === 'planner' ? 'planner' : p === 'recursos' ? 'recursos' : 'tracker');
         return;
       }
     }
     
     if (tier === 'tareas' || tier === 'enfoque') {
       if (p !== 'planner') {
-        setShowLockedModal(p === 'finances' ? 'finances' : 'tracker');
+        setShowLockedModal(p === 'finances' ? 'finances' : p === 'recursos' ? 'recursos' : 'tracker');
         return;
       }
     }
     
     if (tier === 'finanzas') {
       if (p !== 'finances') {
-        setShowLockedModal(p === 'planner' ? 'planner' : 'tracker');
+        setShowLockedModal(p === 'planner' ? 'planner' : p === 'recursos' ? 'recursos' : 'tracker');
+        return;
+      }
+    }
+
+    if (tier === 'recursos') {
+      if (p !== 'recursos') {
+        setShowLockedModal(p === 'planner' ? 'planner' : p === 'finances' ? 'finances' : 'tracker');
         return;
       }
     }

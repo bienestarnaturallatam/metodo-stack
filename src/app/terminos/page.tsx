@@ -178,6 +178,18 @@ export default function TerminosPage() {
             </p>
           </section>
 
+          <section>
+            <h2 className="text-[11px] font-bold uppercase tracking-widest text-app-text3 mb-3">
+              9. Contacto
+            </h2>
+            <p>
+              Para cualquier consulta vía email, puede comunicarse a:{' '}
+              <a href="mailto:metodostack@gmail.com" className="text-brand-green hover:underline">
+                metodostack@gmail.com
+              </a>
+            </p>
+          </section>
+
         </div>
 
         {/* Footer */}

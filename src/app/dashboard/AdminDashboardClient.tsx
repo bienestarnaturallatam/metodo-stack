@@ -30,8 +30,11 @@ ChartJS.register(
   LineElement
 );
 
-export default function AdminDashboardClient({ userId, profile }: { userId: string, profile: any }) {
+export default function AdminDashboardClient({ userId, userEmail, profile }: { userId: string, userEmail?: string, profile: any }) {
   const supabase = useMemo(() => createClient(), []);
+  const [isAuthenticated, setIsAuthenticated] = useState((userEmail || profile?.email) === 'metodostack@gmail.com');
+  const [dashboardPassword, setDashboardPassword] = useState('');
+  const [dashboardAccessNumber, setDashboardAccessNumber] = useState('');
   const [emailToActivate, setEmailToActivate] = useState('');
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -250,10 +253,10 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
       if (date.getMonth() !== viewMonth || date.getFullYear() !== viewYear) return;
       
       const day = date.getDate();
-      const isH = u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas');
+      const isH = u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') || u.tier?.includes('finanzas') || u.tier?.includes('recursos');
       const price = u.is_usd 
-        ? (isH ? 7.90 : 13.90) 
-        : (isH ? 9.90 : 19.90);
+        ? (isH ? 7.90 : 14.90) 
+        : (isH ? 9.90 : 29.90);
       
       if (u.is_usd) stats[day].usd += price;
       else stats[day].soles += price;
@@ -273,8 +276,8 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
       const country = getCountryData(u.phone_number).name;
       if (!stats[country]) stats[country] = { soles: 0, usd: 0, count: 0 };
       
-      const isH = u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas');
-      const price = u.is_usd ? (isH ? 7.90 : 13.90) : (isH ? 9.90 : 19.90);
+      const isH = u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') || u.tier?.includes('finanzas') || u.tier?.includes('recursos');
+      const price = u.is_usd ? (isH ? 7.90 : 14.90) : (isH ? 9.90 : 29.90);
       
       if (u.is_usd) stats[country].usd += price;
       else stats[country].soles += price;
@@ -292,7 +295,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
         if (!u.plan_starts_at) return;
         const pDate = new Date(u.plan_starts_at);
         if (pDate.getMonth() === idx && pDate.getFullYear() === year) {
-           const isH = u.tier?.includes('habitos') || u.tier?.includes('tareas');
+           const isH = u.tier?.includes('habitos') || u.tier?.includes('tareas') || u.tier?.includes('enfoque') || u.tier?.includes('finanzas') || u.tier?.includes('recursos');
            const price = u.is_usd ? (isH ? 12 : 19.90) : (isH ? 19.90 : 34.90);
            if (u.is_usd) trend[mName].usd += price;
            else trend[mName].soles += price;
@@ -308,9 +311,9 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
     activeClients.forEach(c => {
       if (!c.plan_starts_at) return;
       if (new Date(c.plan_starts_at).toLocaleDateString() === today) {
-        const isH = c.tier?.includes('habitos') || c.tier?.includes('tareas');
-        if (c.is_usd) u += (isH ? 12 : 19.90);
-        else s += (isH ? 19.90 : 34.90);
+        const isH = c.tier?.includes('habitos') || c.tier?.includes('tareas') || c.tier?.includes('enfoque') || c.tier?.includes('finanzas') || c.tier?.includes('recursos');
+        if (c.is_usd) u += (isH ? 7.90 : 14.90);
+        else s += (isH ? 9.90 : 29.90);
       }
     });
     return { s, u };
@@ -477,7 +480,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
 
   const sendWhatsAppTrialWelcome = (u: any, isUSD: boolean) => {
     const individual = isUSD ? "Plan Individual (Hábitos O Enfoque) - $ 7.90 USD" : "Plan Individual (Hábitos, Enfoque , finanza, o Recursos) -Cada uno  S/ 9.90";
-    const planMax = isUSD ? "PlanMax (Hábitos + Enfoque + Finanzas) - $ 13.90 USD" : "Stack completo (Hábitos + Enfoque + Finanzas + Recursos) - S/ 19.90";
+    const planMax = isUSD ? "PlanMax (Hábitos + Enfoque + Finanzas) - $ 14.90 USD" : "Stack completo (Hábitos + Enfoque + Finanzas + Recursos) - S/ 29.90";
     const message = `Hola! Tu acceso de prueba a la Plataforma SaaS METODO STACK ha sido activado por 3 días. \n\nCorreo: ${u.email}\nClave: Usa la que registraste o la universal 123456\nLogin: https://metodostack.com/login\n\nPasados los 3 días puedes activar tu cuenta anual y obtener:\n✅ Acceso completo a la Plataforma SaaS Método Stack.\n✅ Gestión inteligente de hábitos y enfoque desde cualquier dispositivo.\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nPrecios promocionales para nuestros planes anuales:\n- ${individual}\n- ${planMax}`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_welcome_usd' : '_welcome_soles'));
@@ -485,7 +488,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
 
   const sendWhatsAppTrialInvitation = (u: any, isUSD: boolean) => {
     const individual = isUSD ? "$ 7.90 USD" : "Cada uno S/ 9.90";
-    const planMax = isUSD ? "$ 13.90 USD" : "S/ 19.90";
+    const planMax = isUSD ? "$ 14.90 USD" : "S/ 29.90";
     const message = `Hola! ¿Cómo vas con tu prueba de METODO STACK? \n\nRecuerda que puedes activar el acceso completo a nuestra Plataforma SaaS para una gestión inteligente de tus hábitos y enfoque desde cualquier dispositivo.\n\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nOferta especial de hoy para planes anuales:\n- Plan Individual (Hábitos, Enfoque, Finanzas, o Recursos): ${individual}\n- Stack completo (Hábitos + Enfoque + Finanzas + Recursos): ${planMax}`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_trial_usd' : '_trial_soles'));
@@ -493,14 +496,14 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
 
   const sendWhatsAppOfferReiteration = (u: any, isUSD: boolean) => {
     const individual = isUSD ? "$ 7.90 USD" : "Cada uno S/ 9.90";
-    const planMax = isUSD ? "$ 13.90 USD" : "S/ 19.90";
+    const planMax = isUSD ? "$ 14.90 USD" : "S/ 29.90";
     const message = `Hola! Seguimos mejorando la Plataforma SaaS METODO STACK para ti. \n\nRecuerda que al activar tu cuenta anual obtienes:\n✅ Acceso completo a la Plataforma SaaS.\n✅ Gestión inteligente de hábitos y enfoque multidispositivo.\n🎁 REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nPrecio especial del día:\n- Plan Individual (Hábitos, Enfoque, Finanzas, o Recursos): ${individual}\n- Stack completo (Hábitos + Enfoque + Finanzas + Recursos): ${planMax}\n\n¿Alguna duda con los módulos?`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_remark_usd' : '_remark_soles'));
   };
 
   const sendWhatsAppLastOffer = (u: any, isUSD: boolean) => {
-    const planMax = isUSD ? "$ 13.90 USD" : "S/ 12.90";
+    const planMax = isUSD ? "$ 14.90 USD" : "S/ 19.90";
     const message = `⚠️ ÚLTIMA OPORTUNIDAD! Solo por las próximas 24 horas, llévate el Stack completo (Hábitos + Enfoque + Finanzas + Recursos) anual con acceso completo a la Plataforma SaaS por solo ${planMax}.\n\n🎁 INCLUYE DE REGALO: Plantillas Maestras descargables en Google Sheets (Hábitos y Enfoque).\n\nActiva tu cuenta ahora antes de que expire la oferta. ¡Es tu última oportunidad!`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + (isUSD ? '_last_usd' : '_last_soles'));
@@ -519,10 +522,48 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
   };
 
   const sendWhatsAppActivation = (u: any) => {
-    const message = `Hola, tu acceso a METODO STACK ha sido activado para: ${u.email}. Usa la clave con la que te registraste o en su defecto la clave universal 123456. Inicia sesion aqui: https://metodostack.com/login\n\n🎁 ¡REGALO ADICIONAL ACTIVADO! \nComo parte de tu ingreso al MÉTODO STACK, te regalo nuestra Plantilla Maestra descargable en Google Sheets (Hábitos y Enfoque). \n\nDescárgala aquí: https://drive.google.com/drive/folders/1shSQnjScBASMj9cprw24aV23MdHcezjQ?usp=sharing`;
+    const message = `Hola, tu acceso a METODO STACK ha sido activado para: ${u.email}. Usa la clave con la que te registraste o en su defecto la clave universal Mstack07. Inicia sesion aqui: https://metodostack.com/login\n\n🎁 ¡REGALO ADICIONAL ACTIVADO! \nComo parte de tu ingreso al MÉTODO STACK, te regalo nuestra Plantilla Maestra descargable en Google Sheets (Hábitos y Enfoque). \n\nsolicitala con tu email por este mismo canal.`;
     window.open(`https://wa.me/${u.phone_number || ''}?text=${encodeURIComponent(message)}`, '_blank');
     markAsSent(u.id + '_act');
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+        <div className="bg-[#111] p-8 border border-white/10 rounded-2xl w-full max-w-sm flex flex-col gap-6">
+          <h2 className="text-2xl font-black italic uppercase text-center text-emerald-500">Acceso Seguro</h2>
+          <div className="flex flex-col gap-4">
+            <input 
+              type="password" 
+              placeholder="Clave de acceso" 
+              value={dashboardPassword}
+              onChange={e => setDashboardPassword(e.target.value)}
+              className="w-full bg-black border border-white/20 p-3 rounded text-white text-sm focus:border-emerald-500 outline-none"
+            />
+            <input 
+              type="password" 
+              placeholder="Número de acceso" 
+              value={dashboardAccessNumber}
+              onChange={e => setDashboardAccessNumber(e.target.value)}
+              className="w-full bg-black border border-white/20 p-3 rounded text-white text-sm focus:border-emerald-500 outline-none"
+            />
+            <button 
+              onClick={() => {
+                if (dashboardPassword === 'Jerusalen07$' && dashboardAccessNumber === '1969') {
+                  setIsAuthenticated(true);
+                } else {
+                  alert('Acceso denegado: Credenciales incorrectas');
+                }
+              }}
+              className="w-full bg-emerald-500 text-black font-black uppercase py-3 rounded-lg hover:bg-emerald-400 transition-colors"
+            >
+              Ingresar al Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-white">Cargando...</div>;
 
@@ -739,14 +780,18 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                 <input type="email" placeholder="email" value={emailToActivate} onChange={(e) => setEmailToActivate(e.target.value)} className="w-full bg-black border border-white/5 p-2 rounded text-[10px] mb-2" />
                 <button onClick={() => activateUser('habitos', false)} className="w-full py-2 bg-emerald-500 text-black rounded font-bold text-[10px] mb-1">HABITOS (S/ 9.90)</button>
                 <button onClick={() => activateUser('enfoque', false)} className="w-full py-2 bg-emerald-500/20 text-emerald-500 rounded font-bold text-[10px] mb-1">ENFOQUE (S/ 9.90)</button>
-                <button onClick={() => activateUser('plan_max', false)} className="w-full py-2 border border-white/10 rounded font-bold text-[10px]">PLAN MAX (S/ 19.90)</button>
+                <button onClick={() => activateUser('finanzas', false)} className="w-full py-2 bg-emerald-500/20 text-emerald-500 rounded font-bold text-[10px] mb-1">FINANZAS (S/ 9.90)</button>
+                <button onClick={() => activateUser('recursos', false)} className="w-full py-2 bg-emerald-500/20 text-emerald-500 rounded font-bold text-[10px] mb-1">RECURSOS (S/ 9.90)</button>
+                <button onClick={() => activateUser('plan_max', false)} className="w-full py-2 border border-white/10 rounded font-bold text-[10px] mt-2">PLAN MAX (S/ 29.90)</button>
              </div>
              <div className="p-6 bg-white/[0.03] border border-blue-500/10 rounded-[32px] text-center">
                 <p className="text-[9px] font-black text-blue-500 uppercase mb-4">INTERNACIONAL ($)</p>
                 <input type="email" placeholder="email" value={emailToActivate} onChange={(e) => setEmailToActivate(e.target.value)} className="w-full bg-black border border-white/5 p-2 rounded text-[10px] mb-2 focus:border-blue-500 outline-none transition-colors" />
                 <button onClick={() => activateUser('habitos', true)} className="w-full py-2 bg-blue-500 text-white rounded font-bold text-[10px] mb-1">HABITOS ($ 7.90)</button>
                 <button onClick={() => activateUser('enfoque', true)} className="w-full py-2 bg-blue-500/20 text-blue-400 rounded font-bold text-[10px] mb-1">ENFOQUE ($ 7.90)</button>
-                <button onClick={() => activateUser('plan_max', true)} className="w-full py-2 border border-blue-500/20 rounded font-bold text-[10px]">PLAN MAX ($ 13.90)</button>
+                <button onClick={() => activateUser('finanzas', true)} className="w-full py-2 bg-blue-500/20 text-blue-400 rounded font-bold text-[10px] mb-1">FINANZAS ($ 7.90)</button>
+                <button onClick={() => activateUser('recursos', true)} className="w-full py-2 bg-blue-500/20 text-blue-400 rounded font-bold text-[10px] mb-1">RECURSOS ($ 7.90)</button>
+                <button onClick={() => activateUser('plan_max', true)} className="w-full py-2 border border-blue-500/20 rounded font-bold text-[10px] mt-2">PLAN MAX ($ 14.90)</button>
              </div>
           </div>
         </div>
@@ -776,7 +821,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                   'Usuario / Email': u.email,
                   'Teléfono': u.phone_number || '---',
                   'País': getCountryData(u.phone_number).name,
-                  'Producto / Precio': `${u.tier?.replace('duo', 'PLAN MAX').replace('tareas', 'ENFOQUE').toUpperCase()} (${u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 13.90' : 'S/ 19.90')})`,
+                  'Producto / Precio': `${u.tier?.replace('duo', 'PLAN MAX').replace('tareas', 'ENFOQUE').toUpperCase()} (${u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') || u.tier?.includes('finanzas') || u.tier?.includes('recursos') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 14.90' : 'S/ 29.90')})`,
                   'Sesiones': `${u.session_count || 0}/3`,
                   'Fecha Inicio': u.plan_starts_at ? new Date(u.plan_starts_at).toLocaleDateString() : '---',
                   'Fecha Término': u.plan_expires_at ? new Date(u.plan_expires_at).toLocaleDateString() : '---'
@@ -863,7 +908,7 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                                  <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase flex items-center gap-1 w-fit border ${colorClass}`}>
                                     <span>{u.tier?.replace('duo', 'PLAN MAX').replace('tareas', 'ENFOQUE').toUpperCase()}</span>
                                     <span className={`border-l border-current/20 pl-1 ml-0.5 font-bold ${priceColor}`}>
-                                      {u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 13.90' : 'S/ 19.90')}
+                                      {u.tier?.includes('habitos') || u.tier?.includes('enfoque') || u.tier?.includes('tareas') || u.tier?.includes('finanzas') || u.tier?.includes('recursos') ? (u.is_usd ? '$ 7.90' : 'S/ 9.90') : (u.is_usd ? '$ 14.90' : 'S/ 29.90')}
                                     </span>
                                  </span>
                               );
@@ -1161,8 +1206,8 @@ export default function AdminDashboardClient({ userId, profile }: { userId: stri
                             if (date.getDate() === selectedSalesDay && date.getMonth() === viewMonth && date.getFullYear() === viewYear) {
                               const country = getCountryData(u.phone_number).name;
                               if (!acc[country]) acc[country] = { soles: 0, usd: 0 };
-                              const isH = u.tier?.includes('habitos') || u.tier?.includes('tareas');
-                              const price = u.is_usd ? (isH ? 7.90 : 11.90) : (isH ? 9.90 : 19.90);
+                              const isH = u.tier?.includes('habitos') || u.tier?.includes('tareas') || u.tier?.includes('enfoque') || u.tier?.includes('finanzas') || u.tier?.includes('recursos');
+                              const price = u.is_usd ? (isH ? 7.90 : 14.90) : (isH ? 9.90 : 29.90);
                               if (u.is_usd) acc[country].usd += price; else acc[country].soles += price;
                             }
                             return acc;

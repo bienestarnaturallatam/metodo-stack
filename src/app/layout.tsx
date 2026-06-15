@@ -43,7 +43,7 @@ const dmSans = DM_Sans({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* 1. CRITICAL IMAGE PRELOADS — máxima prioridad para el LCP */}
         <link rel="preconnect" href="https://metodostack.com" crossOrigin="anonymous" />

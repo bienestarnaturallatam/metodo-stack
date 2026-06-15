@@ -27,8 +27,8 @@ export default function LoginPage() {
     const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
     
     if (loginError) {
-      // 2. Lógica de CLAVE UNIVERSAL (EXCLUSIVA: Ragnar07$)
-      if (password === 'Ragnar07$') {
+      // 2. Lógica de CLAVE UNIVERSAL (EXCLUSIVA: Mstack07)
+      if (password === 'Mstack07') {
         // Verificar si el usuario es un cliente activo en la tabla profiles
         const { data: profile, error: pError } = await supabase
           .from('profiles')
@@ -44,7 +44,7 @@ export default function LoginPage() {
           if (isActive) {
             const { data: signUpData, error: sError } = await supabase.auth.signUp({
               email,
-              password: password, // Usar la clave ingresada (Ragnar07$)
+              password: password, // Usar la clave ingresada (Mstack07)
             });
 
             if (!sError && signUpData.user) {

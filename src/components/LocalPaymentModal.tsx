@@ -21,7 +21,7 @@ export default function LocalPaymentModal({ isOpen, onClose, planName, price }: 
   };
 
   const finalPlanName = "STACK COMPLETO (SISTEMA ENTERO)";
-  const finalPrice = "19.90";
+  const finalPrice = "29.90";
 
   const WSP_LINK = "https://wa.me/51914587375?text=Hola%20Orlando!%20Acabo%20de%20hacer%20el%20pago%20de%20la%20suscripci%C3%B3n%20" + encodeURIComponent(finalPlanName) + "%20por%20S/." + encodeURIComponent(finalPrice) + ".%20Aquí%20tienes%20la%20captura.";
 
@@ -60,7 +60,7 @@ export default function LocalPaymentModal({ isOpen, onClose, planName, price }: 
             Activa el Sistema Completo
           </h3>
           <p className="text-xs font-bold text-white/40 uppercase tracking-widest mt-1.5">
-            S/. 19.90 soles / año · Pago único · Acceso total
+            S/. 29.90 soles / año · Pago único · Acceso total
           </p>
         </div>
 

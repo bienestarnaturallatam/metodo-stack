@@ -404,7 +404,7 @@ export default function MainSections({
                     </div>
                   )}
                   <div className="text-4xl font-black mb-1 italic">
-                    {plan.price === '0' ? 'FREE' : `${currency}${plan.price === '14.90' ? (isPeru ? ' 19.90' : '14.90') : (isPeru ? ' 9.90' : '7.90')}`} 
+                    {plan.price === '0' ? 'FREE' : `${currency}${plan.price === '14.90' ? (isPeru ? ' 29.90' : '14.90') : (isPeru ? ' 9.90' : '7.90')}`} 
                   </div>
                   <div className={`text-[10px] font-bold uppercase tracking-widest ${plan.price === '0' ? 'text-[#00C853]' : 'text-black/30'}`}>
                     {plan.price === '0' ? 'GRATIS — ACCESO 3 DÍAS' : `/ ${plan.period}`}
@@ -448,7 +448,7 @@ export default function MainSections({
                   <button 
                     onClick={() => {
                       if (isPeru) {
-                        onOpenPayment(plan.name, plan.price === '14.90' ? '19.90' : '9.90');
+                        onOpenPayment(plan.name, plan.price === '14.90' ? '29.90' : '9.90');
                       } else {
                         window.open(HOTMART_LINK, '_blank');
                       }
@@ -520,7 +520,7 @@ export default function MainSections({
           </Link>
 
           <p className="text-[#AAAAAA]/60 text-xs font-bold uppercase tracking-widest mb-16">
-            Sin tarjeta de crédito · Cancela cuando quieras · Garantía 7 días
+            Sin tarjeta de crédito · Cancela cuando quieras · Garantía 7 días cuando es compra por Hotmart
           </p>
 
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-[#AAAAAA]/40 text-[13px] font-bold uppercase tracking-widest">
@@ -622,7 +622,7 @@ export default function MainSections({
                       <span>COTIZAR AHORA</span>
                     </div>
                   </a>
-                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em]">soporte@metodostack.com</span>
+                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.2em]">metodostack@gmail.com</span>
                 </div>
               </div>
             </div>

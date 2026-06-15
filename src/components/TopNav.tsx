@@ -73,12 +73,20 @@ export default function TopNav({ page, setPage, userEmail, userTier, isPaid }: P
               )}
             </div>
 
-            <button
-              onClick={signOut}
-              className="px-4 sm:px-6 py-2 sm:py-2.5 bg-rose-50 text-rose-600 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-xl border border-rose-100 hover:bg-rose-600 hover:text-white transition-all duration-300 active:scale-95 shadow-sm shadow-rose-100"
-            >
-              {t('logout_btn')}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => router.push('/update-password')}
+                className="hidden sm:block px-4 py-2 sm:py-2.5 bg-emerald-50 text-emerald-600 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-xl border border-emerald-100 hover:bg-emerald-600 hover:text-white transition-all duration-300 active:scale-95 shadow-sm shadow-emerald-100"
+              >
+                Cambiar clave
+              </button>
+              <button
+                onClick={signOut}
+                className="px-4 sm:px-6 py-2 sm:py-2.5 bg-rose-50 text-rose-600 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-lg sm:rounded-xl border border-rose-100 hover:bg-rose-600 hover:text-white transition-all duration-300 active:scale-95 shadow-sm shadow-rose-100"
+              >
+                {t('logout_btn')}
+              </button>
+            </div>
           </div>
         </div>
       </div>

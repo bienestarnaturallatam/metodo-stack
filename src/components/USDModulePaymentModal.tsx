@@ -182,7 +182,7 @@ export default function USDModulePaymentModal({ isOpen, onClose, defaultModuleNa
               🔒 Compra 100% segura procesada y respaldada por Hotmart.
             </div>
             <div>
-              🛡️ Garantía incondicional de satisfacción de 7 días.
+              🛡️ Garantía incondicional de satisfacción de 7 días (por compras vía Hotmart).
             </div>
           </div>
 
